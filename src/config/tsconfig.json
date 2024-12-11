@@ -8,7 +8,7 @@
 
     // 모듈 해석 설정
     "moduleResolution": "bundler",   // 번들러에 최적화된 모듈 해석 방식 사용
-    "baseUrl": ".",                 // 절대 경로 임포트의 기준 경로 설정
+    "baseUrl": "../..",                 // 절대 경로 임포트의 기준 경로 설정
     "paths": {                      // 경로 별칭 설정 (예: @/components)
       "@/*": ["src/*"]
     },
@@ -29,8 +29,17 @@
     // 추가 설정
     "esModuleInterop": true,        // CommonJS 모듈 호환성 개선
     "skipLibCheck": true,           // 선언 파일의 타입 체크 스킵으로 빌드 성능 향상
-    "forceConsistentCasingInFileNames": true  // 파일명 대소문자 일관성 강제
+    "forceConsistentCasingInFileNames": true,  // 파일명 대소문자 일관성 강제
+
+    // Vite 관련 추가 설정
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,  // Vite가 빌드를 처리하므로 TypeScript 출력은 비활성화
+    "allowImportingTsExtensions": true
   },
   "include": ["src/**/*"],          // src 폴더 내 모든 파일 포함
-  "exclude": ["node_modules"]       // node_modules 폴더 제외
+  "exclude": [
+    "../../node_modules"
+  ]       // node_modules 폴더 제외
 }
