@@ -8,7 +8,7 @@
 .wrap {
     width: 355px;
     justify-content: center;
-    margin-bottom: var(--header-height);
+    /*margin-bottom: var(--header-height);*/
 }
 
 .login #loginText {

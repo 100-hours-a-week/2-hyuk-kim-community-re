@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 // import { LOGIN_URL } from './api/constants';
-import './../../styles/LoginPage.css';
+// import './../../styles/LoginPage.styled.css';
+import {LoginPageStyled} from "../../styles/LoginPage.styled";
+import { validateEmail, validatePassword } from '../../utils/validations/authValidation';
+import InputField from "../../components/auth/CustomeInput";
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -10,32 +13,18 @@ const LoginPage: React.FC = () => {
     const [helperText, setHelperText] = useState('');
     const [isHelperVisible, setIsHelperVisible] = useState(false);
 
-    const validateEmail = (email: string) => {
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        if (emailRegex.test(email)) {
-            setIsHelperVisible(false);
-            setCheckEmail(true);
-        } else {
-            setHelperText('*올바른 이메일 주소 형식을 입력해주세요 (예: example@example.com)');
-            setIsHelperVisible(true);
-            setCheckEmail(false);
-        }
+    const handleEmailValidation = (value) => {
+        const check = validateEmail(value);
+        return {
+            message: check.isValid ? '' : check.errorMessage
+        };
     };
 
-    const validatePassword = (password: string) => {
-        const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?~-]).{8,20}$/;
-        if (password.length === 0) {
-            setHelperText('*비밀번호를 입력해주세요');
-            setIsHelperVisible(true);
-            setCheckPassword(false);
-        } else if (passwordRegex.test(password)) {
-            setIsHelperVisible(false);
-            setCheckPassword(true);
-        } else {
-            setHelperText('*비밀번호가 다릅니다.');
-            setIsHelperVisible(true);
-            setCheckPassword(false);
-        }
+    const handlePasswordValidation = (value) => {
+        const check = validatePassword(value);
+        return {
+            message: check.isValid ? '' : check.errorMessage
+        };
     };
 
     const handleLogin = async () => {
@@ -73,6 +62,7 @@ const LoginPage: React.FC = () => {
     };
 
     return (
+        <LoginPageStyled>
         <div className="container">
             {/* <HeaderComponent /> */}
             <section className="wrap">
@@ -81,36 +71,23 @@ const LoginPage: React.FC = () => {
                 </article>
 
                 <article id="article-auth">
-                    <div className="input-group">
-                        <p className="text-guide">이메일</p>
-                        <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => {
-                                setEmail(e.target.value);
-                                validateEmail(e.target.value);
-                            }}
-                            placeholder="이메일을 입력해주세요"
-                        />
-                    </div>
+                    <InputField
+                        label="이메일"
+                        type="email"
+                        value={email}
+                        onChange={setEmail}
+                        placeholder="이메일을 입력해주세요"
+                        validation={handleEmailValidation}
+                    />
 
-                    <div className="input-group">
-                        <p className="text-guide">비밀번호</p>
-                        <input
-                            type="password"
-                            value={password}
-                            onChange={(e) => {
-                                setPassword(e.target.value);
-                                validatePassword(e.target.value);
-                            }}
-                            placeholder="비밀번호를 입력해주세요"
-                        />
-                        {isHelperVisible && (
-                            <p className="helper-text" style={{ visibility: 'visible' }}>
-                                {helperText}
-                            </p>
-                        )}
-                    </div>
+                    <InputField
+                        label="비밀번호"
+                        type="password"
+                        value={password}
+                        onChange={setPassword}
+                        placeholder="비밀번호를 입력해주세요"
+                        validation={handlePasswordValidation}
+                    />
                 </article>
 
                 <article>
@@ -131,6 +108,7 @@ const LoginPage: React.FC = () => {
                 </article>
             </section>
         </div>
+        </LoginPageStyled>
     );
 };
 
