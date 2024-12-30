@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
+  "type": "module",
   "scripts": {
-    "dev": "vite --config src/config/vite.config.ts",
-    "build": "tsc && vite build --config src/config/vite.config.ts",
-    "preview": "vite preview --config src/config/vite.config.ts"
+    "dev": "vite --config vite.config.ts",
+    "build": "tsc && vite build --config vite.config.ts",
+    "preview": "vite preview --config vite.config.ts"
   },
   "dependencies": {
     "@types/react": "^19.0.1",

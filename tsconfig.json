@@ -5,10 +5,11 @@
     "module": "ESNext",             // 최신 모듈 시스템 사용
     "outDir": "./build",            // 컴파일된 파일은 build 폴더에 생성
     "rootDir": "./src",             // 소스 코드의 루트 디렉토리 지정
+    "typeRoots": ["./src/types", "./node_modules/@types"], // 타입 명시 파일들 모아두는 곳
 
     // 모듈 해석 설정
     "moduleResolution": "bundler",   // 번들러에 최적화된 모듈 해석 방식 사용
-    "baseUrl": "../..",                 // 절대 경로 임포트의 기준 경로 설정
+    "baseUrl": "./src/config",                 // 절대 경로 임포트의 기준 경로 설정
     "paths": {                      // 경로 별칭 설정 (예: @/components)
       "@/*": ["src/*"]
     },
@@ -38,8 +39,13 @@
     "noEmit": true,  // Vite가 빌드를 처리하므로 TypeScript 출력은 비활성화
     "allowImportingTsExtensions": true
   },
-  "include": ["src/**/*"],          // src 폴더 내 모든 파일 포함
+  "include": [
+    "src/**/*",  // src 폴더 아래 모든 파일 포함
+    "src/types/**/*.d.ts",  // 타입 선언 파일 명시적 포함
+    "src/types/custom.d.ts",
+    "src/types/images.d.ts"
+  ],          // src 폴더 내 모든 파일 포함
   "exclude": [
-    "../../node_modules"
+    "node_modules"
   ]       // node_modules 폴더 제외
 }

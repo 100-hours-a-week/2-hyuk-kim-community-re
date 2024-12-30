@@ -1,20 +1,19 @@
 import React, { useState, useEffect } from 'react';
 // import { LOGIN_URL } from './api/constants';
 // import './../../styles/LoginPage.styled.css';
-import {LoginPageStyled} from "../../styles/LoginPage.styled";
+import {LoginPageStyled} from "./LoginPage.styled";
 import { validateEmail, validatePassword } from '../../utils/validations/authValidation';
-import InputField from "../../components/auth/CustomeInput";
+import InputField from "../../components/CustomeInput";
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [checkEmail, setCheckEmail] = useState(false);
     const [checkPassword, setCheckPassword] = useState(false);
-    const [helperText, setHelperText] = useState('');
-    const [isHelperVisible, setIsHelperVisible] = useState(false);
 
     const handleEmailValidation = (value) => {
         const check = validateEmail(value);
+        setCheckEmail(check.isValid);
         return {
             message: check.isValid ? '' : check.errorMessage
         };
@@ -22,6 +21,7 @@ const LoginPage: React.FC = () => {
 
     const handlePasswordValidation = (value) => {
         const check = validatePassword(value);
+        setCheckPassword(check.isValid);
         return {
             message: check.isValid ? '' : check.errorMessage
         };
@@ -64,12 +64,12 @@ const LoginPage: React.FC = () => {
     return (
         <LoginPageStyled>
         <div className="container">
-            {/* <HeaderComponent /> */}
             <section className="wrap">
                 <article className="login">
                     <p id="loginText">로그인</p>
                 </article>
 
+                <article className="form-login">
                 <article id="article-auth">
                     <InputField
                         label="이메일"
@@ -105,6 +105,7 @@ const LoginPage: React.FC = () => {
                     <p id="signup-button" className="button-text" onClick={handleSignup}>
                         회원가입
                     </p>
+                </article>
                 </article>
             </section>
         </div>

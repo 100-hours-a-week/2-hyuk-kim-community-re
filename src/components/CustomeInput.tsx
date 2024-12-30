@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {CustomInputStyled} from "./CustomeInput.styled";
 
 const InputField = ({
                         label,
@@ -23,20 +24,22 @@ const InputField = ({
         }
     };
     return (
+        <CustomInputStyled>
         <div className="input-group">
-        <p className="text-guide">{label}</p>
-            <input
-    type={type}
-    value={value}
-    onChange={handleChange}
-    placeholder={placeholder}
-    />
-    {isHelperVisible && (
-        <p className="helper-text" style={{ visibility: 'visible' }}>
-        {helperText}
-        </p>
-    )}
-    </div>
+            <p className="text-guide">{label}</p>
+                <input
+                    type={type}
+                    value={value}
+                    onChange={handleChange}
+                    placeholder={placeholder}
+                    />
+            {isHelperVisible && (
+                <p className="helper-text" style={{ visibility: 'visible' }}>
+                {helperText}
+                </p>
+            )}
+        </div>
+        </CustomInputStyled>
 );
 };
 

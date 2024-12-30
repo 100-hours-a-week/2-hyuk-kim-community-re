@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import {COLORS} from "../../styles/colors";
 
 export const LoginPageStyled = styled.div`
     .container {
@@ -30,37 +31,12 @@ export const LoginPageStyled = styled.div`
         margin-bottom: 2rem;
     }
 
-    .text-guide {
-        width: fit-content;
-        font-size: 1.5rem;
-        font-weight: 700;
-        line-height: 1.79rem;
-        text-align: left;
-    }
-
-    .helper-text {
-        margin: 0;
-        margin-top: 0.4rem;
-        color: red;
-        font-size: 1.2rem;
-    }
-
-    input {
-        width: 33.3rem;
-        height: 2.9rem;
-        border-radius: 0.4rem;
-        border-width: 0.1rem;
-        border-style: solid;
-        padding-left: 1rem;
-        padding-right: 1rem;
-        background-color: transparent;
-
-        &::placeholder {
-            font-size: 1.4rem;
-            font-weight: 400;
-            line-height: 1.6rem;
-            text-align: left;
-        }
+    .form-login {
+        width: 100%;
+        height: auto;
+        background: ${COLORS.original.white};
+        border-radius: 20px;
+        padding: 30px;
     }
 
     .button-purple {
@@ -72,6 +48,7 @@ export const LoginPageStyled = styled.div`
         border: none;
         color: white;
         cursor: pointer;
+        background: ${COLORS.original.paleBlue};
 
         &:disabled {
             cursor: not-allowed;
@@ -82,6 +59,6 @@ export const LoginPageStyled = styled.div`
         font-size: 1.4rem;
         text-align: center;
         margin: 0;
-        cursor: pointer;
+    cursor: pointer;
     }
 `;
