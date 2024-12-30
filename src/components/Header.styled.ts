@@ -2,88 +2,90 @@ import styled from 'styled-components';
 import { theme } from '@/styles/theme';
 
 export const HeaderStyled = styled.header`
+    width: 100%;
+    background: ${theme.colors.activeRed};
     .header {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100vw;
-        height: 10vh;
-        border-bottom: #EDECF7 solid 1px;
-        border-radius: 0 0 10px 10px;
+        height: 4rem;
         position: relative;
-        background: ${theme.colors.white};
-        margin-left: auto;
+        background: linear-gradient(to right, #00FFC0, #00C596);
+    }
+
+    .header-overlay {
+        position: absolute;
+        inset: 0;
+        background:
+                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(0deg, rgba(255,255,255,0.1) 1px, transparent 1px);
+        background-size: 20px 20px;
+    }
+
+    .header-content {
+        max-width: 72rem;  // 주석 해제
+        margin: 0 auto;
+        width: 100%;
+        padding: 0 1.5rem;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        //justify-content: space-between;
+        position: relative;
+        z-index: 10;
+    }
+
+    .header-logo {
+        color: ${theme.colors.white};
+        font-size: 1.25rem;
+        font-weight: bold;
         margin-right: auto;
     }
-
-    .logo {
-        /* rem 대신 vw 사용 */
-        width: 20vw;  /* 뷰포트 너비의 20% */
-        font-size: clamp(2rem, 4vw, 3.2rem);  /* 최소 2rem, 최대 3.2rem */
-        line-height: 1;  /* font-size에 비례하도록 설정 */
-        text-align: center;
-        margin-left: 13.3rem;
-        margin-right: 13.3rem;
-        font: ${({ theme }) => theme.font.bold};
-    }
-
-
-    .button-back {
-        width: 4rem;
-        height: 4rem;
-        border: none;
-        background: none;
-        cursor: pointer;
-        padding: 0;
-
-        img {
-            width: 100%;
-            height: 100%;
-        }
-    }
-
-    .button-profile {
-        width: 3.6rem;
-        height: 3.6rem;
-        position: relative;
-        padding: 0;
-        border: none;
-        background: none;
-        cursor: pointer;
-    }
-
-    .button-profile-img {
-        width: 3.6rem;
-        height: 3.6rem;
-        object-fit: cover;
-        border-radius: 50%;
-    }
-
-    .menu-container {
+    
+    .github-container {
         position: absolute;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
+        right: 4.5rem;
     }
 
-    .menu-item {
+    .github-link {
         display: flex;
-        flex-direction: column;
         align-items: center;
-        justify-content: center;
-        width: 11.7rem;
-        height: 3.5rem;
-        font-size: 1.2rem;
-        font-weight: 400;
-        line-height: 1.452rem;
-        background: #d9d9d9;
-        border: none;
-        margin: 0;
-        cursor: pointer;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background-color: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(4px);
+        color: white;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        transition: background-color 0.3s;
+    }
 
-        &:hover {
-            background-color: #e9e9e9;
+    .github-link:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .github-icon {
+        width: 1.25rem;
+        height: 1.25rem;
+    }
+
+    @media (max-width: 640px) {
+        .header-content {
+            width: 100%;
+            //flex-direction: row;
+            //justify-content: center;
+            gap: 0.5rem;
+            padding: 0 1rem;
         }
-    }
+
+        .header-logo {
+            font-size: 1rem;
+        }
+
+        .github-link {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+        }
+
+        .github-icon {
+            width: 1rem;
+            height: 1rem;
+        }
 `;

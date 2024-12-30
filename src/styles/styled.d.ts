@@ -26,26 +26,7 @@ declare module 'styled-components' {
             activeRed: string;
 
             // before primary Colors
-            white: string;
-            black: string;
-            purple: string;
-            red: string;
-            paleBlue: string;
-            paleBluePastel: string;
-            lavender: string;
-            lavenderPastel: string;
-            greyPurple: string;
-            greyPurplePastel: string;
-            coolGrey: string;
-            coolGreyPastel: string;
-            navy: string;
-            navyPastel: string;
-            skyBlue: string;
-            skyBluePastel: string;
-            warmGrey: string;
-            warmGreyPastel: string;
-            darkGrey: string;
-            darkGreyPastel: string;
+            background: string;
         };
         media: {
             large_tablet: string;

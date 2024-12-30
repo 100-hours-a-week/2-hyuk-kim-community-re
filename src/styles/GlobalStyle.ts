@@ -1,11 +1,18 @@
 // src/styles/GlobalStyle.ts
 import { createGlobalStyle } from 'styled-components';
 import { theme } from './theme';
-import {COLORS} from "./colors";
 
 export const GlobalStyle = createGlobalStyle`
     :root {
-        // --header-height: ${theme.sizes.headerHeight};
+         --header-height: ${theme.sizes.headerHeight};
+    }
+    
+    #root {
+        width: 100%;
+    }
+    
+    #app {
+        width: 100%;
     }
 
     html {
@@ -15,15 +22,8 @@ export const GlobalStyle = createGlobalStyle`
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        // 스크롤 시 배경 고정
-        background: linear-gradient(
-                135deg,
-                ${COLORS.pastel.skyBlue} 0%,
-                ${COLORS.pastel.greyPurple} 70%,
-                ${COLORS.pastel.lavender} 80%,
-                ${COLORS.pastel.paleBlue} 100%
-        ) fixed;
         background-size: cover;
+        background: ${theme.colors.background};
     }
 
 
@@ -34,11 +34,14 @@ export const GlobalStyle = createGlobalStyle`
         height: 100%;
         width: 100%;
         margin: 0;
+        padding: 0;
+        background: ${theme.colors.activeBlue};   
     }
 
     .wrap {
         display: flex;
         flex-direction: column;
+        width: 100%;
         height: 100%;
     }
 `;

@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from 'react';
-// import { LOGIN_URL } from './api/constants';
-// import './../../styles/LoginPage.styled.css';
-import {LoginPageStyled} from "./LoginPage.styled";
+import React, { useState } from 'react';
+import { LoginPageStyled } from "./LoginPage.styled";
 import { validateEmail, validatePassword } from '../../utils/validations/authValidation';
 import InputField from "../../components/CustomeInput";
 
@@ -11,7 +9,7 @@ const LoginPage: React.FC = () => {
     const [checkEmail, setCheckEmail] = useState(false);
     const [checkPassword, setCheckPassword] = useState(false);
 
-    const handleEmailValidation = (value) => {
+    const handleEmailValidation = (value: string) => {
         const check = validateEmail(value);
         setCheckEmail(check.isValid);
         return {
@@ -19,7 +17,7 @@ const LoginPage: React.FC = () => {
         };
     };
 
-    const handlePasswordValidation = (value) => {
+    const handlePasswordValidation = (value: string) => {
         const check = validatePassword(value);
         setCheckPassword(check.isValid);
         return {
@@ -29,7 +27,6 @@ const LoginPage: React.FC = () => {
 
     const handleLogin = async () => {
         try {
-            // const response = await fetch(LOGIN_URL, {
             const response = await fetch("LOGIN_URL", {
                 method: 'POST',
                 headers: {
@@ -63,52 +60,46 @@ const LoginPage: React.FC = () => {
 
     return (
         <LoginPageStyled>
-        <div className="container">
-            <section className="wrap">
-                <article className="login">
-                    <p id="loginText">로그인</p>
-                </article>
-
-                <article className="form-login">
-                <article id="article-auth">
-                    <InputField
-                        label="이메일"
-                        type="email"
-                        value={email}
-                        onChange={setEmail}
-                        placeholder="이메일을 입력해주세요"
-                        validation={handleEmailValidation}
-                    />
-
-                    <InputField
-                        label="비밀번호"
-                        type="password"
-                        value={password}
-                        onChange={setPassword}
-                        placeholder="비밀번호를 입력해주세요"
-                        validation={handlePasswordValidation}
-                    />
-                </article>
-
-                <article>
-                    <button
-                        id="login-button"
-                        className="button-purple"
-                        disabled={!checkEmail || !checkPassword}
-                        onClick={handleLogin}
-                        style={{
-                            backgroundColor: checkEmail && checkPassword ? '#7F6AEE' : '#ACA0EB'
-                        }}
-                    >
-                        로그인
-                    </button>
-                    <p id="signup-button" className="button-text" onClick={handleSignup}>
-                        회원가입
-                    </p>
-                </article>
-                </article>
-            </section>
-        </div>
+            <div className="container">
+                <h1 className="login" id="loginText">로그인</h1>
+                <div className="form-login">
+                    <div id="article-auth">
+                        <InputField
+                            label="이메일"
+                            type="email"
+                            value={email}
+                            onChange={setEmail}
+                            placeholder="이메일을 입력해주세요"
+                            validation={handleEmailValidation}
+                        />
+                        <InputField
+                            label="비밀번호"
+                            type="password"
+                            value={password}
+                            onChange={setPassword}
+                            placeholder="비밀번호를 입력해주세요"
+                            validation={handlePasswordValidation}
+                        />
+                    </div>
+                    <div>
+                        <button
+                            id="login-button"
+                            className="button-purple"
+                            disabled={!checkEmail || !checkPassword}
+                            onClick={handleLogin}
+                        >
+                            로그인
+                        </button>
+                        <p
+                            id="signup-button"
+                            className="button-text"
+                            onClick={handleSignup}
+                        >
+                            회원가입
+                        </p>
+                    </div>
+                </div>
+            </div>
         </LoginPageStyled>
     );
 };

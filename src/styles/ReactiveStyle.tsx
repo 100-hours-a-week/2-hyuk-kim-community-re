@@ -5,12 +5,11 @@ import { theme } from './theme';
 const ReactiveStyle = createGlobalStyle`
   html {
     font-size: 100%;
-    transition: all 1s ease-in-out;
 
     @media ${theme.media.large_tablet}{
       font-size: 90%;
     }
-    
+
     @media ${theme.media.tablet} {
       font-size: 80%;
     }
