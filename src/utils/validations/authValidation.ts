@@ -46,3 +46,52 @@ export const validatePassword = (password: string): ValidationResult => {
         errorMessage: '*비밀번호가 다릅니다.'
     };
 };
+
+export const validatePasswordRe = (passwordRe: string, currentPassword: string): ValidationResult => {
+    if (passwordRe.length === 0) {
+        return {
+            isValid: false,
+            errorMessage: '*비밀번호를 한번더 입력해주세요'
+        };
+    }
+
+    if (passwordRe === currentPassword) {
+        return {
+            isValid: true
+        };
+    }
+
+    return {
+        isValid: false,
+        errorMessage: '*비밀번호가 다릅니다.'
+    };
+};
+
+export const validateNickname = (nickname: string): ValidationResult => {
+    const nicknameRegex = /^[^\s]{1,10}$/;
+
+    if (nickname.length === 0) {
+        return {
+            isValid: false,
+            errorMessage: '*닉네임을 입력해주세요.'
+        };
+    }
+
+    if (nickname.length > 10) {
+        return {
+            isValid: false,
+            errorMessage: '*닉네임은 최대 10자 까지 작성 가능합니다.'
+        };
+    }
+
+    if (!nicknameRegex.test(nickname)) {
+        return {
+            isValid: false,
+            errorMessage: '*띄어쓰기를 없애주세요.'
+        };
+    }
+
+    return {
+        isValid: true
+    };
+};

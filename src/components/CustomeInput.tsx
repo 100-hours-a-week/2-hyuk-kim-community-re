@@ -9,6 +9,7 @@ const InputField = ({
                         onChange,
                         placeholder,
                         validation,
+                        required,
                     }) => {
     const [helperText, setHelperText] = useState('');
     const [isHelperVisible, setIsHelperVisible] = useState(false);
@@ -26,7 +27,7 @@ const InputField = ({
     };
     return (
         <InputGroup>
-            <FormLabel>{label}</FormLabel>
+            <FormLabel required={required}>{label}</FormLabel>
                 <FormInput
                     type={type}
                     value={value}
@@ -48,22 +49,32 @@ const InputGroup = styled.div`
     width: 100%;
 `
 
-const FormLabel = styled.label`
+const FormLabel = styled.label<{ required: boolean }>`
     display: block;
     font-weight: 500;
     font-size: 1rem;
     margin-bottom: 0.5rem;
     color: ${theme.colors.gray6};
+
+    ${props => props.required && `
+       &::after {
+           content: '*';
+           color: red;
+           margin-left: 4px;
+       }
+   `}
 `;
 
 const FormInput = styled.input`
     width: 100%;
-    padding: 0.75rem 1rem;
+    max-height: 30px;
+    padding: 0.6rem 1rem;
     border-radius: 0.75rem;
     border: 2px solid ${theme.colors.gray2};
     outline: none;
     transition: all 0.2s;
     box-sizing: border-box;
+    font-size: 1rem;
     
     &:focus {
         border-color: ${theme.colors.seaGreenDark2};

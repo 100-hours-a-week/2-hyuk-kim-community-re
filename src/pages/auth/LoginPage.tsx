@@ -63,6 +63,7 @@ const LoginPage: React.FC = () => {
                                     onChange={setEmail}
                                     placeholder="이메일을 입력해주세요"
                                     validation={handleEmailValidation}
+                                    required={false}
                                 />
                             </FormGroup>
 
@@ -74,11 +75,22 @@ const LoginPage: React.FC = () => {
                                     onChange={setPassword}
                                     placeholder="비밀번호를 입력해주세요"
                                     validation={handlePasswordValidation}
+                                    required={false}
                                 />
                             </FormGroup>
 
-                            <LoginButton>
-                                <span>로그인하기</span>
+                            <LoginButton
+                                type="button"
+                                isEnabled={checkEmail && checkPassword}
+                                onClick={() => {
+                                console.log(checkEmail, checkPassword)
+                                    if(checkEmail && checkPassword) {
+                                        // 회원가입 로직
+                                        console.log("로그인 클릭!!", checkEmail, checkPassword);
+                                    }
+                                }}
+                            >
+                                <span>로그인</span>
                             </LoginButton>
 
                             <FormFooter>
@@ -267,7 +279,7 @@ const FormGroup = styled.div`
   margin-bottom: 1.5rem;
 `;
 
-const LoginButton = styled.button`
+const LoginButton = styled.button<{ isEnabled: boolean }>`
   width: 100%;
   padding: 0.875rem;
   border-radius: 0.75rem;
@@ -276,8 +288,13 @@ const LoginButton = styled.button`
   font-weight: 500;
   position: relative;
   overflow: hidden;
-  background: linear-gradient(to right, ${theme.colors.seaGreenLight}, ${theme.colors.seaGreenDark1});
-
+    
+    background: ${props => props.isEnabled
+            ? `linear-gradient(to right, ${theme.colors.seaGreenLight}, ${theme.colors.seaGreenDark1})`
+            : 'gray'};
+    cursor: ${props => props.isEnabled ? 'pointer' : 'not-allowed'};
+    opacity: ${props => props.isEnabled ? 1 : 0.5};
+    
   span {
     position: relative;
     z-index: 10;
