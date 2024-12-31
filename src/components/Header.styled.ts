@@ -3,11 +3,12 @@ import { theme } from '@/styles/theme';
 
 export const HeaderStyled = styled.header`
     width: 100%;
-    background: ${theme.colors.activeRed};
     .header {
+        max-width: 100%;
         height: 4rem;
         position: relative;
         background: linear-gradient(to right, #00FFC0, #00C596);
+        
     }
 
     .header-overlay {
@@ -27,7 +28,7 @@ export const HeaderStyled = styled.header`
         height: 100%;
         display: flex;
         align-items: center;
-        //justify-content: space-between;
+        justify-content: space-between;
         position: relative;
         z-index: 10;
     }
@@ -36,12 +37,13 @@ export const HeaderStyled = styled.header`
         color: ${theme.colors.white};
         font-size: 1.25rem;
         font-weight: bold;
-        margin-right: auto;
+        //margin-right: auto;
     }
     
     .github-container {
-        position: absolute;
-        right: 4.5rem;
+           
+        //position: absolute;
+        //right: 4.5rem;
     }
 
     .github-link {

@@ -24,6 +24,11 @@ export const GlobalStyle = createGlobalStyle`
         box-sizing: border-box;
         background-size: cover;
         background: ${theme.colors.background};
+        -ms-overflow-style: none;
+
+        ::-webkit-scrollbar {
+            display: none;
+        }
     }
 
 
@@ -35,7 +40,6 @@ export const GlobalStyle = createGlobalStyle`
         width: 100%;
         margin: 0;
         padding: 0;
-        background: ${theme.colors.activeBlue};   
     }
 
     .wrap {

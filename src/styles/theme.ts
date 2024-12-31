@@ -1,6 +1,7 @@
 import { DefaultTheme } from 'styled-components';
 
 export const theme: DefaultTheme = {
+    // ${theme.}
     colors: {
         // Primary Colors (Sea Green)
         seaGreenBG: '#F3F6F6',     // RGB(232, 232, 232)
