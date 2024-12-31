@@ -4,7 +4,12 @@ import react from '@vitejs/plugin-react'
 import path from 'path'
 
 export default defineConfig({
-    plugins: [react()],
+    plugins: [
+        react({
+            include: ["**/*.tsx", "**/*.ts"],
+        })
+    ],
+
     root: process.cwd(),  // src 폴더를 루트로 설정
     server: {
         port: 3000,
@@ -16,7 +21,7 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, '../')  // src 폴더에 대한 별칭 설정
+            '@': path.resolve(__dirname, './src')  // src 폴더에 대한 별칭 설정
         }
     }
 })
