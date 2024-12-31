@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { HeaderStyled } from './Header.styled.ts';
 import backIcon from '@/assets/images/back.svg';
 import defaultProfile from '../assets/images/profile.webp';
 import githubLogo from '../assets/images/logo-github.svg';
