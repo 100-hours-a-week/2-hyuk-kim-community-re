@@ -4,8 +4,9 @@ import Header from "./components/Header";
 
 // 컴포넌트 임포트
 // import Header from './components/Header';
-import LoginPage from './pages/auth/LoginPage';
 import './App.css'
+import LoginPage from './pages/auth/LoginPage';
+import SignUpPage from "@/pages/auth/SignUpPage.tsx";
 
 const App: React.FC = () => {
     return (
@@ -14,7 +15,8 @@ const App: React.FC = () => {
                 <Header />
                 <main>
                     <Routes>
-                        <Route path="/Login" element={<LoginPage />} />
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/signup" element={<SignUpPage />} />
                     </Routes>
                 </main>
             </BrowserRouter>
