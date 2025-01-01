@@ -2,8 +2,9 @@ import styled from 'styled-components';
 import {theme} from "@/styles/theme.ts";
 import React, {useState} from 'react';
 import InputField from "@/components/CustomeInput.tsx";
+import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
 import {validateEmail, validatePassword, validatePasswordRe, validateNickname} from "@/utils/validations/authValidation.ts";
-import iconUser from "@/assets/images/Logo.png"
+import iconUser from "@/assets/images/icon-user.svg"
 import iconUpload from "@/assets/images/icon-upload.svg"
 
 const SignUpPage: React.FC = () => {
@@ -47,6 +48,10 @@ const SignUpPage: React.FC = () => {
             message: check.isValid ? '' : check.errorMessage
         };
     };
+
+    const handleSignUpButtonClick = () => {
+
+    }
 
     return (
         /*
@@ -117,17 +122,17 @@ const SignUpPage: React.FC = () => {
                             />
                         </FormGroup>
 
-                        <LoginButton
+                        <PrimaryButtonLarge
                             isEnabled={checkEmail && checkPassword && checkPasswordRe && checkNickname}
+                            className={"회원가입"}
+                            type={"button"}
                             onClick={() => {
                                 if(checkEmail && checkPassword && checkPasswordRe && checkNickname) {
                                     // 회원가입 로직
                                     console.log("회원가입 클릭!!")
                                 }
                             }}
-                        >
-                            <span>회원가입</span>
-                        </LoginButton>
+                        />
 
                         <FormFooter>
                             <FormLink href="/login">로그인</FormLink>
@@ -144,11 +149,13 @@ export default SignUpPage;
 
 const Container = styled.main`
     width: 100%;
+    height: calc(100vh - 4rem);
     display: flex;
     justify-content: center;
-    margin: 1rem 0;
+    
     @media (max-width: 640px) {
         width: calc(100% - 2rem);
+        height: 100%;
         padding: 0 1rem;
     }
 `;
@@ -185,7 +192,7 @@ const ProfileHelperText = styled.p`
     text-align: start;
 `;
 
-const ProfileButton = styled.button<{ iconUrl: string }>`
+const ProfileButton = styled.button<{ iconUrl }>`
     position: relative;
     width: 100px;
     height: 100px;
@@ -207,7 +214,7 @@ const ProfileButton = styled.button<{ iconUrl: string }>`
     
     &::after {
         content: '';
-        background-image: url('${props => props.iconUrl}'); 
+        background-image: url("${props => props.iconUrl}");
         background-size: cover;
         background-position: center;
         position: absolute;
@@ -254,40 +261,6 @@ const FormGroup = styled.div`
     margin-bottom: 1.5rem;
 `;
 
-const LoginButton = styled.button<{ isEnabled: boolean }>`
-    width: 100%;
-    padding: 0.875rem;
-    border-radius: 0.75rem;
-    border-width: 0;
-    color: white;
-    font-weight: 500;
-    position: relative;
-    overflow: hidden;
-    
-    background: ${props => props.isEnabled
-            ? `linear-gradient(to right, ${theme.colors.seaGreenLight}, ${theme.colors.seaGreenDark1})`
-            : 'gray'};
-    cursor: ${props => props.isEnabled ? 'pointer' : 'not-allowed'};
-    opacity: ${props => props.isEnabled ? 1 : 0.5};
-    
-    span {
-        position: relative;
-        z-index: 10;
-    }
-
-    &::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to right, ${theme.colors.seaGreenDark1}, ${theme.colors.seaGreenDark3});
-        transform: translateX(100%);
-        transition: transform 0.3s;
-    }
-
-    &:hover::after {
-        transform: translateX(0);
-    }
-`;
 
 const FormFooter = styled.div`
     display: flex;

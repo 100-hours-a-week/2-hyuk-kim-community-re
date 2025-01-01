@@ -3,8 +3,9 @@ import {theme} from "@/styles/theme.ts";
 import React, {useState} from 'react';
 import InputField from "@/components/CustomeInput.tsx";
 import {validateEmail, validatePassword, validatePasswordRe, validateNickname} from "@/utils/validations/authValidation.ts";
-import iconUser from "@/assets/images/Logo.png"
+import iconUser from "@/assets/images/icon-user.svg"
 import iconUpload from "@/assets/images/icon-upload.svg"
+import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
 
 const SignUpPage: React.FC = () => {
     const [email, setEmail] = useState('기존 이메일');
@@ -59,17 +60,17 @@ const SignUpPage: React.FC = () => {
                             />
                         </FormGroup>
 
-                        <LoginButton
+                        <PrimaryButtonLarge
                             isEnabled={updateProfile || checkNickname}
+                            className={"회원정보 수정"}
+                            type={"button"}
                             onClick={() => {
                                 if(updateProfile || checkNickname) {
                                     // 회원가입 로직
-                                    console.log("회원정보수정 클릭!!")
+                                    console.log("수정하기 클릭!!")
                                 }
                             }}
-                        >
-                            <span>수정하기</span>
-                        </LoginButton>
+                        />
 
                         <FormFooter>
                             <FormLink href="/login">계정 삭제</FormLink>
@@ -86,9 +87,10 @@ export default SignUpPage;
 
 const Container = styled.main`
     width: 100%;
+    height: calc(100vh - 4rem);
     display: flex;
     justify-content: center;
-    margin: 1rem 0;
+
     @media (max-width: 640px) {
         width: calc(100% - 2rem);
         padding: 0 1rem;
@@ -149,7 +151,7 @@ const ProfileButton = styled.button<{ iconUrl: string }>`
     
     &::after {
         content: '';
-        background-image: url('${props => props.iconUrl}'); 
+        background-image: url("${props => props.iconUrl}");
         background-size: cover;
         background-position: center;
         position: absolute;

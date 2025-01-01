@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import backIcon from '@/assets/images/back.svg';
-import defaultProfile from '../assets/images/profile.webp';
-import githubLogo from '../assets/images/logo-github.svg';
+import defaultProfile from '@/assets/images/icon-user.svg';
+import githubLogo from '@/assets/images/logo-github.svg';
 import styled from "styled-components";
 import {theme} from "@/styles/theme.ts";
 import logo from "@/assets/images/Logo.png";
