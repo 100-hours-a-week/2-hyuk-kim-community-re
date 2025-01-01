@@ -3,6 +3,7 @@ import {theme} from "@/styles/theme.ts";
 import React, { useState } from 'react';
 import InputField from "@/components/CustomeInput.tsx";
 import {validateEmail, validatePassword} from "@/utils/validations/authValidation.ts";
+import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
 
 
 const LoginPage: React.FC = () => {
@@ -79,19 +80,17 @@ const LoginPage: React.FC = () => {
                                 />
                             </FormGroup>
 
-                            <LoginButton
-                                type="button"
+                            <PrimaryButtonLarge
                                 isEnabled={checkEmail && checkPassword}
+                                className={"로그인"}
+                                type={"button"}
                                 onClick={() => {
-                                console.log(checkEmail, checkPassword)
                                     if(checkEmail && checkPassword) {
                                         // 회원가입 로직
-                                        console.log("로그인 클릭!!", checkEmail, checkPassword);
+                                        console.log("로그인 클릭!!")
                                     }
                                 }}
-                            >
-                                <span>로그인</span>
-                            </LoginButton>
+                            />
 
                             <FormFooter>
                                 <FormLink href="/signup">회원가입</FormLink>
@@ -110,9 +109,14 @@ const Container = styled.main`
     width: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
     //padding: 4rem 1.5rem;
+
+    height: calc(100vh - 8rem);
+    
     @media (max-width: 640px) {
         width: calc(100% - 2rem);
+        height: 100%;
         padding: 0 1rem;
     }
 `;
@@ -277,41 +281,6 @@ const LoginTitle = styled.h2`
 
 const FormGroup = styled.div`
   margin-bottom: 1.5rem;
-`;
-
-const LoginButton = styled.button<{ isEnabled: boolean }>`
-  width: 100%;
-  padding: 0.875rem;
-  border-radius: 0.75rem;
-  border-width: 0;
-  color: white;
-  font-weight: 500;
-  position: relative;
-  overflow: hidden;
-    
-    background: ${props => props.isEnabled
-            ? `linear-gradient(to right, ${theme.colors.seaGreenLight}, ${theme.colors.seaGreenDark1})`
-            : 'gray'};
-    cursor: ${props => props.isEnabled ? 'pointer' : 'not-allowed'};
-    opacity: ${props => props.isEnabled ? 1 : 0.5};
-    
-  span {
-    position: relative;
-    z-index: 10;
-  }
-
-  &::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to right, ${theme.colors.seaGreenDark1}, ${theme.colors.seaGreenDark3});
-    transform: translateX(100%);
-    transition: transform 0.3s;
-  }
-
-  &:hover::after {
-    transform: translateX(0);
-  }
 `;
 
 const FormFooter = styled.div`

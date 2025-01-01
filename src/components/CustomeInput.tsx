@@ -72,7 +72,7 @@ const FormInput = styled.input<{ disabled: boolean }>`
     width: 100%;
     max-height: 30px;
     padding: 0.6rem 1rem;
-    border-radius: 0.75rem;
+    border-radius: 0.5rem;
     border: 2px solid ${theme.colors.gray2};
     outline: none;
     transition: all 0.2s;

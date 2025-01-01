@@ -5,6 +5,7 @@ import InputField from "@/components/CustomeInput.tsx";
 import {validateEmail, validatePassword, validatePasswordRe, validateNickname} from "@/utils/validations/authValidation.ts";
 import iconUser from "@/assets/images/Logo.png"
 import iconUpload from "@/assets/images/icon-upload.svg"
+import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
 
 const SignUpPage: React.FC = () => {
     const [password, setPassword] = useState('');
@@ -65,17 +66,17 @@ const SignUpPage: React.FC = () => {
                             />
                         </FormGroup>
 
-                        <LoginButton
+                        <PrimaryButtonLarge
                             isEnabled={checkPassword && checkPasswordRe}
+                            className={"비밀번호수정"}
+                            type={"button"}
                             onClick={() => {
                                 if(checkPassword && checkPasswordRe) {
                                     // 회원가입 로직
                                     console.log("비밀번호수정 클릭!!")
                                 }
                             }}
-                        >
-                            <span>수정하기</span>
-                        </LoginButton>
+                        />
 
                         {/*</form>*/}
                     </LoginContent>
@@ -89,9 +90,10 @@ export default SignUpPage;
 
 const Container = styled.main`
     width: 100%;
+    height: calc(100vh - 4rem);
     display: flex;
     justify-content: center;
-    margin: 1rem 0;
+    
     @media (max-width: 640px) {
         width: calc(100% - 2rem);
         padding: 0 1rem;
@@ -102,8 +104,6 @@ const GridContainer = styled.div`
     width: 100%;
     max-width: 30.5rem;
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
     align-items: center;
 
     @media (max-width: 640px) {

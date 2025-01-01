@@ -10,6 +10,7 @@ export default defineConfig({
         })
     ],
 
+    assetsInclude: ['**/*.svg'],
     root: process.cwd(),  // src 폴더를 루트로 설정
     server: {
         port: 3000,
