@@ -7,6 +7,8 @@ import Header from "./components/Header";
 import './App.css'
 import LoginPage from './pages/auth/LoginPage';
 import SignUpPage from "@/pages/auth/SignUpPage.tsx";
+import UpdateUserInfoPage from "@/pages/auth/UpdateUserInfoPage.tsx";
+import UpdateUserPasswordPage from "@/pages/auth/UpdateUserPasswordPage.tsx";
 
 const App: React.FC = () => {
     return (
@@ -15,8 +17,13 @@ const App: React.FC = () => {
                 <Header />
                 <main>
                     <Routes>
+                    {/*     auth*/}
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/signup" element={<SignUpPage />} />
+                        <Route path="/settings/profile" element={<UpdateUserInfoPage />} />
+                        <Route path="/settings/password" element={<UpdateUserPasswordPage />} />
+
+                    {/*    board*/}
                     </Routes>
                 </main>
             </BrowserRouter>

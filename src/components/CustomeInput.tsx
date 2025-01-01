@@ -10,6 +10,7 @@ const InputField = ({
                         placeholder,
                         validation,
                         required,
+                        disabled = false,
                     }) => {
     const [helperText, setHelperText] = useState('');
     const [isHelperVisible, setIsHelperVisible] = useState(false);
@@ -33,6 +34,8 @@ const InputField = ({
                     value={value}
                     onChange={handleChange}
                     placeholder={placeholder}
+                    disabled={disabled}
+                    readOnly={disabled}
                     />
             {isHelperVisible && (
                 <HelperLabel style={{ visibility: 'visible' }}>
@@ -65,7 +68,7 @@ const FormLabel = styled.label<{ required: boolean }>`
    `}
 `;
 
-const FormInput = styled.input`
+const FormInput = styled.input<{ disabled: boolean }>`
     width: 100%;
     max-height: 30px;
     padding: 0.6rem 1rem;
@@ -75,6 +78,13 @@ const FormInput = styled.input`
     transition: all 0.2s;
     box-sizing: border-box;
     font-size: 1rem;
+
+    
+  ${props => props.disabled && `
+    cursor: not-allowed;
+    pointer-events: none;
+    background-color: #f5f5f5;
+  `}
     
     &:focus {
         border-color: ${theme.colors.seaGreenDark2};
