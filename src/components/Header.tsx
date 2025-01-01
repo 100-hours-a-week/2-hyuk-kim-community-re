@@ -110,7 +110,7 @@ const HeaderOverlay = styled.div`
 `
 
 const HeaderContent = styled.div`
-    max-width: 72rem;
+    //max-width: 72rem;
     margin: 0 auto;
     width: calc(100% - 2rem);
     padding: 0 1.5rem;
