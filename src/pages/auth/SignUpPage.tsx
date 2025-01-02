@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import {theme} from "@/styles/theme.ts";
-import React, {useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import InputField from "@/components/CustomeInput.tsx";
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
 import {validateEmail, validatePassword, validatePasswordRe, validateNickname} from "@/utils/validations/authValidation.ts";
 import iconUser from "@/assets/images/icon-user.svg"
 import iconUpload from "@/assets/images/icon-upload.svg"
+import { useImageUpload } from '@/utils/imageUploader.tsx';
 
 const SignUpPage: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -16,6 +17,14 @@ const SignUpPage: React.FC = () => {
     const [checkPassword, setCheckPassword] = useState(false);
     const [checkPasswordRe, setCheckPasswordRe] = useState(false);
     const [checkNickname, setCheckNickname] = useState(false);
+    const profileButtonRef = useRef<HTMLButtonElement>(null);
+
+    const {
+        preview,
+        fileInputRef,
+        handleImageChange,
+        triggerFileInput
+    } = useImageUpload();
 
     const handleEmailValidation = (value: string) => {
         const check = validateEmail(value);
@@ -26,10 +35,12 @@ const SignUpPage: React.FC = () => {
     };
 
     const handlePasswordValidation = (value: string) => {
-        const check = validatePassword(value);
-        setCheckPassword(check.isValid);
+        const checkPassword = validatePassword(value);
+        const checkPasswordRe = validatePasswordRe(value, passwordRe);
+        setCheckPassword(checkPassword.isValid);
+        setCheckPasswordRe(checkPasswordRe.isValid);
         return {
-            message: check.isValid ? '' : check.errorMessage
+            message: checkPassword.isValid ? '' : checkPassword.errorMessage
         };
     };
 
@@ -65,12 +76,18 @@ const SignUpPage: React.FC = () => {
                     <LoginContent>
                         <LoginTitle>회원가입</LoginTitle>
                         <ProfileContainer>
-                            {/*<ProfileText>프로필 사진</ProfileText>*/}
-                            <ProfileHelperText>
-                                {/**프로필 사진을 추가해주세요.*/}
-                            </ProfileHelperText>
-                            <ProfileButton iconUrl={iconUpload}>
-                                <img src={iconUser as string}/>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                hidden
+                                ref={fileInputRef}
+                                onChange={handleImageChange}
+                            />
+                            <ProfileButton
+                                $iconUrl={iconUpload}
+                                onClick={triggerFileInput}
+                            >
+                                <img src={preview || iconUser} alt="프로필 이미지"/>
                             </ProfileButton>
                         </ProfileContainer>
 
@@ -123,7 +140,7 @@ const SignUpPage: React.FC = () => {
                         </FormGroup>
 
                         <PrimaryButtonLarge
-                            isEnabled={checkEmail && checkPassword && checkPasswordRe && checkNickname}
+                            $isEnabled={checkEmail && checkPassword && checkPasswordRe && checkNickname}
                             className={"회원가입"}
                             type={"button"}
                             onClick={() => {
@@ -192,7 +209,7 @@ const ProfileHelperText = styled.p`
     text-align: start;
 `;
 
-const ProfileButton = styled.button<{ iconUrl }>`
+const ProfileButton = styled.button<{ $iconUrl }>`
     position: relative;
     width: 100px;
     height: 100px;
@@ -214,7 +231,7 @@ const ProfileButton = styled.button<{ iconUrl }>`
     
     &::after {
         content: '';
-        background-image: url("${props => props.iconUrl}");
+        background-image: url("${props => props.$iconUrl}");
         background-size: cover;
         background-position: center;
         position: absolute;
@@ -228,7 +245,8 @@ const ProfileButton = styled.button<{ iconUrl }>`
     img {
         width: 100%;
         height: 100%;
-        object-fit: contain;
+        object-fit: cover;
+        border-radius: 50%;
     }
 `;
 

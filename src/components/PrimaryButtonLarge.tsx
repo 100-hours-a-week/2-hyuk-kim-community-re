@@ -2,8 +2,15 @@ import React, {useState} from 'react';
 import styled from "styled-components";
 import {theme} from "@/styles/theme.ts";
 
+interface PrimaryButtonLargeProps {
+    $isEnabled: boolean;  // isEnabled → $isEnabled
+    className: string;
+    type: "button" | "submit" | "reset";
+    onClick: () => void;
+}
+
 const PrimaryButtonLarge = ({
-                        isEnabled,
+                        $isEnabled,
                         className,
                         type,
                         onClick,
@@ -11,7 +18,7 @@ const PrimaryButtonLarge = ({
 
     return (
         <LoginButton
-            isEnabled={isEnabled}
+            $isEnabled={$isEnabled}
             onClick={onClick}
             className={className}
             type={type}
@@ -23,7 +30,7 @@ const PrimaryButtonLarge = ({
 
 export default PrimaryButtonLarge;
 
-const LoginButton = styled.button<{ isEnabled: boolean }>`
+const LoginButton = styled.button<{ $isEnabled: boolean }>`
     width: 100%;
     padding: 0.875rem;
     border-radius: 0.75rem;
@@ -33,11 +40,11 @@ const LoginButton = styled.button<{ isEnabled: boolean }>`
     position: relative;
     overflow: hidden;
     
-    background: ${props => props.isEnabled
+    background: ${props => props.$isEnabled
     ? `linear-gradient(to right, ${theme.colors.seaGreenLight}, ${theme.colors.seaGreenDark1})`
     : 'gray'};
-    cursor: ${props => props.isEnabled ? 'pointer' : 'not-allowed'};
-    opacity: ${props => props.isEnabled ? 1 : 0.5};
+    cursor: ${props => props.$isEnabled ? 'pointer' : 'not-allowed'};
+    opacity: ${props => props.$isEnabled ? 1 : 0.5};
     
     span {
         position: relative;
