@@ -3,10 +3,10 @@ import {theme} from "@/styles/theme.ts";
 import React, {useEffect, useRef, useState} from 'react';
 import InputField from "@/components/CustomeInput.tsx";
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
-import {validateEmail, validatePassword, validatePasswordRe, validateNickname} from "@/utils/validations/authValidation.ts";
+import {validateEmail, validatePassword, validatePasswordRe, validateNickname} from "@/hooks/authValidation.ts";
 import iconUser from "@/assets/images/icon-user.svg"
 import iconUpload from "@/assets/images/icon-upload.svg"
-import { useImageUpload } from '@/utils/imageUploader.tsx';
+import { useImageUpload } from '@/hooks/imageUploader.tsx';
 
 const SignUpPage: React.FC = () => {
     const [email, setEmail] = useState('');

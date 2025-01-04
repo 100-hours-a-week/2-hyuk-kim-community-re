@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import {theme} from "@/styles/theme.ts";
 import React, { useState } from 'react';
 import InputField from "@/components/CustomeInput.tsx";
-import {validateEmail, validatePassword} from "@/utils/validations/authValidation.ts";
+import {validateEmail, validatePassword} from "@/hooks/authValidation.ts";
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
 
 
