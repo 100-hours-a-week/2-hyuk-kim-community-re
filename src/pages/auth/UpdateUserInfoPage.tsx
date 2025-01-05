@@ -1,17 +1,33 @@
 import styled from 'styled-components';
 import {theme} from "@/styles/theme.ts";
 import React, {useState} from 'react';
+import { useNavigate } from "react-router-dom";
 import InputField from "@/components/CustomeInput.tsx";
 import {validateEmail, validatePassword, validatePasswordRe, validateNickname} from "@/hooks/authValidation.ts";
 import iconUser from "@/assets/images/icon-user.svg"
 import iconUpload from "@/assets/images/icon-upload.svg"
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
+import {useImageUpload} from "@/hooks/imageUploader.tsx";
+import {SignupRequest} from "@/types/models/auth.ts";
+import {signup} from "@/api/auth.ts";
 
 const SignUpPage: React.FC = () => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('기존 이메일');
     const [nickname, setNickname] = useState('');
     const [updateProfile, setUpdateProfile] = useState(false);
     const [checkNickname, setCheckNickname] = useState(false);
+    const [profileImageUrl, setProfileImageUrl] = useState<string>(
+        // 기본 이미지로 iconUser 사용하거나, 사용자의 기존 프로필 이미지 URL 설정
+        sessionStorage.getItem('profile') || iconUser as string
+    );
+    // 프로필 이미지 업로드를 위한 코드!
+    const {
+        preview,
+        fileInputRef,
+        handleImageChange,
+        triggerFileInput
+    } = useImageUpload();
 
     const handleNicknameValidation = (value: string) => {
         const check = validateNickname(value);
@@ -21,6 +37,29 @@ const SignUpPage: React.FC = () => {
         };
     };
 
+    const handleSignup = async () => {
+        try {
+            const files = fileInputRef.current?.files;
+
+            const request: updateUserInfoRequest = {
+                nickname: nickname ? nickname : "",
+                image: files && files.length > 0 ? files[0] : ""
+            };
+
+            const response = await updateUser(request);
+
+            if (response) {
+                alert('회원정보 수정이 완료되었습니다.');
+                navigate('/');
+            } else {
+                alert('회원정보 수정에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('회원정보 수정 오류:', error);
+            alert('회원정보 수정 중 오류가 발생했습니다.');
+        }
+    };
+
     return (
         <Container>
             <GridContainer>
@@ -28,12 +67,25 @@ const SignUpPage: React.FC = () => {
                     <LoginContent>
                         <LoginTitle>회원정보 수정</LoginTitle>
                         <ProfileContainer>
-                            {/*<ProfileText>프로필 사진</ProfileText>*/}
-                            <ProfileHelperText>
-                                {/**프로필 사진을 추가해주세요.*/}
-                            </ProfileHelperText>
-                            <ProfileButton iconUrl={iconUpload}>
-                                <img src={iconUser as string}/>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                hidden
+                                ref={fileInputRef}
+                                onChange={handleImageChange}
+                            />
+                            <ProfileButton
+                                $iconUrl={iconUpload}
+                                onClick={triggerFileInput}
+                            >
+                                <img
+                                    src={preview || profileImageUrl}
+                                    alt="프로필 이미지"
+                                    onError={(e) => {
+                                        // 이미지 로드 실패시 기본 이미지로 대체
+                                        e.currentTarget.src = iconUser as string;
+                                    }}
+                                />
                             </ProfileButton>
                         </ProfileContainer>
 
@@ -61,7 +113,7 @@ const SignUpPage: React.FC = () => {
                         </FormGroup>
 
                         <PrimaryButtonLarge
-                            isEnabled={updateProfile || checkNickname}
+                            $isEnabled={updateProfile || checkNickname}
                             className={"회원정보 수정"}
                             type={"button"}
                             onClick={() => {
@@ -129,7 +181,7 @@ const ProfileHelperText = styled.p`
     text-align: start;
 `;
 
-const ProfileButton = styled.button<{ iconUrl: string }>`
+const ProfileButton = styled.button<{ $iconUrl: string }>`
     position: relative;
     width: 100px;
     height: 100px;
@@ -151,7 +203,7 @@ const ProfileButton = styled.button<{ iconUrl: string }>`
     
     &::after {
         content: '';
-        background-image: url("${props => props.iconUrl}");
+        background-image: url("${props => props.$iconUrl}");
         background-size: cover;
         background-position: center;
         position: absolute;
@@ -165,7 +217,8 @@ const ProfileButton = styled.button<{ iconUrl: string }>`
     img {
         width: 100%;
         height: 100%;
-        object-fit: contain;
+        object-fit: cover;
+        border-radius: 50%;
     }
 `;
 

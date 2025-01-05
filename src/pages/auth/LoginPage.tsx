@@ -1,12 +1,15 @@
 import styled from 'styled-components';
 import {theme} from "@/styles/theme.ts";
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import InputField from "@/components/CustomeInput.tsx";
 import {validateEmail, validatePassword} from "@/hooks/authValidation.ts";
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
+import {login} from "@/api/auth.ts";
 
 
 const LoginPage: React.FC = () => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [checkEmail, setCheckEmail] = useState(false);
@@ -27,6 +30,21 @@ const LoginPage: React.FC = () => {
             message: check.isValid ? '' : check.errorMessage
         };
     };
+
+    const handleLogin = async () => {
+        try {
+            const data = {
+                email: email,
+                password: password,
+            }
+            const response = await login(data);
+            if (response) {
+                // navigate('/settings/profile');
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
 
     return (
         <Container>
@@ -81,15 +99,10 @@ const LoginPage: React.FC = () => {
                             </FormGroup>
 
                             <PrimaryButtonLarge
-                                isEnabled={checkEmail && checkPassword}
+                                $isEnabled={checkEmail && checkPassword}
                                 className={"로그인"}
                                 type={"button"}
-                                onClick={() => {
-                                    if(checkEmail && checkPassword) {
-                                        // 회원가입 로직
-                                        console.log("로그인 클릭!!")
-                                    }
-                                }}
+                                onClick={handleLogin}
                             />
 
                             <FormFooter>

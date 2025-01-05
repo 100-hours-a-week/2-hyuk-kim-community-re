@@ -1,14 +1,18 @@
 import styled from 'styled-components';
 import {theme} from "@/styles/theme.ts";
-import React, {useEffect, useRef, useState} from 'react';
+import React, {useState} from 'react';
+import { useNavigate } from "react-router-dom";
 import InputField from "@/components/CustomeInput.tsx";
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
 import {validateEmail, validatePassword, validatePasswordRe, validateNickname} from "@/hooks/authValidation.ts";
 import iconUser from "@/assets/images/icon-user.svg"
 import iconUpload from "@/assets/images/icon-upload.svg"
 import { useImageUpload } from '@/hooks/imageUploader.tsx';
+import {signup} from "@/api/auth.ts";
+import {SignupRequest} from "@/types/models/auth.ts";
 
 const SignUpPage: React.FC = () => {
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordRe, setPasswordRe] = useState('');
@@ -17,8 +21,8 @@ const SignUpPage: React.FC = () => {
     const [checkPassword, setCheckPassword] = useState(false);
     const [checkPasswordRe, setCheckPasswordRe] = useState(false);
     const [checkNickname, setCheckNickname] = useState(false);
-    const profileButtonRef = useRef<HTMLButtonElement>(null);
 
+    // 프로필 이미지 업로드를 위한 코드!
     const {
         preview,
         fileInputRef,
@@ -60,16 +64,36 @@ const SignUpPage: React.FC = () => {
         };
     };
 
-    const handleSignUpButtonClick = () => {
+    const handleSignup = async () => {
+        try {
+            const files = fileInputRef.current?.files;
+            if (!files || files.length === 0) {
+                alert('프로필 이미지를 선택해주세요.');
+                return;
+            }
 
-    }
+            const signupData: SignupRequest = {
+                email,
+                password,
+                nickname,
+                image: files[0]
+            };
+
+            const response = await signup(signupData);
+
+            if (response) {
+                alert('회원가입이 완료되었습니다.');
+                navigate('/login');
+            } else {
+                alert('회원가입에 실패했습니다.');
+            }
+        } catch (error) {
+            console.error('회원가입 오류:', error);
+            alert('회원가입 중 오류가 발생했습니다.');
+        }
+    };
 
     return (
-        /*
-        Login이랑 같은 태그 이름 사용! -> 필요시 변경하고 주석 달기!
-        1. 프로필 이미지 부분 생성함.
-        2. 비밀번호 확인, 닉네임 생성함.
-         */
         <Container>
             <GridContainer>
                 <LoginContainer>
@@ -87,7 +111,7 @@ const SignUpPage: React.FC = () => {
                                 $iconUrl={iconUpload}
                                 onClick={triggerFileInput}
                             >
-                                <img src={preview || iconUser} alt="프로필 이미지"/>
+                                <img src={preview as string || iconUser as string} alt="프로필 이미지"/>
                             </ProfileButton>
                         </ProfileContainer>
 
@@ -143,12 +167,7 @@ const SignUpPage: React.FC = () => {
                             $isEnabled={checkEmail && checkPassword && checkPasswordRe && checkNickname}
                             className={"회원가입"}
                             type={"button"}
-                            onClick={() => {
-                                if(checkEmail && checkPassword && checkPasswordRe && checkNickname) {
-                                    // 회원가입 로직
-                                    console.log("회원가입 클릭!!")
-                                }
-                            }}
+                            onClick={handleSignup}
                         />
 
                         <FormFooter>
@@ -193,20 +212,6 @@ const GridContainer = styled.div`
 
 const ProfileContainer = styled.div`
 
-`;
-
-const ProfileText = styled.p`
-    display: block;
-    font-weight: 500;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    color: ${theme.colors.gray6};
-`;
-
-const ProfileHelperText = styled.p`
-    width: 100%;
-    visibility: visible;
-    text-align: start;
 `;
 
 const ProfileButton = styled.button<{ $iconUrl }>`

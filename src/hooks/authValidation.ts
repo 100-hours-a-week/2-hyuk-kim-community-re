@@ -1,4 +1,4 @@
-import {ValidationResult} from "./validationTypes.ts";
+import {ValidationResult} from "../types/validationTypes.ts";
 
 /**
  * 이메일 유효성 검사
