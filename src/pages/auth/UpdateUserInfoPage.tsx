@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import {theme} from "@/styles/theme.ts";
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { useNavigate } from "react-router-dom";
 import InputField from "@/components/CustomeInput.tsx";
 import {validateEmail, validatePassword, validatePasswordRe, validateNickname} from "@/hooks/authValidation.ts";
@@ -10,8 +10,10 @@ import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
 import {useImageUpload} from "@/hooks/imageUploader.tsx";
 import {SignupRequest} from "@/types/models/auth.ts";
 import {signup} from "@/api/auth.ts";
+import {getProfile, updateUser} from "@/api/user.ts";
+import {GetProfileResponse, UpdateUserInfoRequest} from "@/types/models/user.ts";
 
-const SignUpPage: React.FC = () => {
+const UpdateUserInfoPage: React.FC = () => {
     const navigate = useNavigate();
     const [email, setEmail] = useState('기존 이메일');
     const [nickname, setNickname] = useState('');
@@ -27,7 +29,9 @@ const SignUpPage: React.FC = () => {
         fileInputRef,
         handleImageChange,
         triggerFileInput
-    } = useImageUpload();
+    } = useImageUpload(setUpdateProfile);
+
+
 
     const handleNicknameValidation = (value: string) => {
         const check = validateNickname(value);
@@ -37,15 +41,30 @@ const SignUpPage: React.FC = () => {
         };
     };
 
-    const handleSignup = async () => {
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const response = await getProfile();
+                setEmail(response.email);
+                setNickname(response.nickname);
+            } catch (e) {
+                console.error(e);
+            }
+        };
+
+        fetchProfile();
+    }, []);
+
+    const handleUpdateUser = async () => {
         try {
             const files = fileInputRef.current?.files;
 
-            const request: updateUserInfoRequest = {
+            const request: UpdateUserInfoRequest = {
                 nickname: nickname ? nickname : "",
                 image: files && files.length > 0 ? files[0] : ""
             };
 
+            console.log(request.image);
             const response = await updateUser(request);
 
             if (response) {
@@ -116,12 +135,7 @@ const SignUpPage: React.FC = () => {
                             $isEnabled={updateProfile || checkNickname}
                             className={"회원정보 수정"}
                             type={"button"}
-                            onClick={() => {
-                                if(updateProfile || checkNickname) {
-                                    // 회원가입 로직
-                                    console.log("수정하기 클릭!!")
-                                }
-                            }}
+                            onClick={handleUpdateUser}
                         />
 
                         <FormFooter>
@@ -135,7 +149,7 @@ const SignUpPage: React.FC = () => {
     );
 
 };
-export default SignUpPage;
+export default UpdateUserInfoPage;
 
 const Container = styled.main`
     width: 100%;
@@ -151,18 +165,16 @@ const Container = styled.main`
 
 const GridContainer = styled.div`
     width: 100%;
+    height: calc(100% - 2rem);
     max-width: 30.5rem;
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
     align-items: center;
 
     @media (max-width: 640px) {
         margin-top: 2.5rem;
-        gap: 2.5rem;
+        align-items: flex-start;
     }
 `;
-
 const ProfileContainer = styled.div`
     margin: 2rem 0;
 `;

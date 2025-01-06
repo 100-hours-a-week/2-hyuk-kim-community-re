@@ -1,6 +1,6 @@
 import { useState, useRef, ChangeEvent } from 'react';
 
-export const useImageUpload = () => {
+export const useImageUpload = (setProfileUpdate?: (value: boolean) => void) => {
     // 선택된 이미지 파일을 저장하는 state
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
     // 이미지 미리보기 URL을 저장하는 state
@@ -22,6 +22,7 @@ export const useImageUpload = () => {
         reader.onload = () => {
             // 읽은 결과(base64 문자열)를 미리보기 state에 저장
             setPreview(reader.result as string);
+            setProfileUpdate?.(true);
         };
         // 파일을 base64 문자열로 읽기 시작
         reader.readAsDataURL(file);

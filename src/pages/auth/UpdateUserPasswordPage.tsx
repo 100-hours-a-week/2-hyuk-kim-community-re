@@ -7,7 +7,7 @@ import iconUser from "@/assets/images/Logo.png"
 import iconUpload from "@/assets/images/icon-upload.svg"
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
 
-const SignUpPage: React.FC = () => {
+const UpdateUserPasswordPage: React.FC = () => {
     const [password, setPassword] = useState('');
     const [passwordRe, setPasswordRe] = useState('');
     const [checkPassword, setCheckPassword] = useState(false);
@@ -67,7 +67,7 @@ const SignUpPage: React.FC = () => {
                         </FormGroup>
 
                         <PrimaryButtonLarge
-                            isEnabled={checkPassword && checkPasswordRe}
+                            $isEnabled={checkPassword && checkPasswordRe}
                             className={"비밀번호수정"}
                             type={"button"}
                             onClick={() => {
@@ -86,7 +86,7 @@ const SignUpPage: React.FC = () => {
     );
 
 };
-export default SignUpPage;
+export default UpdateUserPasswordPage;
 
 const Container = styled.main`
     width: 100%;
@@ -102,73 +102,17 @@ const Container = styled.main`
 
 const GridContainer = styled.div`
     width: 100%;
+    height: calc(100% - 2rem);
     max-width: 30.5rem;
     display: grid;
     align-items: center;
 
     @media (max-width: 640px) {
         margin-top: 2.5rem;
-        gap: 2.5rem;
+        align-items: flex-start;
     }
 `;
 
-const ProfileContainer = styled.div`
-
-`;
-
-const ProfileText = styled.p`
-    display: block;
-    font-weight: 500;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    color: ${theme.colors.gray6};
-`;
-
-const ProfileHelperText = styled.p`
-    width: 100%;
-    visibility: visible;
-    text-align: start;
-`;
-
-const ProfileButton = styled.button<{ iconUrl: string }>`
-    position: relative;
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    border: 0;
-    display: block;
-    margin: 0 auto;
-    background-color: transparent;
-    padding: 0;
-
-    &::before {
-        content: "*";
-        position: absolute;
-        top: 0;
-        right: 0;
-        color: red;
-        font-size: 20px;
-    }
-    
-    &::after {
-        content: '';
-        background-image: url('${props => props.iconUrl}'); 
-        background-size: cover;
-        background-position: center;
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-    }
-
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-`;
 
 const LoginContainer = styled.div`
     max-width: 35.5rem;
@@ -199,7 +143,7 @@ const FormGroup = styled.div`
     margin-bottom: 1.5rem;
 `;
 
-const LoginButton = styled.button<{ isEnabled: boolean }>`
+const LoginButton = styled.button<{ $isEnabled: boolean }>`
     width: 100%;
     padding: 0.875rem;
     border-radius: 0.75rem;
@@ -209,11 +153,11 @@ const LoginButton = styled.button<{ isEnabled: boolean }>`
     position: relative;
     overflow: hidden;
     
-    background: ${props => props.isEnabled
+    background: ${props => props.$isEnabled
             ? `linear-gradient(to right, ${theme.colors.seaGreenLight}, ${theme.colors.seaGreenDark1})`
             : 'gray'};
-    cursor: ${props => props.isEnabled ? 'pointer' : 'not-allowed'};
-    opacity: ${props => props.isEnabled ? 1 : 0.5};
+    cursor: ${props => props.$isEnabled ? 'pointer' : 'not-allowed'};
+    opacity: ${props => props.$isEnabled ? 1 : 0.5};
     
     span {
         position: relative;
@@ -231,21 +175,5 @@ const LoginButton = styled.button<{ isEnabled: boolean }>`
 
     &:hover::after {
         transform: translateX(0);
-    }
-`;
-
-const FormFooter = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1rem;
-    padding-top: 0.5rem;
-`;
-
-const FormLink = styled.a`
-    color: ${theme.colors.seaGreenDark1};
-
-    &:hover {
-        text-decoration: underline;
     }
 `;
