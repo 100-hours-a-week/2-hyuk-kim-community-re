@@ -3,14 +3,21 @@ import styled from 'styled-components';
 import PostList from "@/components/PostList.tsx";
 import {theme} from "@/styles/theme.ts";
 import uploadPostButton from "@/assets/images/icon-upload-post.svg"
+import {useNavigate} from "react-router-dom";
 
 const PostListPage: React.FC = () => {
+    const navigate = useNavigate();
+
+    const handlePostButton = async () => {
+        navigate("/posts/create");
+    }
+
     return (
         <Container>
             <PostListPageContainer>
                 <UploadContainer>
                     <UploadTitle>새 게시물 추가하기...</UploadTitle>
-                    <UploadButton>
+                    <UploadButton onClick={handlePostButton}>
                         <img src={uploadPostButton}/>
                     </UploadButton>
                 </UploadContainer>
