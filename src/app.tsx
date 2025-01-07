@@ -9,6 +9,9 @@ import LoginPage from './pages/LoginPage.tsx';
 import SignUpPage from "@/pages/SignUpPage.tsx";
 import UpdateUserInfoPage from "@/pages/UpdateUserInfoPage.tsx";
 import UpdateUserPasswordPage from "@/pages/UpdateUserPasswordPage.tsx";
+import PostList from "@/components/PostList.tsx";
+import PostListPage from "@/pages/PostListPage.tsx";
+import PostCreatePage from "@/pages/PostCreatePage.tsx";
 
 const App: React.FC = () => {
     return (
@@ -24,6 +27,8 @@ const App: React.FC = () => {
                         <Route path="/settings/password" element={<UpdateUserPasswordPage />} />
 
                     {/*    board*/}
+                        <Route path="/posts" element={<PostListPage />} />
+                        <Route path="/posts/create" element={<PostCreatePage />} />
                     </Routes>
                 </main>
             </BrowserRouter>
