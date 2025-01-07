@@ -4,5 +4,5 @@ export const API_ENDPOINTS = {
 
     GET_PROFILE: 'api/users/:userId/profile',
     UPDATE_USER: 'api/users/profile',
-    UPDATE_PASSWORD: 'api/users/:userId/password',
+    UPDATE_PASSWORD: 'api/users/password',
 } as const;

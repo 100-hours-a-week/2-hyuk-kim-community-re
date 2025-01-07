@@ -5,10 +5,10 @@ import Header from "./components/Header";
 // 컴포넌트 임포트
 // import Header from './components/Header';
 import './App.css'
-import LoginPage from './pages/auth/LoginPage';
-import SignUpPage from "@/pages/auth/SignUpPage.tsx";
-import UpdateUserInfoPage from "@/pages/auth/UpdateUserInfoPage.tsx";
-import UpdateUserPasswordPage from "@/pages/auth/UpdateUserPasswordPage.tsx";
+import LoginPage from './pages/LoginPage.tsx';
+import SignUpPage from "@/pages/SignUpPage.tsx";
+import UpdateUserInfoPage from "@/pages/UpdateUserInfoPage.tsx";
+import UpdateUserPasswordPage from "@/pages/UpdateUserPasswordPage.tsx";
 
 const App: React.FC = () => {
     return (

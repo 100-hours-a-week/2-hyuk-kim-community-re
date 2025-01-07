@@ -1,44 +1,87 @@
 import { useState, useRef, ChangeEvent } from 'react';
 
 export const useImageUpload = (setProfileUpdate?: (value: boolean) => void) => {
-    // 선택된 이미지 파일을 저장하는 state
     const [selectedImage, setSelectedImage] = useState<File | null>(null);
-    // 이미지 미리보기 URL을 저장하는 state
     const [preview, setPreview] = useState<string>('');
-    // 파일 입력 요소에 대한 참조를 저장하는 ref
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    // 이미지 파일이 선택될 때 실행되는 핸들러
-    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-        // 선택된 첫 번째 파일 가져오기
+    // 이미지 크기 제한 (15MB in bytes)
+    const MAX_FILE_SIZE = 15 * 1024 * 1024;
+
+    // 이미지 검증 함수
+    const validateImage = (file: File): Promise<boolean> => {
+        return new Promise((resolve) => {
+            // 파일 크기 검사
+            if (file.size > MAX_FILE_SIZE) {
+                console.warn(`[Image Validation Error] File size too large: ${file.size} bytes`);
+                alert('이미지 크기는 15MB 이하여야 합니다.');
+                resolve(false);
+                return;
+            }
+
+            // 허용되는 이미지 MIME 타입 검사
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
+            if (!allowedTypes.includes(file.type)) {
+                console.warn(`[Image Validation Error] Invalid file type: ${file.type}`);
+                alert('지원하지 않는 이미지 형식입니다. (JPG, PNG, GIF만 허용)');
+                resolve(false);
+                return;
+            }
+
+            // 이미지 로드하여 추가 검증
+            const img = new Image();
+            const objectUrl = URL.createObjectURL(file);
+
+            img.onload = () => {
+                URL.revokeObjectURL(objectUrl);
+                // 이미지가 정상적으로 로드되면 유효한 이미지로 판단
+                resolve(true);
+            };
+
+            img.onerror = () => {
+                URL.revokeObjectURL(objectUrl);
+                console.warn('[Image Validation Error] Failed to load image');
+                alert('유효하지 않은 이미지 파일입니다.');
+                resolve(false);
+            };
+
+            img.src = objectUrl;
+        });
+    };
+
+    const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // 선택된 파일을 state에 저장
+        // 이미지 검증
+        const isValid = await validateImage(file);
+        if (!isValid) {
+            if (fileInputRef.current) {
+                fileInputRef.current.value = '';
+            }
+            return;
+        }
+
         setSelectedImage(file);
-        // FileReader 인스턴스 생성
+
+        // 이미지 미리보기 생성
         const reader = new FileReader();
-        // 파일 읽기가 완료되면 실행되는 콜백
         reader.onload = () => {
-            // 읽은 결과(base64 문자열)를 미리보기 state에 저장
             setPreview(reader.result as string);
             setProfileUpdate?.(true);
         };
-        // 파일을 base64 문자열로 읽기 시작
         reader.readAsDataURL(file);
     };
 
-    // 숨겨진 파일 입력 요소의 클릭 이벤트를 트리거하는 함수
     const triggerFileInput = () => {
         fileInputRef.current?.click();
     };
 
-    // 컴포넌트에서 사용할 값과 함수들을 반환
     return {
-        selectedImage,  // 선택된 이미지 파일
-        preview,        // 이미지 미리보기 URL
-        fileInputRef,   // 파일 입력 요소 참조
-        handleImageChange,  // 이미지 선택 핸들러
-        triggerFileInput   // 파일 선택 다이얼로그 트리거 함수
+        selectedImage,
+        preview,
+        fileInputRef,
+        handleImageChange,
+        triggerFileInput
     };
 };

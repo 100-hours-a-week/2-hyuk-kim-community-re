@@ -40,3 +40,12 @@ export const signup = async (signupData: SignupRequest) => {
         throw error;
     }
 };
+
+export const updatePassword = async (password: string) => {
+    try {
+        const response = await axios.patch<number>(API_ENDPOINTS.UPDATE_PASSWORD, {password});
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+}

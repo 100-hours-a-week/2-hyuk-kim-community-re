@@ -88,7 +88,7 @@ const UpdateUserInfoPage: React.FC = () => {
                         <ProfileContainer>
                             <input
                                 type="file"
-                                accept="image/*"
+                                accept="image/jpeg,image/jpg,image/png,image/gif"
                                 hidden
                                 ref={fileInputRef}
                                 onChange={handleImageChange}
@@ -98,9 +98,9 @@ const UpdateUserInfoPage: React.FC = () => {
                                 onClick={triggerFileInput}
                             >
                                 <img
-                                    src={preview || profileImageUrl}
-                                    alt="프로필 이미지"
-                                    onError={(e) => {
+                                src={preview || profileImageUrl}
+                                alt="프로필 이미지"
+                                onError={(e) => {
                                         // 이미지 로드 실패시 기본 이미지로 대체
                                         e.currentTarget.src = iconUser as string;
                                     }}

@@ -102,7 +102,7 @@ const SignUpPage: React.FC = () => {
                         <ProfileContainer>
                             <input
                                 type="file"
-                                accept="image/*"
+                                accept="image/jpeg,image/jpg,image/png,image/gif"
                                 hidden
                                 ref={fileInputRef}
                                 onChange={handleImageChange}

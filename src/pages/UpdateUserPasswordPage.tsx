@@ -6,8 +6,11 @@ import {validateEmail, validatePassword, validatePasswordRe, validateNickname} f
 import iconUser from "@/assets/images/Logo.png"
 import iconUpload from "@/assets/images/icon-upload.svg"
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
+import {updatePassword} from "@/api/auth.ts";
+import {useNavigate} from "react-router-dom";
 
 const UpdateUserPasswordPage: React.FC = () => {
+    const navigate = useNavigate();
     const [password, setPassword] = useState('');
     const [passwordRe, setPasswordRe] = useState('');
     const [checkPassword, setCheckPassword] = useState(false);
@@ -29,6 +32,14 @@ const UpdateUserPasswordPage: React.FC = () => {
             message: check.isValid ? '' : check.errorMessage
         };
     };
+
+    const handleUpdatePassword = async () => {
+        const response = await updatePassword(password);
+        if (response) {
+            alert("비밀번호가 수정되었습니다.");
+            navigate('/');
+        }
+    }
 
     return (
         /*
@@ -70,12 +81,7 @@ const UpdateUserPasswordPage: React.FC = () => {
                             $isEnabled={checkPassword && checkPasswordRe}
                             className={"비밀번호수정"}
                             type={"button"}
-                            onClick={() => {
-                                if(checkPassword && checkPasswordRe) {
-                                    // 회원가입 로직
-                                    console.log("비밀번호수정 클릭!!")
-                                }
-                            }}
+                            onClick={handleUpdatePassword}
                         />
 
                         {/*</form>*/}
