@@ -37,7 +37,7 @@ const UpdateUserPasswordPage: React.FC = () => {
         const response = await updatePassword(password);
         if (response) {
             alert("비밀번호가 수정되었습니다.");
-            navigate('/');
+            navigate('/posts');
         }
     }
 

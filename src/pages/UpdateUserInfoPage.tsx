@@ -69,7 +69,7 @@ const UpdateUserInfoPage: React.FC = () => {
 
             if (response) {
                 alert('회원정보 수정이 완료되었습니다.');
-                navigate('/');
+                navigate('/posts');
             } else {
                 alert('회원정보 수정에 실패했습니다.');
             }

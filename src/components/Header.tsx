@@ -6,18 +6,16 @@ import githubLogo from '@/assets/images/logo-github.svg';
 import styled from "styled-components";
 import {theme} from "@/styles/theme.ts";
 import logo from "@/assets/images/Logo.png";
-
+import {STORAGE_KEYS} from "@/constants/storage.ts";
 
 const Header: React.FC = () => {
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [profileImage, setProfileImage] = useState(defaultProfile);
     const navigate = useNavigate();
     const location = useLocation();
-    const buttonProfileRef = useRef<HTMLButtonElement>(null!); // 인수 타입 null을(를) 매개변수 타입 HTMLButtonElement에 할당할 수 없습니다
-    const menuRef = useRef<HTMLDivElement>(null!); // 인수 타입 null을(를) 매개변수 타입 HTMLButtonElement에 할당할 수 없습니다
-
-
-
+    const buttonProfileRef = useRef<HTMLButtonElement>(null!);
+    const menuRef = useRef<HTMLDivElement>(null!);
+    const isLoginPage = window.location.pathname === '/login';
 
     useEffect(() => {
         const storedProfile = sessionStorage.getItem('profile');
@@ -35,13 +33,9 @@ const Header: React.FC = () => {
         return () => document.removeEventListener('click', handleClickOutside);
     }, [isMenuVisible]);
 
-    const shouldShowBackButton = !location.pathname.match(
-        /(LoginPage|EditProfilePage|EditPasswordPage|Posts)/
-    );
-
-    const shouldShowProfileButton = !location.pathname.match(
-        /(LoginPage|SignUpPage)/
-    );
+    const handleLogoClick = () => {
+        navigate('/posts');
+    }
 
     const handleProfileClick = (event: React.MouseEvent) => {
         event.stopPropagation();
@@ -70,21 +64,47 @@ const Header: React.FC = () => {
         <HeaderContainer>
             <HeaderOverlay/>
             <HeaderContent>
-
-                <HeaderLogo>
+                <HeaderLogo onClick={handleLogoClick}>
                     <Logo src={logo} alt="logo"/>
                     잡담은 경쟁력
                 </HeaderLogo>
-                <GithubContainer>
-                    <GithubLink
-                        href="https://github.com/100-hours-a-week/2-hyuk-kim-community-re"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                       >
-                        <GithubIcon src={githubLogo}/>
-                        GitHub
-                    </GithubLink>
-                </GithubContainer>
+                <RightContainer>
+                    {isLoginPage ? (
+                        <GithubLink
+                            href="https://github.com/100-hours-a-week/2-hyuk-kim-community-re"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <GithubIcon src={githubLogo}/>
+                            GitHub
+                        </GithubLink>
+                    ) : (
+                        <TempContainer>
+                            <WelcomeText>반가워요!</WelcomeText>
+                            <ProfileButton ref={buttonProfileRef} onClick={handleProfileClick}>
+                                <img src={profileImage as string} alt="profile" />
+                            </ProfileButton>
+                            {isMenuVisible && (
+                                <MenuContainer ref={menuRef}>
+                                    <MenuItem onClick={() => handleMenuClick('settings/profile')}>
+                                        회원정보 수정
+                                    </MenuItem>
+                                    <MenuItem onClick={() => handleMenuClick('settings/password')}>
+                                        비밀번호 수정
+                                    </MenuItem>
+                                    <MenuDivider />
+                                    <MenuItem onClick={() => {
+                                        sessionStorage.removeItem(STORAGE_KEYS.USER_ID);
+                                        sessionStorage.removeItem(STORAGE_KEYS.USER_PROFILE_IMAGE);
+                                        handleMenuClick('login')
+                                    }}>
+                                        로그아웃
+                                    </MenuItem>
+                                </MenuContainer>
+                            )}
+                        </TempContainer>
+                    )}
+                </RightContainer>
             </HeaderContent>
         </HeaderContainer>
     );
@@ -98,8 +118,9 @@ const HeaderContainer = styled.header`
     height: 4rem;
     position: relative;
     background: linear-gradient(to right, #00FFC0, #00C596);
-    overflow: hidden;
+    overflow: visible;
 `
+
 const HeaderOverlay = styled.div`
     position: absolute;
     inset: 0;
@@ -110,10 +131,9 @@ const HeaderOverlay = styled.div`
 `
 
 const HeaderContent = styled.div`
-    //max-width: 72rem;
     margin: 0 auto;
     width: calc(100% - 2rem);
-    padding: 0 1.5rem;
+    padding: 0 1rem;
     height: 100%;
     display: flex;
     align-items: center;
@@ -122,16 +142,18 @@ const HeaderContent = styled.div`
     justify-content: space-between;
 
     @media (max-width: 640px) {
-        padding: 0 1rem; // 수정
-        gap: 0.5rem; // 추가
+        padding: 0 1rem;
+        gap: 0.5rem;
     }
 `
-const HeaderLogo = styled.span`
+
+const HeaderLogo = styled.p`
     color: ${theme.colors.white};
     font-size: 1.25rem;
-    font-weight: bold;
+    font-family: ${theme.font.bold};
     display: flex;
     align-items: center;
+    justify-content: center;
     min-width: 0;
 
     @media (max-width: 640px) {
@@ -141,12 +163,84 @@ const HeaderLogo = styled.span`
 
 const Logo = styled.img`
     margin-right: 0.5rem;
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 1.5rem;
+    height: 1.5rem;
 `
-const GithubContainer = styled.div`
+
+const RightContainer = styled.div`
     margin-left: auto;
+    position: relative;
 `
+
+const TempContainer = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+`
+
+const WelcomeText = styled.span`
+    font-size: 1rem;
+    color: ${theme.colors.white};
+    margin-right: 0.5rem;
+    padding: 0;
+`
+
+const ProfileButton = styled.button`
+    width: 2rem;
+    height: 2rem;
+    background: none;
+    border: none;
+    transition: background-color 0.3s;
+    align-self: center;
+    justify-self: center;
+    padding: 0;
+    cursor: pointer;
+
+    img {
+        width: 2rem;
+        height: 2rem;
+        align-self: center;
+        justify-self: center;
+        padding: 0;
+    }
+`
+
+const MenuContainer = styled.div`
+    position: absolute;
+    top: 100%;
+    right: 0;
+    width: 10rem;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    z-index: 50;
+    overflow: hidden;
+`
+
+const MenuItem = styled.button`
+    width: 100%;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    background: none;
+    border: none;
+    color: ${theme.colors.gray6};
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+
+    &:hover {
+        background-color: ${theme.colors.gray1};
+    }
+`
+
+const MenuDivider = styled.div`
+    height: 1px;
+    background-color: ${theme.colors.gray2};
+    //margin: 0.25rem 0;
+`
+
 const GithubLink = styled.a`
     display: flex;
     align-items: center;
@@ -158,7 +252,7 @@ const GithubLink = styled.a`
     border-radius: 0.5rem;
     font-size: 0.875rem;
     transition: background-color 0.3s;
-    
+
     &:hover {
         background-color: rgba(255, 255, 255, 0.2);
     }
@@ -168,6 +262,7 @@ const GithubLink = styled.a`
         padding: 0.25rem 0.5rem;
     }
 `
+
 const GithubIcon = styled.img`
     width: 1.25rem;
     height: 1.25rem;

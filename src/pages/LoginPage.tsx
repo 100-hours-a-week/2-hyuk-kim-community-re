@@ -39,7 +39,7 @@ const LoginPage: React.FC = () => {
             }
             const response = await login(data);
             if (response) {
-                // navigate('/settings/profile');
+                navigate('/posts');
             }
         } catch (e) {
             console.error(e);
