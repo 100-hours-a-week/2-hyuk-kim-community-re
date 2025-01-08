@@ -4,7 +4,7 @@
  </br>
 ## 프로젝트 소개
 
-![Uploading image.png…]()
+<img width="923" alt="image" src="https://github.com/user-attachments/assets/8e14f475-1e03-4a32-ae94-d94e880f8ffa" />
 
 - 커뮤니티 프로젝트는 **React + TypeScript**를 활용하여 커뮤니티 웹 애플리케이션을 구현한 프로젝트입니다.<br>
 - 이 프로젝트는 사용자 인증, 게시판, 댓글, 좋아요 기능 등 기본적인 커뮤니티 서비스 구현을 목표로 하고 있습니다.
