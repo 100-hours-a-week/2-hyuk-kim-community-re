@@ -12,6 +12,7 @@ import UpdateUserPasswordPage from "@/pages/UpdateUserPasswordPage.tsx";
 import PostList from "@/components/PostList.tsx";
 import PostListPage from "@/pages/PostListPage.tsx";
 import PostCreatePage from "@/pages/PostCreatePage.tsx";
+import PostDetailPage from "@/pages/PostDetailPage.tsx";
 
 const App: React.FC = () => {
     return (
@@ -29,6 +30,7 @@ const App: React.FC = () => {
                     {/*    board*/}
                         <Route path="/posts" element={<PostListPage />} />
                         <Route path="/posts/create" element={<PostCreatePage />} />
+                        <Route path="/posts/:postId" element={<PostDetailPage />} />
                     </Routes>
                 </main>
             </BrowserRouter>

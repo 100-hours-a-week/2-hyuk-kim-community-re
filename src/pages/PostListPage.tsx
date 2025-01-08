@@ -1,12 +1,47 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import styled from 'styled-components';
 import PostList from "@/components/PostList.tsx";
 import {theme} from "@/styles/theme.ts";
 import uploadPostButton from "@/assets/images/icon-upload-post.svg"
 import {useNavigate} from "react-router-dom";
+import PostDetailPage from "@/pages/PostDetailPage.tsx";
 
 const PostListPage: React.FC = () => {
     const navigate = useNavigate();
+    const [posts, setPosts] = useState<Post[]>([]);
+    const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                // 또는 여러 게시글 데이터
+                setPosts([
+                    {
+                        id: 1,
+                        title: '첫번째 게시글',
+                        content: '첫번째 내용'
+                    },
+                    {
+                        id: 2,
+                        title: '두번째 게시글',
+                        content: '두번째 내용'
+                    },
+                    {
+                        id: 3,
+                        title: '세번째 게시글',
+                        content: '세번째 내용'
+                    }
+                ]);
+                // const response = await fetch('/api/posts');
+                // const data = await response.json();
+                // setPosts(data);
+            } catch (error) {
+                console.error('Failed to fetch posts:', error);
+            }
+        };
+
+        fetchPosts();
+    }, []);
 
     const handlePostButton = async () => {
         navigate("/posts/create");
@@ -21,7 +56,20 @@ const PostListPage: React.FC = () => {
                         <img src={uploadPostButton}/>
                     </UploadButton>
                 </UploadContainer>
-                <PostList/>
+                {/*<PostList/>*/}
+                {posts.map(post => (
+                    <PostList
+                        // key={post.id}
+                        // post={post}
+                        onClick={() => setSelectedPostId(post.id)}
+                    />
+                ))}
+                {selectedPostId && (
+                    <PostDetailPage
+                        postId={selectedPostId}
+                        onClose={() => setSelectedPostId(null)}
+                    />
+                )}
             </PostListPageContainer>
         </Container>
     );

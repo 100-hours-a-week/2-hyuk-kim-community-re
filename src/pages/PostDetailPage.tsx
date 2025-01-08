@@ -7,15 +7,40 @@ import logo from "@/assets/images/Logo.png";
 import PostListPage from "@/pages/PostListPage.tsx";
 import {theme} from "@/styles/theme.ts";
 
-interface PostListProps {
-    onClick: () => void;
+interface PostDetailProps {
+    postId: number;
+    onClose: () => void;
 }
 
-const PostList: React.FC<PostListProps> = ({onClick}) => {
+const PostDetailPage: React.FC<PostDetailProps> = ({postId, onClose}) => {
+    const [post, setPost] = useState<Post | null>(null);
+
+    useEffect(() => {
+        // 팝업이 열릴 때 body 스크롤 막기
+        document.body.style.overflow = 'hidden';
+
+        // 컴포넌트가 언마운트될 때(팝업이 닫힐 때) body 스크롤 복구
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+
+        const fetchPostDetail = async () => {
+            try {
+                console.log(`게시글 상세페이지 오픈!! PostId: ${postId}`);
+                // const response = await fetch(`/api/posts/${postId}`);
+                // const data = await response.json();
+                // setPost(data);
+            } catch (error) {
+                console.error('Failed to fetch post detail:', error);
+            }
+        };
+
+        fetchPostDetail();
+    }, [postId]);
 
     return (
-        <Container onClick={onClick}>
-            <PostListContainer>
+        <Container onClick={onClose}>
+            <PostListContainer onClick={e => e.stopPropagation()}>
             {/*    프로필사진 이름 작성일*/}
             {/*    row로 정렬하기!*/}
                 <UserContainer>
@@ -48,34 +73,39 @@ const PostList: React.FC<PostListProps> = ({onClick}) => {
     );
 };
 
-export default PostList;
+export default PostDetailPage;
 
-export const Container = styled.main`
+export const Container = styled.dialog`
     width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+    border: none;
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
-    flex-direction: column;
-    align-items: center;
     justify-content: center;
-    margin: 1rem 0;
-    transition: all 0.3s ease; // 모든 변화에 애니메이션 적용
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-
-    &:hover {
-        transform: translateY(-0.25rem);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
+    align-items: center;
+    z-index: 1000;
 `
 export const PostListContainer = styled.div`
+    width: 90%;
     max-width: 30rem;
-    padding: 0.5rem 2rem;
+    max-height: 90vh;
     border-radius: 10px;
+    padding: 20px;
     background-color: ${theme.colors.white};
+    overflow-y: auto;
 `
 export const UserContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-top: 1rem;
+    //margin-top: 1rem;
 `
 export const ProfileImage = styled.img`
     width: 100%;
