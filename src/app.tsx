@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
 import Header from "./components/Header";
 
 // 컴포넌트 임포트
@@ -21,6 +21,7 @@ const App: React.FC = () => {
                 <Header />
                 <main>
                     <Routes>
+                        <Route path="/" element={<Navigate to="/posts" replace />} />
                     {/*     auth*/}
                         <Route path="/login" element={<LoginPage />} />
                         <Route path="/signup" element={<SignUpPage />} />

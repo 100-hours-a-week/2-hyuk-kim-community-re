@@ -6,14 +6,17 @@ import iconUser from "@/assets/images/icon-user.svg";
 import logo from "@/assets/images/Logo.png";
 import PostListPage from "@/pages/PostListPage.tsx";
 import {theme} from "@/styles/theme.ts";
+import {Post} from "@/types/models/post.ts";
+import PostList from "@/components/PostList.tsx";
 
 interface PostDetailProps {
     postId: number;
-    onClose: () => void;
+    onClick: () => void;
 }
 
 const PostDetailPage: React.FC<PostDetailProps> = ({postId, onClose}) => {
     const [post, setPost] = useState<Post | null>(null);
+    const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
 
     useEffect(() => {
         // 팝업이 열릴 때 body 스크롤 막기
@@ -69,6 +72,16 @@ const PostDetailPage: React.FC<PostDetailProps> = ({postId, onClose}) => {
             {/*        <CommentContent>댓글 1개 보기...</CommentContent>*/}
                 </PostContainer>
             </PostListContainer>
+            <CommentListContainer>
+                {/*{post.commentList.map(comment => (*/}
+                {/*    <CommentList*/}
+                {/*        // key={comment.id}*/}
+                {/*        comment={comment}*/}
+                {/*        // onClick={() => setSelectedCommentId(comment.id)}*/}
+                {/*        onClick={() => setSelectedCommentId(1)}*/}
+                {/*    />*/}
+                {/*))}*/}
+            </CommentListContainer>
         </Container>
     );
 };
@@ -78,6 +91,10 @@ export default PostDetailPage;
 export const Container = styled.dialog`
     width: 100%;
     height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
     position: fixed;
     top: 0;
     left: 0;
@@ -87,10 +104,11 @@ export const Container = styled.dialog`
     padding: 0;
     border: none;
     background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
     z-index: 1000;
+    
+    @media (max-width: 640px) {
+        flex-direction: column;
+    }
 `
 export const PostListContainer = styled.div`
     width: 90%;
@@ -176,3 +194,9 @@ export const CommentContent = styled.p`
     color: ${theme.colors.gray5};
     margin-left: 0.5rem;
 `
+
+export const CommentListContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+`
+
