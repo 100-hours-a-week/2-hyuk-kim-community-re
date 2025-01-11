@@ -48,7 +48,7 @@ const PostListPage: React.FC = () => {
         <Container>
             <PostListPageContainer>
                 <UploadContainer>
-                    <UploadTitle>새 게시물 추가하기...</UploadTitle>
+                    <UploadTitle>안녕하세요! 잡담은 경쟁력 게시판입니다!</UploadTitle>
                     <UploadButton onClick={handlePostButton}>
                         <img src={uploadPostButton}/>
                     </UploadButton>
@@ -100,7 +100,7 @@ const UploadContainer = styled.main`
     display: flex;
     flex-direction: row;
     padding: 0.5rem 1rem;
-    margin: 0;
+    margin: 0 0 0.5rem 0;
     align-items: center;
     justify-content: center;
     border-radius: 10px;
@@ -108,12 +108,12 @@ const UploadContainer = styled.main`
     background: ${theme.colors.white};
 
     @media (max-width: 640px) {
-        width: 100%;
+        margin: 0.5rem 0;
     }
 `
 
 const UploadTitle = styled.span`
-    font-family: ${theme.font.thin};
+    font-family: ${theme.font.regular};
     color: ${theme.colors.gray5};
     margin-right: auto;
 `

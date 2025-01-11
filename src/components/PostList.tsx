@@ -63,12 +63,12 @@ export default PostList;
 
 export const Container = styled.main`
     max-width: 33rem;
-    width: calc(100% - 4rem);
+    width: calc(100% + 3rem);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: 0.3rem 0;
+    margin: 0.5rem 0;
     border-radius: 8px;
     padding: 1rem 0.5rem;
     background: ${theme.colors.white};
@@ -79,12 +79,16 @@ export const Container = styled.main`
         transform: translateY(-0.25rem);
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     }
+    
+    @media (max-width: 640px) {
+        margin: 0.5rem 0;
+    }
 `
 export const PostListContainer = styled.div`
     //margin: 0;
     //width: calc(100% - 4rem);
     width: 100%;
-    //padding: 1rem 2rem;
+    //padding: 1rem 0rem;
     //border-radius: 0px 15px 15px 15px;
 
 
@@ -133,7 +137,7 @@ export const BoardContainer = styled.div`
     justify-items: center;
     align-items: center;
 
-    padding: 0.5rem 1rem;
+    padding: 0.75rem 1rem;
     border-radius: 5px;
     
     background-color: ${theme.colors.gray1};
