@@ -15,7 +15,7 @@ export const updateUser = async (data: UpdateUserInfoRequest) => {
             console.log(`${key}: ${value}`);
         }
 
-        const response = await axios.patch<UpdateUserInfoResponse>(API_ENDPOINTS.UPDATE_USER, formData, {
+        const response = await axios.patch<UpdateUserInfoResponse>(API_ENDPOINTS.UPDATE_USER, data, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },

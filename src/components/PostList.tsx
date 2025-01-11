@@ -14,9 +14,6 @@ interface PostListProps {
 }
 
 const PostList: React.FC<PostListProps> = ({post, onClick}) => {
-    console.log("post: ", post);
-    console.log("postpost: ", post.post);
-    console.log("user: ", post.user);
 
     return (
         <Container onClick={onClick}>

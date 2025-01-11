@@ -64,7 +64,6 @@ const UpdateUserInfoPage: React.FC = () => {
                 image: files && files.length > 0 ? files[0] : ""
             };
 
-            console.log(request.image);
             const response = await updateUser(request);
 
             if (response) {
