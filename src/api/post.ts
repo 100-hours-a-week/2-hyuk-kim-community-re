@@ -22,7 +22,11 @@ export const getPosts = async (params: PaginationParams) => {
 
 export const createPost = async (params: CreatePostRequest) => {
     try {
-        const response = await axios.post(API_ENDPOINTS.POST_POST, params);
+        const response = await axios.post(API_ENDPOINTS.POST_POST, params, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
         return response.data;
     } catch (e) {
         console.error(e);

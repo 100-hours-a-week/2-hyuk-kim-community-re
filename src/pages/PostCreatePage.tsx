@@ -39,8 +39,8 @@ const PostCreatePage: React.FC = () => {
                 post: {
                     title: title,
                     content: content,
-                    image: files[0],
-                }
+                },
+                image: files[0],
             };
 
             const response = createPost(data);
