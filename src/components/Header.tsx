@@ -204,6 +204,8 @@ const ProfileButton = styled.button`
         align-self: center;
         justify-self: center;
         padding: 0;
+        border-radius: 50%;
+        object-fit: cover;
     }
 `
 
