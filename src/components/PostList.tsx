@@ -163,14 +163,10 @@ export const BoardContainer = styled.div`
     }
 `
 export const ImageContainer = styled.img`
-    width: 100%;
-    height: 100%;
-    max-width: 5rem;
-    max-height: 5rem;
+    width: 5rem;
+    height: 5rem;
     object-fit: cover;
     margin-right: 1rem;
-    //margin-top: 0.5rem;
-    //margin-bottom: 0;
     border-radius: 3px;
     
 `
@@ -222,6 +218,7 @@ export const PostContent = styled.p`
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+    white-space: pre-wrap;
 `
 export const CommentContent = styled.p`
     font-family: ${theme.font.light};

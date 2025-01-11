@@ -124,6 +124,7 @@ const SignUpPage: React.FC = () => {
                                 placeholder="이메일을 입력해주세요"
                                 validation={handleEmailValidation}
                                 required={true}
+                                maxLength={30}
                             />
                         </FormGroup>
 
@@ -136,6 +137,7 @@ const SignUpPage: React.FC = () => {
                                 placeholder="비밀번호를 입력해주세요"
                                 validation={handlePasswordValidation}
                                 required={true}
+                                maxLength={20}
                             />
                         </FormGroup>
 
@@ -148,6 +150,7 @@ const SignUpPage: React.FC = () => {
                                 placeholder="비밀번호를 한번 더 입력해주세요"
                                 validation={handlePasswordReValidation}
                                 required={true}
+                                maxLength={20}
                             />
                         </FormGroup>
 
@@ -160,6 +163,7 @@ const SignUpPage: React.FC = () => {
                                 placeholder="닉네임을 입력해주세요"
                                 validation={handleNicknameValidation}
                                 required={true}
+                                maxLength={10}
                             />
                         </FormGroup>
 

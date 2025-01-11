@@ -57,7 +57,7 @@ const LoginPage: React.FC = () => {
                     <WelcomeText>잡담으로 시작하는 새로운 경쟁력</WelcomeText>
 
                     <CardGrid>
-                        <Card href="/browse">
+                        <Card href="/posts">
                             <CardContent>
                                 <CardTitle>자유롭게</CardTitle>
                                 <CardDesc>둘러보기</CardDesc>
@@ -83,6 +83,7 @@ const LoginPage: React.FC = () => {
                                     placeholder="이메일을 입력해주세요"
                                     validation={handleEmailValidation}
                                     required={false}
+                                    maxLength={30}
                                 />
                             </FormGroup>
 
@@ -95,6 +96,7 @@ const LoginPage: React.FC = () => {
                                     placeholder="비밀번호를 입력해주세요"
                                     validation={handlePasswordValidation}
                                     required={false}
+                                    maxLength={20}
                                 />
                             </FormGroup>
 

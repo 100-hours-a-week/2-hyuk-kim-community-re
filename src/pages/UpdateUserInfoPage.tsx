@@ -127,6 +127,7 @@ const UpdateUserInfoPage: React.FC = () => {
                                 placeholder="기존 닉네임"
                                 validation={handleNicknameValidation}
                                 required={true}
+                                maxLength={10}
                             />
                         </FormGroup>
 

@@ -4,19 +4,24 @@ import {theme} from "@/styles/theme.ts";
 
 const InputField = ({
                         label,
-                        type = 'text',
+                        type,
                         value,
                         onChange,
                         placeholder,
                         validation,
                         required,
                         disabled = false,
+                        maxLength = 500,
+                        isTall = false,
                     }) => {
     const [helperText, setHelperText] = useState('');
     const [isHelperVisible, setIsHelperVisible] = useState(false);
 
     const handleChange = (e) => {
         const newValue = e.target.value;
+        if (maxLength && newValue.length > maxLength) {
+            return; // 최대 길이 초과시 입력 무시
+        }
         onChange(newValue);
 
         if (validation) {
@@ -29,6 +34,8 @@ const InputField = ({
     return (
         <InputGroup>
             <FormLabel required={required}>{label}</FormLabel>
+            <InputWrapper>
+
                 <FormInput
                     type={type}
                     value={value}
@@ -36,12 +43,18 @@ const InputField = ({
                     placeholder={placeholder}
                     disabled={disabled}
                     readOnly={disabled}
+                    maxLength={maxLength}
+                    $isTall={isTall}
                     />
+            {!disabled && <CharacterCount>
+                    {value ? value.length : 0}/{maxLength}
+                </CharacterCount>}
             {isHelperVisible && (
                 <HelperLabel style={{ visibility: 'visible' }}>
                 {helperText}
                 </HelperLabel>
             )}
+            </InputWrapper>
         </InputGroup>
 );
 };
@@ -67,18 +80,30 @@ const FormLabel = styled.label<{ required: boolean }>`
        }
    `}
 `;
-
-const FormInput = styled.input<{ disabled: boolean }>`
+const InputWrapper = styled.div`
+    position: relative;
+    width: 100%;
+`;
+const FormInput = styled.textarea<{ disabled: boolean, $isTall: boolean }>`
     width: 100%;
     max-height: 30px;
-    padding: 0.6rem 1rem;
+    padding: 0.6rem 1rem 2rem 1rem;
     border-radius: 0.5rem;
     border: 2px solid ${theme.colors.gray2};
     outline: none;
     transition: all 0.2s;
     box-sizing: border-box;
     font-size: 1rem;
-
+    white-space: pre-line;     // pre-wrap에서 pre-line으로 변경
+    word-break: break-all;     // 추가
+    overflow-wrap: break-word; // 추가
+    resize: none;              // 추가 (사용자가 크기 조절하는 것을 방지)
+    
+    
+  ${props => props.$isTall && `
+    max-height: 10rem;
+    height: 10rem;
+  `}
     
   ${props => props.disabled && `
     cursor: not-allowed;
@@ -91,7 +116,13 @@ const FormInput = styled.input<{ disabled: boolean }>`
         box-shadow: 0 0 0 4px rgba(0, 197, 150, 0.1);
     }
 `;
-
+const CharacterCount = styled.span`
+    position: absolute;
+    bottom: 8px;
+    right: 12px;
+    font-size: 0.875rem;
+    color: ${theme.colors.gray4};
+`;
 const HelperLabel = styled.label`
     margin: 0;
     margin-top: 0.4rem;

@@ -24,12 +24,6 @@ const PostCreatePage: React.FC = () => {
 
     }, []);
 
-    const handleContentChange = (e) => {
-        if (content.length <= 500) {
-            setContent(content);
-        }
-    };
-
     const handlePostButton = async () => {
         try {
             console.log("게시글 작성 버튼 클릭!");
@@ -47,7 +41,7 @@ const PostCreatePage: React.FC = () => {
                 image: files[0],
             };
 
-            const response = createPost(data);
+            const response = await createPost(data);
             if (response) {
                 navigate('/posts');
             }
@@ -103,6 +97,7 @@ const PostCreatePage: React.FC = () => {
                 placeholder="제목을 입력해주세요"
                 // validation={handleEmailValidation}
                 required={true}
+                maxLength={26}
             />
             {/*내용 ==> 크기가 좀 커야함!*/}
             <ContentInputWrapper>
@@ -113,6 +108,8 @@ const PostCreatePage: React.FC = () => {
                 onChange={setContent}
                 placeholder="내용을 입력해주세요"
                 required={true}
+                maxLength={300}
+                isTall={true}
             />
             </ContentInputWrapper>
 

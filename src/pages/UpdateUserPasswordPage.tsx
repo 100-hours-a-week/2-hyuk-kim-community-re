@@ -62,6 +62,7 @@ const UpdateUserPasswordPage: React.FC = () => {
                                 placeholder="변경할 비밀번호를 입력해주세요"
                                 validation={handlePasswordValidation}
                                 required={true}
+                                maxLength={20}
                             />
                         </FormGroup>
 
@@ -74,6 +75,7 @@ const UpdateUserPasswordPage: React.FC = () => {
                                 placeholder="변경할 비밀번호를 한번 더 입력해주세요"
                                 validation={handlePasswordReValidation}
                                 required={true}
+                                maxLength={20}
                             />
                         </FormGroup>
 
