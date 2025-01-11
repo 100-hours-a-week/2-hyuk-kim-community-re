@@ -9,6 +9,10 @@ import iconUpload from "@/assets/images/icon-upload.svg";
 import iconDelete from "@/assets/images/icon-delete.svg";
 import logo from "@/assets/images/Logo.png";
 import {useNavigate} from "react-router-dom";
+import {createPost} from "@/api/post.ts";
+import {SignupRequest} from "@/types/models/auth.ts";
+import {CreatePostRequest} from "@/types/models/post.ts";
+import {post} from "axios";
 
 const PostCreatePage: React.FC = () => {
     const [title, setTitle] = React.useState("");
@@ -23,7 +27,29 @@ const PostCreatePage: React.FC = () => {
     };
 
     const handlePostButton = async () => {
-        console.log("게시글 작성 버튼 클릭!");
+        try {
+            console.log("게시글 작성 버튼 클릭!");
+            const files = fileInputRef.current?.files;
+            if (!files || files.length === 0) {
+                alert('프로필 이미지를 선택해주세요.');
+                return;
+            }
+
+            const data: CreatePostRequest = {
+                post: {
+                    title: title,
+                    content: content,
+                    image: files[0],
+                }
+            };
+
+            const response = createPost(data);
+            if (response) {
+                navigate('/posts');
+            }
+        } catch (e) {
+            console.error(e);
+        }
     }
 
     const handleBackButton = async () => {

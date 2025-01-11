@@ -5,279 +5,40 @@ import {theme} from "@/styles/theme.ts";
 import uploadPostButton from "@/assets/images/icon-upload-post.svg"
 import {useNavigate} from "react-router-dom";
 import PostDetailPage from "@/pages/PostDetailPage.tsx";
-import {Post} from '@/types/models/post.ts'
+import {GetPosts, Post} from '@/types/models/post.ts'
+import {login} from "@/api/auth.ts";
+import {getPosts} from "@/api/post.ts";
 
 const PostListPage: React.FC = () => {
     const navigate = useNavigate();
-    const [posts, setPosts] = useState<Post[]>([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const POSTS_PER_PAGE = 10;
+
+    const [posts, setPosts] = useState<GetPosts[]>([]);
     const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
 
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                // 또는 여러 게시글 데이터
-                setPosts([
-                    {
-                        id: 1,
-                        title: '첫번째 게시글입니다',
-                        content: '안녕하세요! 첫 번째 게시글의 내용입니다. 오늘 날씨가 정말 좋네요.',
-                        countLike: 15,
-                        image: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg',
-                        user: {
-                            nickname: '행복한하루',
-                            profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                        },
-                        commentList: [
-                            {
-                                user: {
-                                    nickname: '사용자1',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 13:20'
-                            },
-                            {
-                                user: {
-                                    nickname: '댓글러2',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 13:25'
-                            },
-                            {
-                                user: {
-                                    nickname: '행복한하루',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 13:30'
-                            },
-                            {
-                                user: {
-                                    nickname: '구름나그네',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 13:35'
-                            },
-                            {
-                                user: {
-                                    nickname: '바람돌이',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 13:40'
-                            },
-                            {
-                                user: {
-                                    nickname: '달빛산책',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 13:45'
-                            },
-                            {
-                                user: {
-                                    nickname: '별님달님',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 13:50'
-                            },
-                            {
-                                user: {
-                                    nickname: '해피데이',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 13:55'
-                            },
-                            {
-                                user: {
-                                    nickname: '꿈나무',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 14:00'
-                            },
-                            {
-                                user: {
-                                    nickname: '햇살가득',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 14:05'
-                            }
-                        ]
-                    },
-                    {
-                        id: 2,
-                        title: '오늘의 맛집 추천',
-                        content: '맛있는 음식점을 소개합니다. 가성비도 좋고 분위기도 좋아요!',
-                        countLike: 23,
-                        image: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg',
-                        user: {
-                            nickname: '맛집탐험가',
-                            profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                        },
-                        commentList: [
-                            {
-                                user: {
-                                    nickname: '맛집탐험가',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 15:10'
-                            },
-                            {
-                                user: {
-                                    nickname: '미식가',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 15:15'
-                            },
-                            {
-                                user: {
-                                    nickname: '푸드러버',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 15:20'
-                            },
-                            {
-                                user: {
-                                    nickname: '맛있는인생',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 15:25'
-                            },
-                            {
-                                user: {
-                                    nickname: '먹방여신',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 15:30'
-                            },
-                            {
-                                user: {
-                                    nickname: '디저트킹',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 15:35'
-                            },
-                            {
-                                user: {
-                                    nickname: '카페홀릭',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 15:40'
-                            },
-                            {
-                                user: {
-                                    nickname: '음식사진사',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 15:45'
-                            },
-                            {
-                                user: {
-                                    nickname: '맛집매니아',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 15:50'
-                            },
-                            {
-                                user: {
-                                    nickname: '먹방도사',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 15:55'
-                            }
-                        ]
-                    },
-                    {
-                        id: 3,
-                        title: '취미 공유해요',
-                        content: '저의 취미는 등산입니다. 주말마다 산에 오르는게 정말 좋아요.',
-                        countLike: 8,
-                        image: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg',
-                        user: {
-                            nickname: '산사랑',
-                            profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                        },
-                        commentList: [
-                            {
-                                user: {
-                                    nickname: '산사랑',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 16:10'
-                            },
-                            {
-                                user: {
-                                    nickname: '등산왕',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 16:15'
-                            },
-                            {
-                                user: {
-                                    nickname: '자연인',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 16:20'
-                            },
-                            {
-                                user: {
-                                    nickname: '트레킹맨',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 16:25'
-                            },
-                            {
-                                user: {
-                                    nickname: '산악인',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 16:30'
-                            },
-                            {
-                                user: {
-                                    nickname: '등린이',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 16:35'
-                            },
-                            {
-                                user: {
-                                    nickname: '산돌이',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 16:40'
-                            },
-                            {
-                                user: {
-                                    nickname: '정상정복',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 16:45'
-                            },
-                            {
-                                user: {
-                                    nickname: '산행러버',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 16:50'
-                            },
-                            {
-                                user: {
-                                    nickname: '등산스타',
-                                    profile: 'https://ktb-community-storage.s3.ap-northeast-2.amazonaws.com/image/profile/b7e4ff7c-fbda-4325-ba4b-f06478996907.jpeg'
-                                },
-                                date: '2024.01.08 16:55'
-                            }
-                        ]
-                    }
-                ]);
+                const response = await getPosts({
+                    page: currentPage,
+                    limit: POSTS_PER_PAGE
+                });
 
-                // const response = await fetch('/api/posts');
-                // const data = await response.json();
-                // setPosts(data);
+                if (currentPage === 1) {
+                    setPosts(response.posts);
+                } else {
+                    setPosts(prev => [...prev, ...response.posts]); // 인수 타입 (prev: any) => (PostList | GetPosts)[] 을(를) 매개변수 타입 ((prevState: PostList[]) => PostList[]) | PostList[] 에 할당할 수 없습니다
+                }
+                setHasMore(response.hasMore);
             } catch (error) {
                 console.error('Failed to fetch posts:', error);
             }
         };
 
         fetchPosts();
-    }, []);
+    }, [currentPage]);
 
     const handlePostButton = async () => {
         navigate("/posts/create");

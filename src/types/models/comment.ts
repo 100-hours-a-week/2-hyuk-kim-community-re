@@ -4,4 +4,6 @@ export interface Comment {
     id: number;
     date: string;
     user: Pick<User, 'nickname' | 'profile'>;
+    isAuthorComments: boolean;
+    isMyComment: boolean;
 }
