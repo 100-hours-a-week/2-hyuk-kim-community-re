@@ -11,7 +11,7 @@ interface PrimaryButtonLargeProps {
 
 const PrimaryButtonLarge = ({
                         $isEnabled,
-                        className,
+                        text,
                         type,
                         onClick,
                     }) => {
@@ -20,10 +20,11 @@ const PrimaryButtonLarge = ({
         <LoginButton
             $isEnabled={$isEnabled}
             onClick={onClick}
-            className={className}
+            className={text}
+            disabled={!$isEnabled}
             type={type}
         >
-            <span>{className}</span>
+            <span>{text}</span>
         </LoginButton>
 );
 };

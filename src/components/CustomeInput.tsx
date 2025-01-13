@@ -34,7 +34,7 @@ const InputField = ({
     return (
         <InputGroup>
             <FormLabel required={required}>{label}</FormLabel>
-            <InputWrapper>
+            <InputWrapper $hasHelper={isHelperVisible}>
 
                 <FormInput
                     type={type}
@@ -80,14 +80,15 @@ const FormLabel = styled.label<{ required: boolean }>`
        }
    `}
 `;
-const InputWrapper = styled.div`
+const InputWrapper = styled.div<{ $hasHelper: boolean }>`
     position: relative;
     width: 100%;
+    margin-bottom: ${props => props.$hasHelper ? '2rem' : '0'};
 `;
 const FormInput = styled.textarea<{ disabled: boolean, $isTall: boolean }>`
     width: 100%;
     max-height: 30px;
-    padding: 0.6rem 1rem 2rem 1rem;
+    padding: 0.6rem 1rem 1.8rem 1rem;
     border-radius: 0.5rem;
     border: 2px solid ${theme.colors.gray2};
     outline: none;
@@ -118,15 +119,15 @@ const FormInput = styled.textarea<{ disabled: boolean, $isTall: boolean }>`
 `;
 const CharacterCount = styled.span`
     position: absolute;
-    bottom: 8px;
-    right: 12px;
+    bottom: 0.5rem;
+    right: 1rem;
     font-size: 0.875rem;
     color: ${theme.colors.gray4};
 `;
 const HelperLabel = styled.label`
-    margin: 0;
-    margin-top: 0.4rem;
-    padding-left: 1rem;
+    position: absolute;
+    bottom: -1rem;
+    left: 0;
     color: red;
     font-size: 0.875rem;
 `

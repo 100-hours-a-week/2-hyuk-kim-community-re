@@ -133,7 +133,7 @@ const UpdateUserInfoPage: React.FC = () => {
 
                         <PrimaryButtonLarge
                             $isEnabled={updateProfile || checkNickname}
-                            className={"회원정보 수정"}
+                            text={"회원정보 수정"}
                             type={"button"}
                             onClick={handleUpdateUser}
                         />

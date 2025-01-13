@@ -102,7 +102,7 @@ const LoginPage: React.FC = () => {
 
                             <PrimaryButtonLarge
                                 $isEnabled={checkEmail && checkPassword}
-                                className={"로그인"}
+                                text={"로그인"}
                                 type={"button"}
                                 onClick={handleLogin}
                             />

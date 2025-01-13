@@ -27,19 +27,16 @@ const PostCreatePage: React.FC = () => {
     const handlePostButton = async () => {
         try {
             console.log("게시글 작성 버튼 클릭!");
-            const files = fileInputRef.current?.files;
-            if (!files || files.length === 0) {
-                alert('프로필 이미지를 선택해주세요.');
-                return;
-            }
 
             const data: CreatePostRequest = {
-                post: {
-                    title: title,
+            post: {
+                title: title,
                     content: content,
-                },
-                image: files[0],
-            };
+            },
+                ...(fileInputRef.current?.files?.[0] && {
+                image: fileInputRef.current.files[0]
+            })
+        };
 
             const response = await createPost(data);
             if (response) {
@@ -85,6 +82,7 @@ const PostCreatePage: React.FC = () => {
                 {!preview && <img src={iconUploadImage} alt=""/>}
                 {!preview && <ProfileUploadText>클릭해서 사진을 업로드해주세요</ProfileUploadText>}
                 {!preview && <ProfileTypeText>PNG, JPG, GIF (최대 10MB)</ProfileTypeText>}
+                {/*{!preview && <ProfileHelperText>(사진은 1:1 비율로 조정됩니다)</ProfileHelperText>}*/}
             </ProfileContainer>
 
 
@@ -121,7 +119,7 @@ const PostCreatePage: React.FC = () => {
                 />
                 <PrimaryButtonLarge
                     $isEnabled={title && content}
-                    className={"작성하기"}
+                    text={"작성하기"}
                     type={"button"}
                     onClick={handlePostButton}
                 />
@@ -249,6 +247,22 @@ export const ProfileTypeText = styled.span`
     justify-content: center; /* 수평 중앙 정렬 */
     text-align: center;
     font-size: 0.8rem;
+    color: ${theme.colors.gray5};
+    
+    @media (max-width: 640px) {
+        width: 15rem;
+        height: 15rem;
+    }
+`
+
+export const ProfileHelperText = styled.span`
+    width: 100%;
+    display: flex;           /* Flex 컨테이너로 설정 */
+    align-items: center;     /* 수직 중앙 정렬 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    text-align: center;
+    font-size: 0.7rem;
+    margin-top: 0.1rem;
     color: ${theme.colors.gray5};
     
     @media (max-width: 640px) {

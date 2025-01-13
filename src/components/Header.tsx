@@ -16,6 +16,7 @@ const Header: React.FC = () => {
     const buttonProfileRef = useRef<HTMLButtonElement>(null!);
     const menuRef = useRef<HTMLDivElement>(null!);
     const isLoginPage = window.location.pathname === '/login';
+    const isLoggedIn = !!sessionStorage.getItem(STORAGE_KEYS.USER_ID);
 
     useEffect(() => {
         const storedProfile = sessionStorage.getItem('profile');
@@ -80,27 +81,42 @@ const Header: React.FC = () => {
                         </GithubLink>
                     ) : (
                         <TempContainer>
-                            <WelcomeText>반가워요!</WelcomeText>
-                            <ProfileButton ref={buttonProfileRef} onClick={handleProfileClick}>
-                                <img src={profileImage as string} alt="profile" />
-                            </ProfileButton>
-                            {isMenuVisible && (
-                                <MenuContainer ref={menuRef}>
-                                    <MenuItem onClick={() => handleMenuClick('settings/profile')}>
-                                        회원정보 수정
-                                    </MenuItem>
-                                    <MenuItem onClick={() => handleMenuClick('settings/password')}>
-                                        비밀번호 수정
-                                    </MenuItem>
-                                    <MenuDivider />
-                                    <MenuItem onClick={() => {
-                                        sessionStorage.removeItem(STORAGE_KEYS.USER_ID);
-                                        sessionStorage.removeItem(STORAGE_KEYS.USER_PROFILE_IMAGE);
-                                        handleMenuClick('login')
-                                    }}>
-                                        로그아웃
-                                    </MenuItem>
-                                </MenuContainer>
+                            {isLoggedIn ? (
+                                <>
+                                    <WelcomeText>반가워요!</WelcomeText>
+                                    <ProfileButton ref={buttonProfileRef} onClick={handleProfileClick}>
+                                        <img src={profileImage as string} alt="profile" />
+                                    </ProfileButton>
+                                    {isMenuVisible && (
+                                        <MenuContainer ref={menuRef}>
+                                            <MenuItem onClick={() => handleMenuClick('settings/profile')}>
+                                                회원정보 수정
+                                            </MenuItem>
+                                            <MenuItem onClick={() => handleMenuClick('settings/password')}>
+                                                비밀번호 수정
+                                            </MenuItem>
+                                            <MenuDivider />
+                                            <MenuItem onClick={() => {
+                                                sessionStorage.removeItem(STORAGE_KEYS.USER_ID);
+                                                sessionStorage.removeItem(STORAGE_KEYS.USER_PROFILE_IMAGE);
+                                                handleMenuClick('login')
+                                            }}>
+                                                로그아웃
+                                            </MenuItem>
+                                        </MenuContainer>
+                                    )}
+                                </>
+                            ) : (
+                                <ProfileButton ref={buttonProfileRef} onClick={handleProfileClick}>
+                                    <img src={defaultProfile} alt="profile" />
+                                    {isMenuVisible && (
+                                        <MenuContainer ref={menuRef}>
+                                            <MenuItem onClick={() => handleMenuClick('login')}>
+                                                로그인
+                                            </MenuItem>
+                                        </MenuContainer>
+                                    )}
+                                </ProfileButton>
                             )}
                         </TempContainer>
                     )}

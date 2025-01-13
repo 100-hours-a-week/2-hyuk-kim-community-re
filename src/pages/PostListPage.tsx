@@ -44,6 +44,10 @@ const PostListPage: React.FC = () => {
         navigate("/posts/create");
     }
 
+    const handlePostDetail = async (postId: number) => {
+        navigate(`/posts/${postId}`);
+    }
+
     return (
         <Container>
             <PostListPageContainer>
@@ -58,15 +62,15 @@ const PostListPage: React.FC = () => {
                     <PostList
                         key={post.id}
                         post={post}
-                        onClick={() => setSelectedPostId(post.id)}
+                        onClick={() => handlePostDetail(post.id)}
                     />
                 ))}
-                {selectedPostId && (
-                    <PostDetailPage
-                        postId={selectedPostId}
-                        onClose={() => setSelectedPostId(null)}
-                    />
-                )}
+                {/*{selectedPostId && (*/}
+                {/*    <PostDetailPage*/}
+                {/*        postId={selectedPostId}*/}
+                {/*        onClose={() => setSelectedPostId(null)}*/}
+                {/*    />*/}
+                {/*)}*/}
             </PostListPageContainer>
         </Container>
     );

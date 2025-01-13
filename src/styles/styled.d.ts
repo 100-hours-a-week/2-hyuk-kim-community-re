@@ -24,9 +24,6 @@ declare module 'styled-components' {
             // Active Colors
             activeBlue: string;
             activeRed: string;
-
-            // before primary Colors
-            background: string;
         };
         media: {
             large_tablet: string;

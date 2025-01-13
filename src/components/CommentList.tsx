@@ -8,59 +8,44 @@ import PostListPage from "@/pages/PostListPage.tsx";
 import {theme} from "@/styles/theme.ts";
 import {GetPosts, Post} from "@/types/models/post.ts";
 import {DateFormatter} from "@/utils/DateFormatter.ts";
+import {Comment} from "@/types/models/comment.ts";
 
-interface PostListProps {
-    post: GetPosts;
-    onClick: () => void;
+interface CommentListProps {
+    comment: Comment;
 }
 
-const PostList: React.FC<PostListProps> = ({post, onClick}) => {
+const CommentList: React.FC<CommentListProps> = ({comment}) => {
 
     return (
-        <Container onClick={onClick}>
+        <Container>
                 <UserContainer>
                     <UserContent>
-                        <ProfileImage src={post.user.profile}/>
-                        <UserNickname>{post.user.nickname}</UserNickname>
+                        <ProfileImage src={comment.user.profile}/>
+                        <UserNickname>{comment.user.nickname}</UserNickname>
+                        <PostDate>{DateFormatter.toRelativeTime(comment?.date)}</PostDate>
                     </UserContent>
                 </UserContainer>
-            <PostListContainer>
-                {/*    프로필사진 이름 작성일*/}
-                {/*    row로 정렬하기!*/}
-                {/*    이미지*/}
 
-                <BoardContainer>
-                    {post.image &&
-                        <ImageContainer src={post.image} alt="게시글이미지"/>
-                    }
-                    {/*    제목 및 내용(1줄)*/}
-                    <PostContainer>
-                        {/*    제목*/}
-                        <PostTitle>{post.title}</PostTitle>
-                        {/*    내용*/}
-                        <PostContent>{post.content}</PostContent>
-                        {/*    댓글*/}
-                        {/*        <CommentContent>댓글 1개 보기...</CommentContent>*/}
-                    </PostContainer>
-                </BoardContainer>
-                {/*<DivisionLine />*/}
+            <PostContent>{comment.content}</PostContent>
+
+            <PostListContainer>
 
                 {/*    좋아요 댓글 등 ~*/}
-                <PostMetaDataContent>
-                    {/*<PostDate>${post.date}</PostDate>*/}
-                    <PostDate>{DateFormatter.toRelativeTime(post.createat)}</PostDate>
-                    <LikeImg src={like as string} alt=""/>
-                    <LikeCount> {post.countLike}</LikeCount>
-                    <CommentImg src={comment as string} alt=""/>
-                    <CommentCount> {post.countComments}</CommentCount>
-                </PostMetaDataContent>
+                {/*<PostMetaDataContent>*/}
+                {/*    /!*<PostDate>${post.date}</PostDate>*!/*/}
+                {/*    <PostDate>{DateFormatter.toRelativeTime(comment.createat)}</PostDate>*/}
+                {/*    <LikeImg src={like as string} alt=""/>*/}
+                {/*    <LikeCount> {comment.countLike}</LikeCount>*/}
+                {/*    <CommentImg src={comment as string} alt=""/>*/}
+                {/*    <CommentCount> {comment.countComments}</CommentCount>*/}
+                {/*</PostMetaDataContent>*/}
 
             </PostListContainer>
         </Container>
     );
 };
 
-export default PostList;
+export default CommentList;
 
 export const Container = styled.main`
     max-width: 33rem;
@@ -72,9 +57,6 @@ export const Container = styled.main`
     margin: 0.5rem 0;
     border-radius: 8px;
     padding: 1rem 0.5rem;
-    background: ${theme.colors.white};
-    transition: all 0.3s ease; // 모든 변화에 애니메이션 적용
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
     &:hover {
         transform: translateY(-0.25rem);

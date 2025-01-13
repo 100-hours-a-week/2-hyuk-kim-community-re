@@ -24,9 +24,6 @@ export const theme: DefaultTheme = {
 
         white: '#fff',
         black: '#000',
-
-        // Before Primary Colors
-        background: '#F3F6F6',
     },
 
     media: {

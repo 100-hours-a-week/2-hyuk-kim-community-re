@@ -169,7 +169,7 @@ const SignUpPage: React.FC = () => {
 
                         <PrimaryButtonLarge
                             $isEnabled={checkEmail && checkPassword && checkPasswordRe && checkNickname}
-                            className={"회원가입"}
+                            text={"회원가입"}
                             type={"button"}
                             onClick={handleSignup}
                         />

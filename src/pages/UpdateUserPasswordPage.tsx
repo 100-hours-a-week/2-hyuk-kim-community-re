@@ -81,7 +81,7 @@ const UpdateUserPasswordPage: React.FC = () => {
 
                         <PrimaryButtonLarge
                             $isEnabled={checkPassword && checkPasswordRe}
-                            className={"비밀번호수정"}
+                            text={"비밀번호수정"}
                             type={"button"}
                             onClick={handleUpdatePassword}
                         />

@@ -8,6 +8,8 @@ export interface Post {
     countLike: number;
     isLike: boolean;
     image: string;
+    countView: number;
+    createat: string;
     user: Pick<User, 'nickname' | 'profile'>;
     commentList: Comment[];
     isMyPost: boolean;
@@ -25,5 +27,10 @@ export interface GetPosts {
 
 export interface CreatePostRequest {
     post: Pick<Post, 'title' | 'content'>;
-    image: File;
+    image?: File;
+}
+
+export interface CreateCommentRequest {
+    postId: number;
+    content: string;
 }

@@ -7,13 +7,13 @@ export const API_ENDPOINTS = {
     UPDATE_PASSWORD: 'api/users/password',
 
     GET_POSTS: 'api/posts',
-    GET_POST: '/posts/:postId',
-    GET_POST_EDIT: '/posts/:postId/edit',
+    GET_POST: 'api/posts/:postId',
+    GET_POST_EDIT: '/apiposts/:postId/edit',
     POST_POST: 'api/posts',
-    PATCH_POST: '/posts/:postId',
-    DELETE_POST: '/posts/:postId',
+    PATCH_POST: 'api/posts/:postId',
+    DELETE_POST: 'api/posts/:postId',
 
     POST_COMMENT: 'api/comments',
-    PATCH_COMMENT: '/comments/:commentId',
-    DELETE_COMMENT: '/comments/:commentId',
+    PATCH_COMMENT: 'api/comments/:commentId',
+    DELETE_COMMENT: 'api/comments/:commentId',
 } as const;

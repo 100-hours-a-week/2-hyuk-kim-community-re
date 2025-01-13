@@ -23,7 +23,7 @@ export const GlobalStyle = createGlobalStyle`
         padding: 0;
         box-sizing: border-box;
         background-size: cover;
-        background: ${theme.colors.background};
+        background: ${theme.colors.gray1};
         -ms-overflow-style: none;
 
         ::-webkit-scrollbar {
