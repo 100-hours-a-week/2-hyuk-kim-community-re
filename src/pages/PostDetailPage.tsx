@@ -19,7 +19,7 @@ import CommentList from "@/components/CommentList.tsx";
 
 const PostDetailPage: React.FC = () => {
     const [post, setPost] = useState<Post | null>(null);
-    const [commentContent, setCommentContent] = useState<Comment | null>(null);
+    const [commentContent, setCommentContent] = useState<string>(null);
     const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
     const { postId } = useParams();
 
@@ -50,7 +50,18 @@ const PostDetailPage: React.FC = () => {
                 const response = await createComment(body);
                 const data = await response;
 
-                post?.commentList.push(data);
+
+                // 상태 업데이트를 올바르게 수정
+                setPost(prevPost => {
+                    if (!prevPost) return null;
+                    return {
+                        ...prevPost,
+                        commentList: [...prevPost.commentList, data]
+                    }
+                });
+
+                // 댓글 입력 필드 초기화
+                setCommentContent('');
             } catch (error) {
                 console.error('Failed to fetch post detail:', error);
             }
@@ -113,7 +124,7 @@ const PostDetailPage: React.FC = () => {
                 </PostContainer>
             </PostListContainer>
             <CommentListContainer>
-                <CommentListTitle>댓글</CommentListTitle>
+                <CommentListTitle>댓글 ({post?.commentList.length})</CommentListTitle>
                 {post?.commentList.map(comment => (
                     <CommentList
                         // key={comment.id}

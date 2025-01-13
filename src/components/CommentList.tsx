@@ -19,14 +19,17 @@ const CommentList: React.FC<CommentListProps> = ({comment}) => {
     return (
         <Container>
                 <UserContainer>
-                    <UserContent>
-                        <ProfileImage src={comment.user.profile}/>
-                        <UserNickname>{comment.user.nickname}</UserNickname>
-                        <PostDate>{DateFormatter.toRelativeTime(comment?.date)}</PostDate>
-                    </UserContent>
+                    <ProfileImage src={comment.user.profile}/>
+                    <ContentContainer>
+                        <UserContent>
+                            <UserNickname>{comment.user.nickname}</UserNickname>
+                            <AuthorTag>작성자</AuthorTag>
+                            <PostDate>{DateFormatter.toRelativeTime(comment?.date)}</PostDate>
+                        </UserContent>
+                        <PostContent>{comment.content}</PostContent>
+                    </ContentContainer>
                 </UserContainer>
 
-            <PostContent>{comment.content}</PostContent>
 
             <PostListContainer>
 
@@ -48,39 +51,30 @@ const CommentList: React.FC<CommentListProps> = ({comment}) => {
 export default CommentList;
 
 export const Container = styled.main`
-    max-width: 33rem;
-    width: calc(100% + 3rem);
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin: 0.5rem 0;
-    border-radius: 8px;
-    padding: 1rem 0.5rem;
 
-    &:hover {
-        transform: translateY(-0.25rem);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
-    
     @media (max-width: 640px) {
         margin: 0.5rem 0;
     }
 `
 export const PostListContainer = styled.div`
-    //margin: 0;
-    //width: calc(100% - 4rem);
     width: 100%;
-    //padding: 1rem 0rem;
-    //border-radius: 0px 15px 15px 15px;
-
-
-
 `
 export const UserContainer = styled.div`
     width: 100%;
     display: flex;
     flex-direction: row;
+    //margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+`
+export const ContentContainer = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     //margin-top: 1.5rem;
     margin-bottom: 0.75rem;
 `
@@ -104,88 +98,27 @@ export const ProfileImage = styled.img`
 `
 export const UserNickname = styled.span`
     font-family: ${theme.font.regular};
+    margin-right: 0.5rem;
     //font-size: 0.9rem;
 `
-export const BoardContainer = styled.div`
-    display: flex;
-    flex-direction: row;
-    justify-items: center;
-    align-items: center;
-
-    padding: 0.75rem 1rem;
-    border-radius: 5px;
-    
-    background-color: ${theme.colors.gray1};
-
-    position: relative;
-
-    // 꼬리! => 주석는 작성자용!
-    &:before {
-        content: '';
-        position: absolute;
-        top: -1rem;
-        left: 0.5rem; // 꼬리 위치 조절
-        //right: 0.5rem; // 꼬리 위치 조절
-        width: 0;
-        height: 2px;
-        border-left: 0.75rem solid transparent;
-        border-right: 1rem solid transparent;
-        //border-right: 1rem solid transparent;
-        //border-left: 3rem solid transparent;
-        //border-bottom: 2rem solid white;
-        border-bottom: 1rem solid ${theme.colors.gray1};
-        border-bottom: 1rem solid ${theme.colors.gray1};
-    }
-`
-export const ImageContainer = styled.img`
-    width: 5rem;
-    height: 5rem;
-    object-fit: cover;
-    margin-right: 1rem;
-    border-radius: 3px;
-    
-`
-
-export const PostContainer = styled.div``
-export const PostMetaDataContent = styled.div`
-    display: flex;
-    justify-content: start;
-    align-items: end;
-    padding: 0.5rem 0.5rem 0 0.5rem;
+export const AuthorTag = styled.span`
+    font-family: ${theme.font.regular};
+    padding: 1px 4px;
+    background-color: ${theme.colors.seaGreenDark2};  // 민트 계열 연한 배경색
+    color: ${theme.colors.white};  // 민트 계열 글자색
+    border-radius: 4px;
+    font-size: 0.75rem;
+    margin-right: 0.5rem;
 `
 export const PostDate = styled.span`
     font-family: ${theme.font.light};
-    color: ${theme.colors.gray4};
-    font-size: 0.9rem;
-    margin-right: auto;
+    color: ${theme.colors.gray5};
+    font-size: 0.8rem;
     align-self: center;
 `
-export const LikeImg = styled.img`
-    width: 1.2rem;
-    height: 1.2rem;
-`
-export const CommentImg = styled.img`
-    width: 1.2rem;
-    height: 1.2rem;
-`
-export const LikeCount = styled.span`
-    font-family: ${theme.font.regular};
-    font-size: 0.9rem;
-    margin-right: 0.5rem;
-`
-export const CommentCount = styled.span`
-    font-family: ${theme.font.regular};
-    font-size: 0.9rem;
-    //margin-right: 0.5rem;
-`
-export const PostTitle = styled.p`
-    font-size: 0.9rem;
-    font-family: ${theme.font.bold};
-    margin: 1rem 0 1rem 0.5rem;
-`
-export const PostContent = styled.p`
+export const PostContent = styled.span`
     width: 100%;
-    margin-left: 0.5rem;
+    margin-top: 0.5rem;
     font-size: 0.9rem;
     font-family: ${theme.font.regular};
     color: ${theme.colors.gray5};
@@ -197,9 +130,4 @@ export const PostContent = styled.p`
     word-break: break-word; // 단어 단위로 줄바꿈
     white-space: normal;    // pre-wrap에서 normal로 변경
     line-height: 1.2em;     // 줄 높이 추가
-`
-export const CommentContent = styled.p`
-    font-family: ${theme.font.light};
-    color: ${theme.colors.gray5};
-    margin-left: 0.5rem;
 `
