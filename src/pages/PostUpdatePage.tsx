@@ -9,40 +9,53 @@ import iconUpload from "@/assets/images/icon-upload.svg";
 import iconUploadImage from "@/assets/images/icon-upload-image.svg";
 import iconDelete from "@/assets/images/icon-delete.svg";
 import logo from "@/assets/images/Logo.png";
-import {useNavigate} from "react-router-dom";
-import {createPost} from "@/api/post.ts";
+import {useLocation, useNavigate} from "react-router-dom";
+import {createPost, updatePost} from "@/api/post.ts";
 import {SignupRequest} from "@/types/models/auth.ts";
-import {CreatePostRequest} from "@/types/models/post.ts";
+import {CreatePostRequest, UpdatePostRequest} from "@/types/models/post.ts";
 import {post} from "axios";
-import CustomTextArea from "@/components/CustomTextArea.tsx";
 import CustomeTextArea from "@/components/CustomeTextArea.tsx";
 
-const PostCreatePage: React.FC = () => {
-    const [title, setTitle] = React.useState("");
-    const [content, setContent] = React.useState("");
+const PostUpdatePage: React.FC = () => {
+    const location = useLocation();
+    const [post, setPost] = React.useState<UpdatePostRequest | null>(location.state);
     const navigate = useNavigate();
-
     useEffect(() => {
+        console.log(post);
+        if (!location.state || !location.state.post.id) {
+            alert('잘못된 접근입니다');
+            navigate('/'); // 홈으로 리다이렉트
+            return;
+        }
 
+        if (post?.post?.content) {
+            const normalizedContent = post.post.content
+                .replace(/\r\n/g, '\n')  // \r\n을 \n으로 변환
+                .replace(/\r/g, '\n');   // 혹시 모를 단독 \r도 \n으로 변환
+
+            setPost(prev => prev ? {
+                ...prev,
+                post: {
+                    ...prev.post,
+                    content: normalizedContent
+                }
+            } : null);
+        }
+
+        if (post?.image) {
+            setPreview(post?.image);
+        }
     }, []);
 
-    const handlePostButton = async () => {
+    const handleUpdateButton = async () => {
         try {
             console.log("게시글 작성 버튼 클릭!");
 
-            const data: CreatePostRequest = {
-            post: {
-                title: title,
-                    content: content,
-            },
-                ...(fileInputRef.current?.files?.[0] && {
-                image: fileInputRef.current.files[0]
-            })
-        };
-
-            const response = await createPost(data);
+            const response = await updatePost(post);
+            console.log(response);
             if (response) {
-                navigate('/posts');
+                alert("수정이 완료되었습니다.");
+                navigate(`/posts/${post?.post?.id}`);
             }
         } catch (e) {
             console.error(e);
@@ -50,20 +63,41 @@ const PostCreatePage: React.FC = () => {
     }
 
     const handleBackButton = async () => {
-        navigate("/posts");
+        navigate(`/posts/${post?.post?.id}`);
     }
+
+    const handleTitleChange = (value: string) => {
+        setPost(prev => prev ? {
+            ...prev,
+            post: {
+                ...prev.post,
+                title: value
+            }
+        } : null);
+    };
+
+    const handleContentChange = (value: string) => {
+        setPost(prev => prev ? {
+            ...prev,
+            post: {
+                ...prev.post,
+                content: value
+            }
+        } : null);
+    };
 
     const {
         preview,
         fileInputRef,
         handleImageChange,
+        setPreview,
         triggerFileInput
     } = useImageUpload();
 
     return (
       <Container>
         <PostCreatePageContainer>
-            <MainTitle> 게시글 작성 </MainTitle>
+            <MainTitle> 게시글 수정 </MainTitle>
 
             <ProfileContainer
                 onClick={triggerFileInput}>
@@ -92,8 +126,8 @@ const PostCreatePage: React.FC = () => {
             <CustomeInput
                 label="제목"
                 type="textarea"
-                value={title}
-                onChange={setTitle}
+                value={post?.post?.title} // error 해결되지 않은 변수 title
+                onChange={handleTitleChange}
                 placeholder="제목을 입력해주세요"
                 // validation={handleEmailValidation}
                 required={true}
@@ -104,8 +138,8 @@ const PostCreatePage: React.FC = () => {
             <CustomeTextArea
                 label="내용"
                 type="textarea"  // input 대신 textarea 사용
-                value={content}
-                onChange={setContent}
+                value={post?.post?.content}
+                onChange={handleContentChange}
                 placeholder="내용을 입력해주세요"
                 required={true}
                 maxLength={300}
@@ -120,10 +154,10 @@ const PostCreatePage: React.FC = () => {
                     onClick={handleBackButton}
                 />
                 <PrimaryButtonLarge
-                    $isEnabled={title && content}
+                    $isEnabled={post?.post?.title && post?.post?.content}
                     text={"작성하기"}
                     type={"button"}
-                    onClick={handlePostButton}
+                    onClick={handleUpdateButton}
                 />
             </ButtonContainer>
         </PostCreatePageContainer>
@@ -131,7 +165,7 @@ const PostCreatePage: React.FC = () => {
     );
 };
 
-export default PostCreatePage;
+export default PostUpdatePage;
 
 export const Container = styled.main`
     width: 100vw;

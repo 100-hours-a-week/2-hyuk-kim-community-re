@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import styled from "styled-components";
 import {theme} from "@/styles/theme.ts";
 
-const InputField = ({
+const CustomTextArea = ({
                         label,
                         type,
                         value,
@@ -60,7 +60,7 @@ const InputField = ({
 );
 };
 
-export default InputField;
+export default CustomTextArea;
 
 const InputGroup = styled.div`
     width: 100%;
@@ -86,7 +86,7 @@ const InputWrapper = styled.div<{ $hasHelper: boolean }>`
     width: 100%;
     margin-bottom: ${props => props.$hasHelper ? '2rem' : '0'};
 `;
-const FormInput = styled.input<{ disabled: boolean, $isTall: boolean }>`
+const FormInput = styled.textarea<{ disabled: boolean, $isTall: boolean }>`
     width: 100%;
     max-height: 30px;
     padding: 0.6rem 1rem 0.6rem 1rem;

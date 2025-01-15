@@ -16,4 +16,7 @@ export const API_ENDPOINTS = {
     POST_COMMENT: 'api/comments',
     PATCH_COMMENT: 'api/comments/:commentId',
     DELETE_COMMENT: 'api/comments/:commentId',
+
+    POST_LIKE: 'api/posts/like/:postId',
+    POST_UNLIKE: 'api/posts/unlike/:postId',
 } as const;

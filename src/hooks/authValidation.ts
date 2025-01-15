@@ -1,10 +1,8 @@
 import {ValidationResult} from "../types/validationTypes.ts";
 
-/**
- * 이메일 유효성 검사
- * @param email 검사할 이메일 주소
- * @returns ValidationResult
- */
+
+ // * 이메일 유효성 검사
+
 export const validateEmail = (email: string): ValidationResult => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -20,11 +18,7 @@ export const validateEmail = (email: string): ValidationResult => {
     };
 };
 
-/**
- * 비밀번호 유효성 검사
- * @param password 검사할 비밀번호
- * @returns ValidationResult
- */
+ // * 비밀번호 유효성 검사
 export const validatePassword = (password: string): ValidationResult => {
     const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>/?~-]).{8,20}$/;
 
@@ -47,6 +41,7 @@ export const validatePassword = (password: string): ValidationResult => {
     };
 };
 
+// * 비밀번호 확인 유효성 검사
 export const validatePasswordRe = (passwordRe: string, currentPassword: string): ValidationResult => {
     if (passwordRe.length === 0) {
         return {
@@ -67,6 +62,7 @@ export const validatePasswordRe = (passwordRe: string, currentPassword: string):
     };
 };
 
+// * 닉네임 유효성 검사
 export const validateNickname = (nickname: string): ValidationResult => {
     const nicknameRegex = /^[^\s]{1,10}$/;
 

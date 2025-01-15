@@ -13,6 +13,7 @@ import PostList from "@/components/PostList.tsx";
 import PostListPage from "@/pages/PostListPage.tsx";
 import PostCreatePage from "@/pages/PostCreatePage.tsx";
 import PostDetailPage from "@/pages/PostDetailPage.tsx";
+import PostUpdatePage from "@/pages/PostUpdatePage.tsx";
 
 const App: React.FC = () => {
     return (
@@ -32,6 +33,7 @@ const App: React.FC = () => {
                         <Route path="/posts" element={<PostListPage />} />
                         <Route path="/posts/create" element={<PostCreatePage />} />
                         <Route path="/posts/:postId" element={<PostDetailPage />} />
+                        <Route path="/posts/:postId/edit" element={<PostUpdatePage />} />
                     </Routes>
                 </main>
             </BrowserRouter>

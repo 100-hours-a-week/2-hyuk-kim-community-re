@@ -6,7 +6,7 @@ export interface Post {
     title: string;
     content: string;
     countLike: number;
-    isLike: boolean;
+    isLiked: boolean;
     image: string;
     countView: number;
     createat: string;
@@ -28,6 +28,11 @@ export interface GetPosts {
 export interface CreatePostRequest {
     post: Pick<Post, 'title' | 'content'>;
     image?: File;
+}
+
+export interface UpdatePostRequest {
+    post: Pick<Post, 'id' | 'title' | 'content'>;
+    image?: File | string;
 }
 
 export interface CreateCommentRequest {

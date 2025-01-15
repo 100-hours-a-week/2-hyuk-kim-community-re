@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import like from "@/assets/images/Like.svg";
 import comment from "@/assets/images/Comment.svg";
@@ -9,12 +9,74 @@ import {theme} from "@/styles/theme.ts";
 import {GetPosts, Post} from "@/types/models/post.ts";
 import {DateFormatter} from "@/utils/DateFormatter.ts";
 import {Comment} from "@/types/models/comment.ts";
+import iconMenu from "@/assets/images/icon-menu.svg";
+import {MenuButton} from "@/pages/PostDetailPage.tsx";
+import {useNavigate} from "react-router-dom";
+import {useParams} from "react-router";
+import {deletePost} from "@/api/post.ts";
+import {DeleteDialog} from "@/components/DeleteDialog.tsx";
+import DropdownMenu from "@/components/DropdownMenu.tsx";
 
 interface CommentListProps {
+    key: number;
     comment: Comment;
 }
 
 const CommentList: React.FC<CommentListProps> = ({comment}) => {
+    const navigate = useNavigate();
+    const [isMenuVisible, setIsMenuVisible] = useState(false);
+    const buttonProfileRef = useRef<HTMLButtonElement>(null);    // ref 생성
+    const [isLikeLoading, setIsLikeLoading] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    // 댓글 삭제 핸들러
+    const handleDeleteComment = async () => {
+        if (!comment.id) return;
+
+        setIsDeleting(true);
+        try {
+            await deletePost(String(comment.id));
+            // navigate('/posts'); // 목록으로 이동
+        } catch (error) {
+            console.error('Failed to delete post:', error);
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    // 메뉴 버튼 클릭
+    const handleMenuClick = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        setIsMenuVisible(!isMenuVisible);
+    };
+
+    const menuItems = [
+        {
+            label: '수정',
+            onClick: () => {
+
+                setIsMenuVisible(false);
+            }
+        },
+        {
+            label: '삭제',
+            onClick: () => {
+                setIsDeleteDialogOpen(true);
+                setIsMenuVisible(false);
+            }
+        }
+    ];
+
+    const getMenuPosition = () => {
+        if (!buttonProfileRef.current) return {};
+
+        const buttonRect = buttonProfileRef.current.getBoundingClientRect();
+        return {
+            $top: `${buttonRect.height + 5}px`, // 8px 간격 추가
+            $right: '0'
+        };
+    };
 
     return (
         <Container>
@@ -23,8 +85,18 @@ const CommentList: React.FC<CommentListProps> = ({comment}) => {
                     <ContentContainer>
                         <UserContent>
                             <UserNickname>{comment.user.nickname}</UserNickname>
-                            <AuthorTag>작성자</AuthorTag>
+                            {comment.isAuthorComments ? <AuthorTag>작성자</AuthorTag> : null}
                             <PostDate>{DateFormatter.toRelativeTime(comment?.date)}</PostDate>
+                            {comment?.isMyComment ?
+                                <MenuButton ref={buttonProfileRef} onClick={handleMenuClick}>
+                                    <img src={iconMenu} alt=""/>
+                                </MenuButton>  : null}
+                            <DropdownMenu
+                                isVisible={isMenuVisible}
+                                items={menuItems}
+                                onClose={() => setIsMenuVisible(false)}
+                                position={getMenuPosition()}
+                            />
                         </UserContent>
                         <PostContent>{comment.content}</PostContent>
                     </ContentContainer>
@@ -44,6 +116,13 @@ const CommentList: React.FC<CommentListProps> = ({comment}) => {
                 {/*</PostMetaDataContent>*/}
 
             </PostListContainer>
+            <DeleteDialog
+                isOpen={isDeleteDialogOpen}
+                onClose={() => setIsDeleteDialogOpen(false)}
+                onConfirm={handleDeleteComment}
+                isLoading={isDeleting}
+                title={"댓글을 삭제하시겠습니까?"}
+            />
         </Container>
     );
 };
@@ -80,6 +159,7 @@ export const ContentContainer = styled.div`
 `
 
 export const UserContent = styled.div`
+    position: relative;
     width: 100%;
     display: flex;
     flex-direction: row;

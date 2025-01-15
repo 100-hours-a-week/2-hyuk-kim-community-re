@@ -1,27 +1,142 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useRef, useState} from "react";
 import styled from "styled-components";
 import like from "@/assets/images/Like.svg";
 import comment from "@/assets/images/Comment.svg";
 import view from "@/assets/images/icon-view.svg";
-import iconUser from "@/assets/images/icon-user.svg";
+import iconMenu from "@/assets/images/icon-menu.svg";
 import logo from "@/assets/images/Logo.png";
 import PostListPage from "@/pages/PostListPage.tsx";
 import {theme} from "@/styles/theme.ts";
 import {CreateCommentRequest, Post} from "@/types/models/post.ts";
 import PostList from "@/components/PostList.tsx";
-import {createComment, getPost} from "@/api/post.ts";
+import {createComment, deletePost, getPost, postLike, unlikePost} from "@/api/post.ts";
 import {useParams} from "react-router";
 import {DateFormatter} from "@/utils/DateFormatter.ts";
 import CustomeInput from "@/components/CustomeInput.tsx";
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
 import CommentList from "@/components/CommentList.tsx";
+import DropdownMenu from "@/components/DropdownMenu.tsx";
+import {STORAGE_KEYS} from "@/constants/storage.ts";
+import {useNavigate} from "react-router-dom";
+import likeTrue from "@/assets/images/icon-like-true.svg";
+import {DeleteDialog} from "@/components/DeleteDialog.tsx";
 
 
 const PostDetailPage: React.FC = () => {
+    const navigate = useNavigate();
+    const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [post, setPost] = useState<Post | null>(null);
     const [commentContent, setCommentContent] = useState<string>(null);
     const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
+    const [totalComments, setTotalComments] = useState(0);
+    const buttonProfileRef = useRef<HTMLButtonElement>(null);    // ref 생성
+    const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const { postId } = useParams();
+    const [isLikeLoading, setIsLikeLoading] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
+
+    // 게시글 삭제 핸들러
+    const handleDeletePost = async () => {
+        if (!postId) return;
+
+        setIsDeleting(true);
+        try {
+            await deletePost(postId);
+            navigate('/posts'); // 목록으로 이동
+        } catch (error) {
+            console.error('Failed to delete post:', error);
+        } finally {
+            setIsDeleting(false);
+        }
+    };
+
+    const handleLike = async () => {
+        if (isLikeLoading || !post) return;
+
+        setIsLikeLoading(true);
+        try {
+            // 현재 좋아요 상태에 따라 다른 API 호출
+            if (post.isLiked) {
+                // 이미 좋아요 상태인 경우 취소
+                await unlikePost(postId);
+            } else {
+                // 좋아요가 안 된 상태인 경우 좋아요 추가
+                await postLike(postId);
+            }
+
+            // API 호출이 성공하면 게시글 상태 업데이트
+            setPost(prevPost => {
+                if (!prevPost) return null;
+                return {
+                    ...prevPost,
+                    isLiked: !prevPost.isLiked,
+                    countLike: prevPost.isLiked ? prevPost.countLike - 1 : prevPost.countLike + 1
+                };
+            });
+        } catch (error) {
+            console.error('Failed to update like:', error);
+            // 에러 시 토스트 메시지 표시 가능
+        } finally {
+            setIsLikeLoading(false);
+        }
+    };
+
+// 댓글 제출 후 값을 비우는 함수
+    const clearTextArea = () => {
+        if (textAreaRef.current) {
+            textAreaRef.current.value = '';
+        }
+    };
+
+
+    // 메뉴 버튼 클릭
+    const handleMenuClick = (event: React.MouseEvent) => {
+        event.stopPropagation();
+        setIsMenuVisible(!isMenuVisible);
+    };
+    // // 메뉴 내 항목(수정, 삭제) 클릭
+    // const handleMenuSelected = (path: string) => {
+    //     navigate(`/${path}`);
+    //     setIsMenuVisible(false);
+    // };
+
+    const menuItems = [
+        {
+            label: '수정',
+            onClick: () => {
+                navigate(`/posts/${postId}/edit`, {
+                    state: {
+                        post: {
+                            id: post?.id,
+                            title: post?.title,
+                            content: post?.content,
+                        },
+                        image: post?.image,
+                    }
+                });
+                setIsMenuVisible(false);
+            }
+        },
+        {
+            label: '삭제',
+            onClick: () => {
+                setIsDeleteDialogOpen(true);
+                setIsMenuVisible(false);
+            }
+        }
+    ];
+
+    const getMenuPosition = () => {
+        if (!buttonProfileRef.current) return {};
+
+        const buttonRect = buttonProfileRef.current.getBoundingClientRect();
+        return {
+            $top: `${buttonRect.height + 8}px`, // 8px 간격 추가
+            $right: '0'
+        };
+    };
+
 
     const handlePostButton = async () => {
         const fetchPostDetail = async () => {
@@ -61,7 +176,7 @@ const PostDetailPage: React.FC = () => {
                 });
 
                 // 댓글 입력 필드 초기화
-                setCommentContent('');
+                clearTextArea();
             } catch (error) {
                 console.error('Failed to fetch post detail:', error);
             }
@@ -70,21 +185,20 @@ const PostDetailPage: React.FC = () => {
         fetchPostDetail();
     }
 
+    // 게시글 상세 정보 불러오기 (1페이지 댓글 포함)
     useEffect(() => {
-        console.log(`postId: ${postId}`);
         const fetchPostDetail = async () => {
             try {
                 const response = await getPost(postId);
-                const data = await response;
-                setPost(data);
-
+                setPost(response);
+                setTotalComments(response.commentList.length);
             } catch (error) {
                 console.error('Failed to fetch post detail:', error);
             }
         };
 
         fetchPostDetail();
-    }, []);
+    }, [postId]);
 
     return (
         <Container>
@@ -95,10 +209,22 @@ const PostDetailPage: React.FC = () => {
                 <UserContainer>
                     <ProfileImage src={post?.user.profile}/>
                     <UserContent>
+                        <TitleMenuContainer>
                         {/*    제목*/}
-                        <PostTitle>{post?.title}</PostTitle>
+                            <PostTitle>{post?.title}</PostTitle>
+                            {post?.isMyPost ?
+                                <MenuButton ref={buttonProfileRef} onClick={handleMenuClick}>
+                                    <img src={iconMenu}/>
+                                </MenuButton>  : null}
+                            <DropdownMenu
+                                isVisible={isMenuVisible}
+                                items={menuItems}
+                                onClose={() => setIsMenuVisible(false)}
+                                position={getMenuPosition()}
+                            />
+                        </TitleMenuContainer>
                         {/*<UserNickname>{post?.user.nickname}</UserNickname>*/}
-                        <PostDate>{post?.user.nickname}{DateFormatter.toRelativeTime(post?.createat)}</PostDate>
+                        <PostDate>{post?.user.nickname} · {DateFormatter.toRelativeTime(post?.createat)}</PostDate>
                     </UserContent>
                 </UserContainer>
             {/*    이미지*/}
@@ -112,10 +238,24 @@ const PostDetailPage: React.FC = () => {
                     <DivisionLine/>
             {/*    좋아요 댓글 등 ~*/}
                     <PostMetaDataContent>
-                        <LikeImg src={like as string} alt="" />
+                        <button
+                            onClick={handleLike}
+                            disabled={isLikeLoading}
+                            style={{
+                                all: 'unset',
+                                cursor: 'pointer',
+                                opacity: isLikeLoading ? 0.5 : 1
+                            }}
+                        >
+                            <LikeImg
+                                src={post?.isLiked ? likeTrue as string : like as string}
+                                alt={post?.isLiked ? "좋아요 취소" : "좋아요"}
+                                className={isLikeLoading ? 'opacity-50' : ''}
+                            />
+                        </button>
                         <LikeCount> {post?.countLike}</LikeCount>
 
-                        <CommentImg src={comment as string} alt="" />
+                        <CommentImg src={comment as string} alt=""/>
                         <CommentCount> {post?.commentList.length}</CommentCount>
 
                         <ViewImg src={view as string} alt="" />
@@ -127,7 +267,7 @@ const PostDetailPage: React.FC = () => {
                 <CommentListTitle>댓글 ({post?.commentList.length})</CommentListTitle>
                 {post?.commentList.map(comment => (
                     <CommentList
-                        // key={comment.id}
+                        key={comment.id}
                         comment={comment}
                         // onClick={() => setSelectedCommentId(comment.id)}
                         // onClick={() => setSelectedCommentId(1)}
@@ -139,7 +279,7 @@ const PostDetailPage: React.FC = () => {
                     <CustomeInput
                         label=""
                         type="textarea"
-                        value={commentContent}
+                        // value={commentContent}
                         onChange={setCommentContent}
                         placeholder="댓글을 남겨주세요!"
                         // validation={handleEmailValidation}
@@ -157,6 +297,13 @@ const PostDetailPage: React.FC = () => {
                 </PostComment>
             </CommentListContainer>
         </PostDetailContainer>
+            <DeleteDialog
+                isOpen={isDeleteDialogOpen}
+                onClose={() => setIsDeleteDialogOpen(false)}
+                onConfirm={handleDeletePost}
+                isLoading={isDeleting}
+                title={"게시글을 삭제하시겠습니까?"}
+            />
         </Container>
     );
 };
@@ -195,9 +342,10 @@ export const PostListContainer = styled.div`
     overflow-y: auto;
 `
 export const UserContainer = styled.div`
+    width: 100%;
     display: flex;
     flex-direction: row;
-    align-items: center;
+    align-items: start;
     //margin-top: 1rem;
 `
 export const ProfileImage = styled.img`
@@ -209,8 +357,26 @@ export const ProfileImage = styled.img`
 `
 
 export const UserContent = styled.div`
+    width: 100%;
     display: flex;
     flex-direction: column;
+`
+export const TitleMenuContainer = styled.div`
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+`
+export const MenuButton = styled.button`
+    background-color: transparent;
+    padding: 0;
+    margin-left: auto;
+    border: none;
+    img {
+        width: 1rem;
+        height: 1rem;
+    }
 `
 export const UserNickname = styled.span`
     font-family: ${theme.font.bold};
@@ -320,7 +486,7 @@ const InputWrapper = styled.div`
 const ButtonWrapper = styled.div`
     width: 10%;
     height: 8%;
-
+    
     // 버튼이 wrapper 크기에 맞게 채워지도록
     > button {
         font-size: 1rem;
@@ -328,6 +494,10 @@ const ButtonWrapper = styled.div`
         height: 100%;
         padding: 0.7rem 1rem;
         margin: 0rem;
+    }
+    
+    @media (max-width: 1024px) {
+        width: 15%;
     }
 `
 

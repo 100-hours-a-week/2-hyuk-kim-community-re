@@ -81,6 +81,7 @@ export const useImageUpload = (setProfileUpdate?: (value: boolean) => void) => {
         selectedImage,
         preview,
         fileInputRef,
+        setPreview,
         handleImageChange,
         triggerFileInput
     };

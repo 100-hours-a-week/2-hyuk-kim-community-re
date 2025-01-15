@@ -1,6 +1,6 @@
 import axios from "@/api/axios.ts";
 import {API_ENDPOINTS} from "@/constants/api.ts";
-import {CreateCommentRequest, CreatePostRequest, GetPostsResponse} from "@/types/models/post.ts";
+import {CreateCommentRequest, CreatePostRequest, GetPostsResponse, UpdatePostRequest} from "@/types/models/post.ts";
 
 export const getPosts = async (params: PaginationParams) => {
     try {
@@ -45,6 +45,33 @@ export const createPost = async (params: CreatePostRequest) => {
     }
 }
 
+export const updatePost = async (params: UpdatePostRequest) => {
+    try {
+        console.log(params);
+        console.log(params.post.id);
+        const url = API_ENDPOINTS.PATCH_POST.replace(':postId', String(params.post.id));
+        const response = await axios.patch(url, params, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
+        return response.data;
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+export const deletePost = async (postId: string) => {
+    try {
+        const url = API_ENDPOINTS.DELETE_POST.replace(':postId', String(postId));
+        const response = await axios.delete(url);
+        return response.data;
+    } catch (e) {
+        console.error(e);
+        throw e;
+    }
+}
+
 export const createComment = async (body: CreateCommentRequest) => {
     try {
         const response = await axios.post(API_ENDPOINTS.POST_COMMENT, body);
@@ -53,4 +80,38 @@ export const createComment = async (body: CreateCommentRequest) => {
         console.error(e);
     }
 }
+
+export const deleteComment = async (commentId: string) => {
+    try {
+        const url = API_ENDPOINTS.DELETE_COMMENT.replace(':postId', String(commentId));
+        const response = await axios.delete(url);
+        return response.data;
+    } catch (e) {
+        console.error(e);
+        throw e;
+    }
+}
+
+export const unlikePost = async (postId: string) => {
+    try {
+        const url = API_ENDPOINTS.POST_UNLIKE.replace(':postId', (postId));
+        const response = await axios.post(url);
+        return response.data;
+    } catch (e) {
+        console.error(e);
+        throw e;
+    }
+}
+
+export const postLike = async (postId: string) => {
+    try {
+        const url = API_ENDPOINTS.POST_LIKE.replace(':postId', (postId));
+        const response = await axios.post(url);
+        return response.data;
+    } catch (e) {
+        console.error(e);
+        throw e;
+    }
+}
+
 

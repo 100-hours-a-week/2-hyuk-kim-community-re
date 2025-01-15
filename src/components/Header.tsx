@@ -7,14 +7,13 @@ import styled from "styled-components";
 import {theme} from "@/styles/theme.ts";
 import logo from "@/assets/images/Logo.png";
 import {STORAGE_KEYS} from "@/constants/storage.ts";
+import DropdownMenu from "@/components/DropdownMenu.tsx";
 
 const Header: React.FC = () => {
     const [isMenuVisible, setIsMenuVisible] = useState(false);
-    const [profileImage, setProfileImage] = useState(defaultProfile);
+    const [profileImage, setProfileImage] = useState<string | typeof defaultProfile>(defaultProfile); // 인수 타입 {}을(를) 매개변수 타입 (() => string) | string에 할당할 수 없습니다
     const navigate = useNavigate();
-    const location = useLocation();
-    const buttonProfileRef = useRef<HTMLButtonElement>(null!);
-    const menuRef = useRef<HTMLDivElement>(null!);
+    const buttonProfileRef = useRef<HTMLButtonElement>(null);
     const isLoginPage = window.location.pathname === '/login';
     const isLoggedIn = !!sessionStorage.getItem(STORAGE_KEYS.USER_ID);
 
@@ -23,31 +22,14 @@ const Header: React.FC = () => {
         if (storedProfile) {
             setProfileImage(storedProfile);
         }
-
-        const handleClickOutside = (event: MouseEvent) => {
-            if (isMenuVisible && !menuRef.current?.contains(event.target as Node)) {
-                setIsMenuVisible(false);
-            }
-        };
-
-        document.addEventListener('click', handleClickOutside);
-        return () => document.removeEventListener('click', handleClickOutside);
-    }, [isMenuVisible]);
+    }, []);
 
     const handleLogoClick = () => {
         navigate('/posts');
-    }
+    };
 
     const handleProfileClick = (event: React.MouseEvent) => {
         event.stopPropagation();
-        if (buttonProfileRef.current && menuRef.current) {
-            const profileRect = buttonProfileRef.current.getBoundingClientRect();
-            const menuWidth = menuRef.current.offsetWidth;
-            const offset = 8;
-
-            menuRef.current.style.left = `${profileRect.right - menuWidth}px`;
-            menuRef.current.style.top = `${profileRect.bottom + offset}px`;
-        }
         setIsMenuVisible(!isMenuVisible);
     };
 
@@ -59,6 +41,46 @@ const Header: React.FC = () => {
             navigate(`/${path}`);
         }
         setIsMenuVisible(false);
+    };
+
+    // 로그인된 사용자의 메뉴 아이템
+    const loggedInMenuItems = [
+        {
+            label: '회원정보 수정',
+            onClick: () => handleMenuClick('settings/profile')
+        },
+        {
+            label: '비밀번호 수정',
+            onClick: () => handleMenuClick('settings/password')
+        },
+        { isDivider: true },
+        {
+            label: '로그아웃',
+            onClick: () => {
+                sessionStorage.removeItem(STORAGE_KEYS.USER_ID);
+                sessionStorage.removeItem(STORAGE_KEYS.USER_PROFILE_IMAGE);
+                handleMenuClick('login');
+            }
+        }
+    ];
+
+    // 비로그인 사용자의 메뉴 아이템
+    const loggedOutMenuItems = [
+        {
+            label: '로그인',
+            onClick: () => handleMenuClick('login')
+        }
+    ];
+
+    // 프로필 버튼의 위치를 기준으로 메뉴 위치 계산
+    const getMenuPosition = () => {
+        if (!buttonProfileRef.current) return {};
+
+        const buttonRect = buttonProfileRef.current.getBoundingClientRect();
+        return {
+            $top: `${buttonRect.height + 8}px`, // 8px 간격 추가
+            $right: '0'
+        };
     };
 
     return (
@@ -81,43 +103,20 @@ const Header: React.FC = () => {
                         </GithubLink>
                     ) : (
                         <TempContainer>
-                            {isLoggedIn ? (
-                                <>
-                                    <WelcomeText>반가워요!</WelcomeText>
-                                    <ProfileButton ref={buttonProfileRef} onClick={handleProfileClick}>
-                                        <img src={profileImage as string} alt="profile" />
-                                    </ProfileButton>
-                                    {isMenuVisible && (
-                                        <MenuContainer ref={menuRef}>
-                                            <MenuItem onClick={() => handleMenuClick('settings/profile')}>
-                                                회원정보 수정
-                                            </MenuItem>
-                                            <MenuItem onClick={() => handleMenuClick('settings/password')}>
-                                                비밀번호 수정
-                                            </MenuItem>
-                                            <MenuDivider />
-                                            <MenuItem onClick={() => {
-                                                sessionStorage.removeItem(STORAGE_KEYS.USER_ID);
-                                                sessionStorage.removeItem(STORAGE_KEYS.USER_PROFILE_IMAGE);
-                                                handleMenuClick('login')
-                                            }}>
-                                                로그아웃
-                                            </MenuItem>
-                                        </MenuContainer>
-                                    )}
-                                </>
-                            ) : (
-                                <ProfileButton ref={buttonProfileRef} onClick={handleProfileClick}>
-                                    <img src={defaultProfile} alt="profile" />
-                                    {isMenuVisible && (
-                                        <MenuContainer ref={menuRef}>
-                                            <MenuItem onClick={() => handleMenuClick('login')}>
-                                                로그인
-                                            </MenuItem>
-                                        </MenuContainer>
-                                    )}
-                                </ProfileButton>
-                            )}
+                            {isLoggedIn && <WelcomeText>반가워요!</WelcomeText>}
+                            <ProfileButton ref={buttonProfileRef} onClick={handleProfileClick}>
+                                <img
+                                    // error 타입 {}을(를) 타입 string | undefined에 할당할 수 없습니다
+                                    src={isLoggedIn ? (profileImage as string) : defaultProfile}
+                                    alt="profile"
+                                />
+                            </ProfileButton>
+                            <DropdownMenu
+                                isVisible={isMenuVisible}
+                                items={isLoggedIn ? loggedInMenuItems : loggedOutMenuItems}
+                                onClose={() => setIsMenuVisible(false)}
+                                position={getMenuPosition()}
+                            />
                         </TempContainer>
                     )}
                 </RightContainer>

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import styled from 'styled-components';
 import PostList from "@/components/PostList.tsx";
 import {theme} from "@/styles/theme.ts";
@@ -8,37 +8,31 @@ import PostDetailPage from "@/pages/PostDetailPage.tsx";
 import {GetPosts, Post} from '@/types/models/post.ts'
 import {login} from "@/api/auth.ts";
 import {getPosts} from "@/api/post.ts";
+import * as timers from "node:timers";
+import {useInfiniteScroll} from "@/hooks/infiniteScroll.ts";
 
 const PostListPage: React.FC = () => {
     const navigate = useNavigate();
-    const [currentPage, setCurrentPage] = useState(1);
-    const [hasMore, setHasMore] = useState(true);
-    const POSTS_PER_PAGE = 10;
+    // const [posts, setPosts] = useState<GetPosts[]>([]);
 
-    const [posts, setPosts] = useState<GetPosts[]>([]);
-    const [selectedPostId, setSelectedPostId] = useState<number | null>(null);
+    const fetchPosts = useCallback(async (page: number) => {
+        const response = await getPosts({
+            page,
+            limit: 10
+        });
 
-    useEffect(() => {
-        const fetchPosts = async () => {
-            try {
-                const response = await getPosts({
-                    page: currentPage,
-                    limit: POSTS_PER_PAGE
-                });
-
-                if (currentPage === 1) {
-                    setPosts(response.posts);
-                } else {
-                    setPosts(prev => [...prev, ...response.posts]); // 인수 타입 (prev: any) => (PostList | GetPosts)[] 을(를) 매개변수 타입 ((prevState: PostList[]) => PostList[]) | PostList[] 에 할당할 수 없습니다
-                }
-                setHasMore(response.hasMore);
-            } catch (error) {
-                console.error('Failed to fetch posts:', error);
-            }
+        return {
+            data: response.posts,
+            hasMore: response.hasMore
         };
+    }, []);
 
-        fetchPosts();
-    }, [currentPage]);
+
+    const {
+        data: posts, isLoading, hasMore, observerRef
+    } = useInfiniteScroll({
+        fetchData: fetchPosts
+    });
 
     const handlePostButton = async () => {
         navigate("/posts/create");
@@ -65,12 +59,8 @@ const PostListPage: React.FC = () => {
                         onClick={() => handlePostDetail(post.id)}
                     />
                 ))}
-                {/*{selectedPostId && (*/}
-                {/*    <PostDetailPage*/}
-                {/*        postId={selectedPostId}*/}
-                {/*        onClose={() => setSelectedPostId(null)}*/}
-                {/*    />*/}
-                {/*)}*/}
+                <ObserverTarget ref={observerRef} />
+                {isLoading && <LoadingSpinner>Loading...</LoadingSpinner>}
             </PostListPageContainer>
         </Container>
     );
@@ -143,3 +133,23 @@ const UploadButton = styled.button`
         transform: translateY(-0.15rem);
     }
 `
+
+const ObserverTarget = styled.div`
+    width: 100%;
+    height: 10px;
+    margin-top: 10px;
+`;
+
+
+const LoadingSpinner = styled.div`
+    text-align: center;
+    padding: 20px 0;
+    color: ${theme.colors.gray5};
+    animation: pulse 1.5s ease-in-out infinite;
+    
+    @keyframes pulse {
+        0% { opacity: 0.6; }
+        50% { opacity: 1; }
+        100% { opacity: 0.6; }
+    }
+`;

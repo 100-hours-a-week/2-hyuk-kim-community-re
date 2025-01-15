@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import like from "@/assets/images/Like.svg";
+import likeTrue from "@/assets/images/icon-like-true.svg";
 import comment from "@/assets/images/Comment.svg";
 import iconUser from "@/assets/images/icon-user.svg";
 import logo from "@/assets/images/Logo.png";
@@ -11,6 +12,7 @@ import {DateFormatter} from "@/utils/DateFormatter.ts";
 
 interface PostListProps {
     post: GetPosts;
+    key: number;
     onClick: () => void;
 }
 
@@ -49,7 +51,10 @@ const PostList: React.FC<PostListProps> = ({post, onClick}) => {
                 <PostMetaDataContent>
                     {/*<PostDate>${post.date}</PostDate>*/}
                     <PostDate>{DateFormatter.toRelativeTime(post.createat)}</PostDate>
-                    <LikeImg src={like as string} alt=""/>
+                    {post.isLiked ?
+                        <LikeImg src={likeTrue as string} alt=""/>
+                        : <LikeImg src={like as string} alt=""/>
+                    }
                     <LikeCount> {post.countLike}</LikeCount>
                     <CommentImg src={comment as string} alt=""/>
                     <CommentCount> {post.countComments}</CommentCount>
