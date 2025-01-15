@@ -34,8 +34,3 @@ export interface UpdatePostRequest {
     post: Pick<Post, 'id' | 'title' | 'content'>;
     image?: File | string;
 }
-
-export interface CreateCommentRequest {
-    postId: number;
-    content: string;
-}

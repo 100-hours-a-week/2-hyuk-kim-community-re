@@ -1,6 +1,7 @@
 import axios from "@/api/axios.ts";
 import {API_ENDPOINTS} from "@/constants/api.ts";
 import {CreateCommentRequest, CreatePostRequest, GetPostsResponse, UpdatePostRequest} from "@/types/models/post.ts";
+import {UpdateCommentRequest} from "@/types/models/comment.ts";
 
 export const getPosts = async (params: PaginationParams) => {
     try {
@@ -81,9 +82,19 @@ export const createComment = async (body: CreateCommentRequest) => {
     }
 }
 
+export const updateComment = async (commentId: number, content: string) => {
+    try {
+        const url = API_ENDPOINTS.PATCH_COMMENT.replace(':commentId', String(commentId));
+        const response = await axios.patch(url, {content});
+        return response.data;
+    } catch (e) {
+        console.error(e);
+    }
+}
+
 export const deleteComment = async (commentId: string) => {
     try {
-        const url = API_ENDPOINTS.DELETE_COMMENT.replace(':postId', String(commentId));
+        const url = API_ENDPOINTS.DELETE_COMMENT.replace(':commentId', String(commentId));
         const response = await axios.delete(url);
         return response.data;
     } catch (e) {

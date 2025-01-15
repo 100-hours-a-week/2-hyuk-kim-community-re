@@ -13,16 +13,18 @@ import iconMenu from "@/assets/images/icon-menu.svg";
 import {MenuButton} from "@/pages/PostDetailPage.tsx";
 import {useNavigate} from "react-router-dom";
 import {useParams} from "react-router";
-import {deletePost} from "@/api/post.ts";
+import {deleteComment, deletePost} from "@/api/post.ts";
 import {DeleteDialog} from "@/components/DeleteDialog.tsx";
 import DropdownMenu from "@/components/DropdownMenu.tsx";
 
 interface CommentListProps {
     key: number;
     comment: Comment;
+    onCommentDeleted: (commentId: number) => void;
+    onStartEdit: (comment: Comment) => void;
 }
 
-const CommentList: React.FC<CommentListProps> = ({comment}) => {
+const CommentList: React.FC<CommentListProps> = ({comment, onCommentDeleted, onStartEdit}) => {
     const navigate = useNavigate();
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const buttonProfileRef = useRef<HTMLButtonElement>(null);    // ref 생성
@@ -30,14 +32,19 @@ const CommentList: React.FC<CommentListProps> = ({comment}) => {
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
+    const getCommentId = async () => {
+        return comment.id;
+    }
+
     // 댓글 삭제 핸들러
     const handleDeleteComment = async () => {
         if (!comment.id) return;
 
         setIsDeleting(true);
         try {
-            await deletePost(String(comment.id));
-            // navigate('/posts'); // 목록으로 이동
+            await deleteComment(String(comment.id));
+            onCommentDeleted(comment.id);
+            setIsDeleteDialogOpen(false);
         } catch (error) {
             console.error('Failed to delete post:', error);
         } finally {
@@ -55,7 +62,7 @@ const CommentList: React.FC<CommentListProps> = ({comment}) => {
         {
             label: '수정',
             onClick: () => {
-
+                onStartEdit(comment);
                 setIsMenuVisible(false);
             }
         },

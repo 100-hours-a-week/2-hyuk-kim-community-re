@@ -8,3 +8,12 @@ export interface Comment {
     isAuthorComments: boolean;
     isMyComment: boolean;
 }
+
+export interface CreateCommentRequest {
+    postId: number;
+    content: string;
+}
+
+export interface UpdateCommentRequest {
+    content: string;
+}

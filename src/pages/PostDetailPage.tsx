@@ -7,9 +7,10 @@ import iconMenu from "@/assets/images/icon-menu.svg";
 import logo from "@/assets/images/Logo.png";
 import PostListPage from "@/pages/PostListPage.tsx";
 import {theme} from "@/styles/theme.ts";
-import {CreateCommentRequest, Post} from "@/types/models/post.ts";
+import {Post} from "@/types/models/post.ts";
+import {CreateCommentRequest} from "@/types/models/comment.ts";
 import PostList from "@/components/PostList.tsx";
-import {createComment, deletePost, getPost, postLike, unlikePost} from "@/api/post.ts";
+import {createComment, deletePost, getPost, postLike, unlikePost, updateComment} from "@/api/post.ts";
 import {useParams} from "react-router";
 import {DateFormatter} from "@/utils/DateFormatter.ts";
 import CustomeInput from "@/components/CustomeInput.tsx";
@@ -20,13 +21,14 @@ import {STORAGE_KEYS} from "@/constants/storage.ts";
 import {useNavigate} from "react-router-dom";
 import likeTrue from "@/assets/images/icon-like-true.svg";
 import {DeleteDialog} from "@/components/DeleteDialog.tsx";
+import GrayButton from "@/components/GrayButton.tsx";
 
 
 const PostDetailPage: React.FC = () => {
     const navigate = useNavigate();
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [post, setPost] = useState<Post | null>(null);
-    const [commentContent, setCommentContent] = useState<string>(null);
+    const [commentContent, setCommentContent] = useState<string>("");
     const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
     const [totalComments, setTotalComments] = useState(0);
     const buttonProfileRef = useRef<HTMLButtonElement>(null);    // ref 생성
@@ -35,6 +37,53 @@ const PostDetailPage: React.FC = () => {
     const [isLikeLoading, setIsLikeLoading] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
+    const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
+    const [editingCommentId, setEditingCommentId] = useState<number | null>(null); // 수정 중인 댓글 ID
+
+    const handleStartEdit = (comment: Comment) => {
+        setIsEditing(true);
+        setEditingCommentId(comment.id);
+        setCommentContent(comment.content);
+    };
+
+    // 댓글 수정 취소
+    const handleCancelEdit = () => {
+        setIsEditing(false);
+        setEditingCommentId(null);
+        setCommentContent("");
+    };
+
+    // 댓글 수정 완료
+    const handleUpdateComment = async () => {
+        if (!editingCommentId || !commentContent) return;
+
+        try {
+            const updatedComment = await updateComment(
+                editingCommentId,
+                commentContent
+            );
+
+            // 댓글 목록 업데이트
+            setPost(prevPost => {
+                if (!prevPost) return null;
+                return {
+                    ...prevPost,
+                    commentList: prevPost.commentList.map(comment =>
+                        comment.id === editingCommentId ? {
+                            ...comment,
+                            content: commentContent
+                        } : comment
+                    )
+                };
+            });
+
+            // 수정 모드 종료
+            handleCancelEdit();
+            clearTextArea();
+        } catch (error) {
+            console.error('Failed to update comment:', error);
+        }
+    };
 
     // 게시글 삭제 핸들러
     const handleDeletePost = async () => {
@@ -49,6 +98,19 @@ const PostDetailPage: React.FC = () => {
         } finally {
             setIsDeleting(false);
         }
+    };
+
+    // 댓글 삭제 핸들러
+    const handleCommentDeleted = (deletedCommentId: number) => {
+        setPost(prevPost => {
+            if (!prevPost) return null;
+            return {
+                ...prevPost,
+                commentList: prevPost.commentList.filter(
+                    comment => comment.id !== deletedCommentId
+                )
+            };
+        });
     };
 
     const handleLike = async () => {
@@ -84,9 +146,7 @@ const PostDetailPage: React.FC = () => {
 
 // 댓글 제출 후 값을 비우는 함수
     const clearTextArea = () => {
-        if (textAreaRef.current) {
-            textAreaRef.current.value = '';
-        }
+        setCommentContent("");
     };
 
 
@@ -269,8 +329,8 @@ const PostDetailPage: React.FC = () => {
                     <CommentList
                         key={comment.id}
                         comment={comment}
-                        // onClick={() => setSelectedCommentId(comment.id)}
-                        // onClick={() => setSelectedCommentId(1)}
+                        onCommentDeleted = {handleCommentDeleted}
+                        onStartEdit={handleStartEdit}
                     />
                 ))}
 
@@ -279,7 +339,7 @@ const PostDetailPage: React.FC = () => {
                     <CustomeInput
                         label=""
                         type="textarea"
-                        // value={commentContent}
+                        value={commentContent}
                         onChange={setCommentContent}
                         placeholder="댓글을 남겨주세요!"
                         // validation={handleEmailValidation}
@@ -287,12 +347,29 @@ const PostDetailPage: React.FC = () => {
                         maxLength={100}
                     />
                     </InputWrapper>
+
                     <ButtonWrapper>
-                    <PrimaryButtonLarge
-                        $isEnabled={commentContent}
-                        text={"등록"}
-                        type={"button"}
-                        onClick={handlePostButton}/>
+                        {isEditing ? (
+                            <>
+                                <PrimaryButtonLarge
+                                    $isEnabled={!!commentContent}
+                                    text="수정"
+                                    type="button"
+                                    onClick={handleUpdateComment}
+                                />
+                                <GrayButton
+                                    className="취소"
+                                    onClick={handleCancelEdit}
+                                />
+                            </>
+                        ) : (
+                            <PrimaryButtonLarge
+                                $isEnabled={!!commentContent}
+                                text="등록"
+                                type="button"
+                                onClick={handlePostButton}
+                            />
+                        )}
                     </ButtonWrapper>
                 </PostComment>
             </CommentListContainer>
@@ -321,8 +398,6 @@ export const PostDetailContainer = styled.div`
     flex-direction: column;
     justify-self: center;
     width: 60%;
-    //max-width: 30rem;
-    //max-height: 90vh;
     border-radius: 10px;
     background-color: ${theme.colors.white};
     justify-content: center;
@@ -394,13 +469,6 @@ export const ImageContainer = styled.img`
     object-fit: cover;
     padding: 1rem;
     margin: 1rem auto 0 auto;  /* 좌우 margin을 auto로 설정 */
-
-    //img {
-    //    width: 100%;
-    //    height: 100%;
-    //    object-fit: cover;
-    //    border-radius: 10px;
-    //}
 `
 
 export const PostContainer = styled.div`
