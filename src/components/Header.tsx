@@ -1,28 +1,29 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import backIcon from '@/assets/images/back.svg';
+import { useNavigate } from 'react-router-dom';
 import defaultProfile from '@/assets/images/icon-user.svg';
 import githubLogo from '@/assets/images/logo-github.svg';
 import styled from "styled-components";
 import {theme} from "@/styles/theme.ts";
 import logo from "@/assets/images/Logo.png";
-import {STORAGE_KEYS} from "@/constants/storage.ts";
 import DropdownMenu from "@/components/DropdownMenu.tsx";
+import {useUserActions, useIsAuthenticated, useUser} from "@/store/useUserStore.ts";
 
 const Header: React.FC = () => {
+    const user = useUser();
+    const isLoggedIn = useIsAuthenticated();
+    const isLoginPage = window.location.pathname === '/login';
+    const { clearUser } = useUserActions();
     const [isMenuVisible, setIsMenuVisible] = useState(false);
-    const [profileImage, setProfileImage] = useState<string | typeof defaultProfile>(defaultProfile); // 인수 타입 {}을(를) 매개변수 타입 (() => string) | string에 할당할 수 없습니다
+    // const [profileImage, setProfileImage] = useState<string | typeof defaultProfile>(defaultProfile);
     const navigate = useNavigate();
     const buttonProfileRef = useRef<HTMLButtonElement>(null);
-    const isLoginPage = window.location.pathname === '/login';
-    const isLoggedIn = !!sessionStorage.getItem(STORAGE_KEYS.USER_ID);
 
-    useEffect(() => {
-        const storedProfile = sessionStorage.getItem('profile');
-        if (storedProfile) {
-            setProfileImage(storedProfile);
-        }
-    }, []);
+    // useEffect(() => {
+    //     const storedProfile = user?.profile
+    //     if (storedProfile) {
+    //         setProfileImage(storedProfile);
+    //     }
+    // }, []);
 
     const handleLogoClick = () => {
         navigate('/posts');
@@ -34,12 +35,7 @@ const Header: React.FC = () => {
     };
 
     const handleMenuClick = (path: string) => {
-        if (path === 'logout') {
-            sessionStorage.removeItem('email');
-            navigate('/LoginPage');
-        } else {
-            navigate(`/${path}`);
-        }
+        navigate(`/${path}`);
         setIsMenuVisible(false);
     };
 
@@ -57,8 +53,7 @@ const Header: React.FC = () => {
         {
             label: '로그아웃',
             onClick: () => {
-                sessionStorage.removeItem(STORAGE_KEYS.USER_ID);
-                sessionStorage.removeItem(STORAGE_KEYS.USER_PROFILE_IMAGE);
+                clearUser();
                 handleMenuClick('login');
             }
         }
@@ -107,7 +102,7 @@ const Header: React.FC = () => {
                             <ProfileButton ref={buttonProfileRef} onClick={handleProfileClick}>
                                 <img
                                     // error 타입 {}을(를) 타입 string | undefined에 할당할 수 없습니다
-                                    src={isLoggedIn ? (profileImage as string) : defaultProfile}
+                                    src={isLoggedIn ? (user?.profile as string ?? defaultProfile as string) : defaultProfile as string}
                                     alt="profile"
                                 />
                             </ProfileButton>

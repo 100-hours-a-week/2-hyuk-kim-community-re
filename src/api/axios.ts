@@ -1,29 +1,57 @@
 import axios from 'axios';
-import {STORAGE_KEYS} from '@/constants/storage.ts';
+import useUserStore from '@/store/useUserStore';
+import {STORAGE_KEYS} from '@/constants/storage';
 
 const instance = axios.create({
     baseURL: import.meta.env.VITE_REACT_APP_BASE_URL,
     timeout: Number(import.meta.env.VITE_REACT_APP_TIMEOUT) || 5000,
     headers: {
-        'Content-Type': 'application/json;  charset=utf-8',
+        'Content-Type': 'application/json; charset=utf-8',
         'Time-Zone': 'Asia/Seoul',
-        'sessionid': `${sessionStorage.getItem(STORAGE_KEYS.SESSION_ID)}` || null,
-        'userid': `${sessionStorage.getItem(STORAGE_KEYS.USER_ID)}` || null,
     }
 });
 
-// response.data.data.key로 받아야하는 문제를 해결하기 위한 인터셉터
-instance.interceptors.response.use(
-    (response) => {
-        // status 확인 및 데이터 구조 가공
-        if (response.data?.status === 'success') { // status를 확인해서 success일 경우 status, message 삭제!
-            return response.data; // 중첩 제거 후 반환
-        }
-        // status가 성공이 아닌 경우 에러 객체 생성
-        return Promise.reject(new Error(response.data?.message || 'Unknown error occurred'));
+// 요청 인터셉터: 매 요청마다 최신 유저 정보 사용
+instance.interceptors.request.use(
+    (config) => {
+        // zustand store에서 직접 현재 상태 가져오기
+        const user = useUserStore.getState().user;
+
+        // 헤더에 인증 정보 추가
+        // config.headers['sessionid'] = user?.sessionId || null;
+        config.headers['userid'] = user?.userId || null;
+
+        return config;
     },
     (error) => {
-        // 네트워크 에러 또는 서버 에러 처리
+        return Promise.reject(error);
+    }
+);
+
+// 응답 인터셉터
+instance.interceptors.response.use(
+    (response) => {
+        // 성공적인 응답 처리
+        if (response.data?.status === 'success') {
+            return response.data;
+        }
+
+        // 인증 오류 처리 (401, 403 등)
+        if (response.data?.status === 'error' &&
+            [401, 403].includes(response.status)) {
+            // zustand store의 clearUser 액션 직접 호출
+            useUserStore.getState().clearUser();
+        }
+
+        return Promise.reject(
+            new Error(response.data?.message || 'Unknown error occurred')
+        );
+    },
+    (error) => {
+        // 네트워크 오류 또는 서버 오류 처리
+        if (error.response?.status === 401) {
+            useUserStore.getState().clearUser();
+        }
         return Promise.reject(error);
     }
 );

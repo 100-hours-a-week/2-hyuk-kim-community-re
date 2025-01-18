@@ -12,8 +12,12 @@ import {SignupRequest} from "@/types/models/auth.ts";
 import {signup} from "@/api/auth.ts";
 import {getProfile, updateUser} from "@/api/user.ts";
 import {GetProfileResponse, UpdateUserInfoRequest} from "@/types/models/user.ts";
+import {useUser, useUserActions} from "@/store/useUserStore.ts";
 
 const UpdateUserInfoPage: React.FC = () => {
+    const user = useUser();
+    // const { updateUser } = useUserActions();
+
     const navigate = useNavigate();
     const [email, setEmail] = useState('기존 이메일');
     const [nickname, setNickname] = useState('');
@@ -21,7 +25,7 @@ const UpdateUserInfoPage: React.FC = () => {
     const [checkNickname, setCheckNickname] = useState(false);
     const [profileImageUrl, setProfileImageUrl] = useState<string>(
         // 기본 이미지로 iconUser 사용하거나, 사용자의 기존 프로필 이미지 URL 설정
-        sessionStorage.getItem('profile') || iconUser as string
+        user?.profile || iconUser as string
     );
     // 프로필 이미지 업로드를 위한 코드!
     const {

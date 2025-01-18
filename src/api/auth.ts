@@ -2,16 +2,16 @@ import axios from './axios';
 import { STORAGE_KEYS } from "@/constants/storage.ts";
 import { API_ENDPOINTS } from "@/constants/api.ts";
 import {LoginRequest, LoginResponse, SignupRequest} from "@/types/models/auth.ts";
+import useUserStore from "@/store/useUserStore.ts";
+import instance from "./axios";
 
 export const login = async (loginData: LoginRequest) => {
     try {
-        const response = await axios.post<LoginResponse>(API_ENDPOINTS.LOGIN, loginData);
-        sessionStorage.setItem(STORAGE_KEYS.USER_PROFILE_IMAGE, response.data.profile ?? "");
-        sessionStorage.setItem(STORAGE_KEYS.USER_ID, response.data.userId ?? "");
+        const response = await instance.post<LoginResponse>(API_ENDPOINTS.LOGIN, loginData);
+        useUserStore.getState().setUser(response.data);
 
         return response.data;
     } catch (error) {
-        // handleError(error);
         throw error;
     }
 };
@@ -29,7 +29,7 @@ export const signup = async (signupData: SignupRequest) => {
             console.log(`${key}: ${value}`);
         }
 
-        const response = await axios.post<number>(API_ENDPOINTS.SIGNUP, formData, {
+        const response = await instance.post<number>(API_ENDPOINTS.SIGNUP, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
             },
@@ -43,7 +43,7 @@ export const signup = async (signupData: SignupRequest) => {
 
 export const updatePassword = async (password: string) => {
     try {
-        const response = await axios.patch<number>(API_ENDPOINTS.UPDATE_PASSWORD, {password});
+        const response = await instance.patch<number>(API_ENDPOINTS.UPDATE_PASSWORD, {password});
         return response.data;
     } catch (error) {
         throw error;

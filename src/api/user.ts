@@ -2,9 +2,12 @@ import axios from './axios';
 import { STORAGE_KEYS } from "@/constants/storage.ts";
 import { API_ENDPOINTS } from "@/constants/api.ts";
 import {GetProfileResponse, UpdateUserInfoRequest, UpdateUserInfoResponse} from "@/types/models/user.ts";
+import useUserStore, {useUser} from "@/store/useUserStore.ts";
 
 
 export const updateUser = async (data: UpdateUserInfoRequest) => {
+    const user = useUser();
+
     try {
         // FormData 생성
         const formData = new FormData();
@@ -21,7 +24,7 @@ export const updateUser = async (data: UpdateUserInfoRequest) => {
             },
         });
         if (response.data.profile) {
-            sessionStorage.setItem(STORAGE_KEYS.USER_PROFILE_IMAGE, response.data.profile ?? "");
+            // useUpdateUser(response.data.profile);
         }
 
         return response.data;
@@ -33,8 +36,10 @@ export const updateUser = async (data: UpdateUserInfoRequest) => {
 
 export const getProfile = async () => {
     try {
-        const url = API_ENDPOINTS.GET_PROFILE.replace(":userId", sessionStorage.getItem(STORAGE_KEYS.USER_ID) as string);
-        const response = await axios.get<GetProfileResponse>(url);
+
+        // const url = API_ENDPOINTS.GET_PROFILE.replace(":userId", useUserStore.getState().user?.userId as string);
+        // const response = await axios.get<GetProfileResponse>(url);
+        const response = await axios.get<GetProfileResponse>(API_ENDPOINTS.GET_PROFILE);
         return response.data;
     }catch (error) {
         // handleError(error);

@@ -1,7 +1,7 @@
 import axios from "@/api/axios.ts";
 import {API_ENDPOINTS} from "@/constants/api.ts";
-import {CreateCommentRequest, CreatePostRequest, GetPostsResponse, UpdatePostRequest} from "@/types/models/post.ts";
-import {UpdateCommentRequest} from "@/types/models/comment.ts";
+import {CreatePostRequest, GetPostsResponse, UpdatePostRequest} from "@/types/models/post.ts";
+import {UpdateCommentRequest, CreateCommentRequest} from "@/types/models/comment.ts";
 
 export const getPosts = async (params: PaginationParams) => {
     try {
