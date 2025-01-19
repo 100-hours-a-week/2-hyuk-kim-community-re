@@ -38,7 +38,6 @@ const CustomTextArea = ({
             <InputWrapper $hasHelper={isHelperVisible}>
 
                 <FormInput
-                    type={type}
                     value={value}
                     onChange={handleChange}
                     placeholder={placeholder}
@@ -88,13 +87,14 @@ const InputWrapper = styled.div<{ $hasHelper: boolean }>`
 `;
 const FormInput = styled.textarea<{ disabled: boolean, $isTall: boolean }>`
     width: 100%;
-    max-height: 30px;
-    padding: 0.6rem 1rem 0.6rem 1rem;
+    height: 2.5rem;
+    padding: 0.6rem 4.5rem 0.6rem 1rem;
     border-radius: 0.5rem;
     border: 2px solid ${theme.colors.gray2};
     outline: none;
     transition: all 0.2s;
     box-sizing: border-box;
+    line-height: 1;
     font-size: 1rem;
     white-space: pre-line;     // pre-wrap에서 pre-line으로 변경
     word-break: break-all;     // 추가

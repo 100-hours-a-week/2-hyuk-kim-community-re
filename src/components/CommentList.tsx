@@ -16,6 +16,7 @@ import {useParams} from "react-router";
 import {deleteComment, deletePost} from "@/api/post.ts";
 import {DeleteDialog} from "@/components/DeleteDialog.tsx";
 import DropdownMenu from "@/components/DropdownMenu.tsx";
+import { hasValidContent } from '@/utils/stringValidators.ts';
 
 interface CommentListProps {
     key: number;
@@ -210,11 +211,9 @@ export const PostContent = styled.span`
     font-family: ${theme.font.regular};
     color: ${theme.colors.gray5};
     display: -webkit-box;
-    -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    word-break: break-word; // 단어 단위로 줄바꿈
-    white-space: normal;    // pre-wrap에서 normal로 변경
+
+    white-space: pre-line; /* \\n 줄바꿈 유지 */
+    word-break: break-word; /* 긴 텍스트 자동 줄바꿈 */
     line-height: 1.2em;     // 줄 높이 추가
 `

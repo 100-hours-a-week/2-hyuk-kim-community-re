@@ -218,7 +218,7 @@ export const PostContent = styled.p`
     overflow: hidden;
     text-overflow: ellipsis;
     word-break: break-word; // 단어 단위로 줄바꿈
-    white-space: normal;    // pre-wrap에서 normal로 변경
+    white-space: pre-line;
     line-height: 1.2em;     // 줄 높이 추가
 `
 export const CommentContent = styled.p`

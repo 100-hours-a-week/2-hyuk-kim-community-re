@@ -16,6 +16,7 @@ import {CreatePostRequest} from "@/types/models/post.ts";
 import {post} from "axios";
 import CustomTextArea from "@/components/CustomTextArea.tsx";
 import CustomeTextArea from "@/components/CustomeTextArea.tsx";
+import {hasValidContent} from "@/utils/stringValidators.ts";
 
 const PostCreatePage: React.FC = () => {
     const [title, setTitle] = React.useState("");
@@ -42,7 +43,7 @@ const PostCreatePage: React.FC = () => {
 
             const response = await createPost(data);
             if (response) {
-                navigate('/posts');
+                navigate(`/posts/${response}`);
             }
         } catch (e) {
             console.error(e);
@@ -120,7 +121,7 @@ const PostCreatePage: React.FC = () => {
                     onClick={handleBackButton}
                 />
                 <PrimaryButtonLarge
-                    $isEnabled={title && content}
+                    $isEnabled={title && content && hasValidContent(title) && hasValidContent(content)}
                     text={"작성하기"}
                     type={"button"}
                     onClick={handlePostButton}

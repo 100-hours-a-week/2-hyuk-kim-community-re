@@ -155,7 +155,7 @@ const PostUpdatePage: React.FC = () => {
                 />
                 <PrimaryButtonLarge
                     $isEnabled={post?.post?.title && post?.post?.content}
-                    text={"작성하기"}
+                    text={"수정하기"}
                     type={"button"}
                     onClick={handleUpdateButton}
                 />

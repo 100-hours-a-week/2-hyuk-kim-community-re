@@ -88,8 +88,8 @@ const InputWrapper = styled.div<{ $hasHelper: boolean }>`
 `;
 const FormInput = styled.input<{ disabled: boolean, $isTall: boolean }>`
     width: 100%;
-    max-height: 30px;
-    padding: 0.6rem 1rem 0.6rem 1rem;
+    max-height: 2.2rem;
+    padding: 0.6rem 4.5rem 0.6rem 1rem;
     border-radius: 0.5rem;
     border: 2px solid ${theme.colors.gray2};
     outline: none;

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import {theme} from "@/styles/theme.ts";
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { useNavigate } from "react-router-dom";
 import InputField from "@/components/CustomeInput.tsx";
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
@@ -37,6 +37,7 @@ const SignUpPage: React.FC = () => {
             message: check.isValid ? '' : check.errorMessage
         };
     };
+
 
     const handlePasswordValidation = (value: string) => {
         const checkPassword = validatePassword(value);

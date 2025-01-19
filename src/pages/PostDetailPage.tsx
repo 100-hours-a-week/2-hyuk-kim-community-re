@@ -22,10 +22,14 @@ import {useNavigate} from "react-router-dom";
 import likeTrue from "@/assets/images/icon-like-true.svg";
 import {DeleteDialog} from "@/components/DeleteDialog.tsx";
 import GrayButton from "@/components/GrayButton.tsx";
+import CustomeTextArea from "@/components/CustomeTextArea.tsx";
+import {useIsAuthenticated} from "@/store/useUserStore.ts";
+import {hasValidContent} from "@/utils/stringValidators.ts";
 
 
 const PostDetailPage: React.FC = () => {
     const navigate = useNavigate();
+    const isAuthenticated = useIsAuthenticated();
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [post, setPost] = useState<Post | null>(null);
     const [commentContent, setCommentContent] = useState<string>("");
@@ -41,6 +45,11 @@ const PostDetailPage: React.FC = () => {
     const [editingCommentId, setEditingCommentId] = useState<number | null>(null); // 수정 중인 댓글 ID
 
     const handleStartEdit = (comment: Comment) => {
+        if (!isAuthenticated) {
+            alert('로그인이 필요한 서비스입니다.');
+            // navigate('/login');
+        }
+
         setIsEditing(true);
         setEditingCommentId(comment.id);
         setCommentContent(comment.content);
@@ -56,6 +65,11 @@ const PostDetailPage: React.FC = () => {
     // 댓글 수정 완료
     const handleUpdateComment = async () => {
         if (!editingCommentId || !commentContent) return;
+
+        if (!isAuthenticated) {
+            alert('로그인이 필요한 서비스입니다.');
+            // navigate('/login');
+        }
 
         try {
             const updatedComment = await updateComment(
@@ -198,7 +212,14 @@ const PostDetailPage: React.FC = () => {
     };
 
 
+    // 댓글 생성
     const handlePostButton = async () => {
+        if (!isAuthenticated) {
+            alert('로그인이 필요한 서비스입니다.');
+            // navigate('/login');
+            return;
+        }
+
         const fetchPostDetail = async () => {
             try {
                 if (!postId || !commentContent) {
@@ -336,7 +357,7 @@ const PostDetailPage: React.FC = () => {
 
                 <PostComment>
                     <InputWrapper>
-                    <CustomeInput
+                    <CustomeTextArea
                         label=""
                         type="textarea"
                         value={commentContent}
@@ -352,19 +373,19 @@ const PostDetailPage: React.FC = () => {
                         {isEditing ? (
                             <>
                                 <PrimaryButtonLarge
-                                    $isEnabled={!!commentContent}
+                                    $isEnabled={!!commentContent & hasValidContent(commentContent)}
                                     text="수정"
                                     type="button"
                                     onClick={handleUpdateComment}
                                 />
-                                <GrayButton
-                                    className="취소"
-                                    onClick={handleCancelEdit}
-                                />
+                                {/*<GrayButton*/}
+                                {/*    className="취소"*/}
+                                {/*    onClick={handleCancelEdit}*/}
+                                {/*/>*/}
                             </>
                         ) : (
                             <PrimaryButtonLarge
-                                $isEnabled={!!commentContent}
+                                $isEnabled={!!commentContent & hasValidContent(commentContent)}
                                 text="등록"
                                 type="button"
                                 onClick={handlePostButton}
@@ -512,6 +533,8 @@ export const PostTitle = styled.span`
 `
 export const PostContent = styled.p`
     margin-left: 0.5rem;
+    white-space: pre-line; /* \\n 줄바꿈 유지 */
+    word-break: break-word; /* 긴 텍스트 자동 줄바꿈 */
 `
 export const CommentContent = styled.p`
     font-family: ${theme.font.light};
@@ -547,13 +570,18 @@ export const PostComment = styled.div`
 `
 
 const InputWrapper = styled.div`
-    width: 85%;
+    width: auto;
+    min-width: 85%;
     margin-right: 3%;
 `
 
 const ButtonWrapper = styled.div`
-    width: 10%;
-    height: 8%;
+    display: flex;
+    flex-direction: row;
+    //width: 10%;
+    //height: 8%;
+
+    height: 2.5rem;
     
     // 버튼이 wrapper 크기에 맞게 채워지도록
     > button {
