@@ -13,6 +13,7 @@ interface UserState {
     user: User | null
     isAuthenticated: boolean
     setUser: (user: User) => void
+    updateUser: (user: User) => void
     clearUser: () => void
 }
 
@@ -37,6 +38,14 @@ const useUserStore = create<UserState>()(
                     user: null,
                     isAuthenticated: false,
                 }),
+
+            // 유저 업데이트
+            updateUser: (updates) =>
+                set((state) => ({
+                    user: state.user ? { ...state.user, ...updates } : null,
+                    // isAuthenticated는 유지 (이미 로그인된 상태의 업데이트이므로)
+                    isAuthenticated: state.isAuthenticated,
+                })),
         }),
         {
             // 세션 스토리지 설정
