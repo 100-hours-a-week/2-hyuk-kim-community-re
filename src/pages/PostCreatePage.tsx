@@ -8,13 +8,9 @@ import GrayButton from "@/components/GrayButton.tsx";
 import iconUpload from "@/assets/images/icon-upload.svg";
 import iconUploadImage from "@/assets/images/icon-upload-image.svg";
 import iconDelete from "@/assets/images/icon-delete.svg";
-import logo from "@/assets/images/Logo.png";
 import {useNavigate} from "react-router-dom";
 import {createPost} from "@/api/post.ts";
-import {SignupRequest} from "@/types/models/auth.ts";
 import {CreatePostRequest} from "@/types/models/post.ts";
-import {post} from "axios";
-import CustomTextArea from "@/components/CustomTextArea.tsx";
 import CustomeTextArea from "@/components/CustomeTextArea.tsx";
 import {hasValidContent} from "@/utils/stringValidators.ts";
 
@@ -82,7 +78,7 @@ const PostCreatePage: React.FC = () => {
                 >
                     <img src={preview as string} alt="프로필 이미지"/>
                 </ProfileButton>}
-                {!preview && <img src={iconUploadImage} alt=""/>}
+                {!preview && <img src={iconUploadImage as string} alt=""/>}
                 {!preview && <ProfileUploadText>클릭해서 사진을 업로드해주세요</ProfileUploadText>}
                 {!preview && <ProfileTypeText>PNG, JPG, GIF (최대 10MB)</ProfileTypeText>}
                 {/*{!preview && <ProfileHelperText>(사진은 1:1 비율로 조정됩니다)</ProfileHelperText>}*/}
@@ -104,7 +100,6 @@ const PostCreatePage: React.FC = () => {
             <ContentInputWrapper>
             <CustomeTextArea
                 label="내용"
-                type="textarea"  // input 대신 textarea 사용
                 value={content}
                 onChange={setContent}
                 placeholder="내용을 입력해주세요"
@@ -178,14 +173,6 @@ const ContentInputWrapper = styled.div`
         word-break: break-all !important;     // 모든 가능한 지점에서 줄바꿈
         white-space: pre-wrap !important;     // 줄바꿈과 공백을 보존하면서 자동 줄바꿈
     }
-`;
-
-const CharacterCount = styled.span`
-  position: absolute;
-  bottom: 8px;
-  right: 16px;
-  font-size: 0.875rem;
-  color: #6b7280;
 `;
 
 const ProfileContainer = styled.div`

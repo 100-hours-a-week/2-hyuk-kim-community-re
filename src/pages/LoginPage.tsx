@@ -288,6 +288,7 @@ const LoginContent = styled.div`
 
 const LoginTitle = styled.h2`
   color: ${theme.colors.seaGreenDark3};
+    font-family: ${theme.font.bold};
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 1.5rem;

@@ -1,7 +1,6 @@
 import axios, { InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import useUserStore from '@/store/useUserStore';
 import { useLoadingStore } from '@/store/useLoadingStore';
-import { STORAGE_KEYS } from '@/constants/storage';
 
 // CustomInternalAxiosRequestConfig 타입 정의
 interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
@@ -11,6 +10,7 @@ interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
 const instance = axios.create({
     baseURL: import.meta.env.VITE_REACT_APP_BASE_URL,
     timeout: Number(import.meta.env.VITE_REACT_APP_TIMEOUT) || 5000,
+    // headers error !! : 해당 파일이 tsconfig. json에 포함되어 있지 않습니다.
     headers: {
         'Content-Type': 'application/json; charset=utf-8',
         'Time-Zone': 'Asia/Seoul',
@@ -19,11 +19,11 @@ const instance = axios.create({
 
 // 요청 인터셉터
 instance.interceptors.request.use(
-    (config: InternalAxiosRequestConfig) => {
+    (config: CustomInternalAxiosRequestConfig) => {
         const user = useUserStore.getState().user;
 
         // skipLoading이 true가 아닐 때만 로딩 표시
-        if (!(config as CustomInternalAxiosRequestConfig).skipLoading) {
+        if (!(config).skipLoading) {
             useLoadingStore.getState().showLoading();
         }
 

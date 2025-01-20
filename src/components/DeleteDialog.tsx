@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import GrayButton from '@/components/GrayButton';
 import PrimaryButtonLarge from '@/components/PrimaryButtonLarge';
+import {theme} from "@/styles/theme.ts";
 
 interface DeleteDialogProps {
     isOpen: boolean;
@@ -71,20 +72,22 @@ const DialogContainer = styled.div`
   max-width: 32rem;
   background: white;
   border-radius: 8px;
-  padding: 24px;
+  padding: 2rem;
   z-index: 1001;
 `;
 
 const Title = styled.h2`
+    font-family: ${theme.font.regular};
   text-align: center;
   margin: 0;
-  font-size: 16px;
+  font-size: 1.2rem;
   font-weight: 500;
+    margin-bottom: 2rem;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin-top: 24px;
+  margin-top: 2rem;
 `;

@@ -1,5 +1,3 @@
-import axios from './axios';
-import { STORAGE_KEYS } from "@/constants/storage.ts";
 import { API_ENDPOINTS } from "@/constants/api.ts";
 import {LoginRequest, LoginResponse, SignupRequest} from "@/types/models/auth.ts";
 import useUserStore from "@/store/useUserStore.ts";

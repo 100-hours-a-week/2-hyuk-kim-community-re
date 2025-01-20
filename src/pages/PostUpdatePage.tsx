@@ -8,12 +8,9 @@ import GrayButton from "@/components/GrayButton.tsx";
 import iconUpload from "@/assets/images/icon-upload.svg";
 import iconUploadImage from "@/assets/images/icon-upload-image.svg";
 import iconDelete from "@/assets/images/icon-delete.svg";
-import logo from "@/assets/images/Logo.png";
 import {useLocation, useNavigate} from "react-router-dom";
-import {createPost, updatePost} from "@/api/post.ts";
-import {SignupRequest} from "@/types/models/auth.ts";
-import {CreatePostRequest, UpdatePostRequest} from "@/types/models/post.ts";
-import {post} from "axios";
+import {updatePost} from "@/api/post.ts";
+import {UpdatePostRequest} from "@/types/models/post.ts";
 import CustomeTextArea from "@/components/CustomeTextArea.tsx";
 
 const PostUpdatePage: React.FC = () => {
@@ -21,7 +18,6 @@ const PostUpdatePage: React.FC = () => {
     const [post, setPost] = React.useState<UpdatePostRequest | null>(location.state);
     const navigate = useNavigate();
     useEffect(() => {
-        console.log(post);
         if (!location.state || !location.state.post.id) {
             alert('잘못된 접근입니다');
             navigate('/'); // 홈으로 리다이렉트
@@ -51,7 +47,7 @@ const PostUpdatePage: React.FC = () => {
         try {
             console.log("게시글 작성 버튼 클릭!");
 
-            const response = await updatePost(post);
+            const response = await updatePost(post!);
             console.log(response);
             if (response) {
                 alert("수정이 완료되었습니다.");
@@ -115,7 +111,7 @@ const PostUpdatePage: React.FC = () => {
                 >
                     <img src={preview as string} alt="프로필 이미지"/>
                 </ProfileButton>}
-                {!preview && <img src={iconUploadImage} alt=""/>}
+                {!preview && <img src={iconUploadImage as string} alt=""/>}
                 {!preview && <ProfileUploadText>클릭해서 사진을 업로드해주세요</ProfileUploadText>}
                 {!preview && <ProfileTypeText>PNG, JPG, GIF (최대 10MB)</ProfileTypeText>}
                 {/*{!preview && <ProfileHelperText>(사진은 1:1 비율로 조정됩니다)</ProfileHelperText>}*/}
@@ -137,7 +133,6 @@ const PostUpdatePage: React.FC = () => {
             <ContentInputWrapper>
             <CustomeTextArea
                 label="내용"
-                type="textarea"  // input 대신 textarea 사용
                 value={post?.post?.content}
                 onChange={handleContentChange}
                 placeholder="내용을 입력해주세요"
@@ -213,13 +208,6 @@ const ContentInputWrapper = styled.div`
     }
 `;
 
-const CharacterCount = styled.span`
-  position: absolute;
-  bottom: 8px;
-  right: 16px;
-  font-size: 0.875rem;
-  color: #6b7280;
-`;
 
 const ProfileContainer = styled.div`
     width: calc(100% - 3rem);

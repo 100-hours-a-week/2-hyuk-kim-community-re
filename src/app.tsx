@@ -1,5 +1,5 @@
-import React, {useEffect} from 'react';
-import {BrowserRouter, Routes, Route, Navigate, useNavigate} from 'react-router-dom';
+import React from 'react';
+import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
 import Header from "./components/Header";
 
 // 컴포넌트 임포트
@@ -9,12 +9,10 @@ import LoginPage from './pages/LoginPage.tsx';
 import SignUpPage from "@/pages/SignUpPage.tsx";
 import UpdateUserInfoPage from "@/pages/UpdateUserInfoPage.tsx";
 import UpdateUserPasswordPage from "@/pages/UpdateUserPasswordPage.tsx";
-import PostList from "@/components/PostList.tsx";
 import PostListPage from "@/pages/PostListPage.tsx";
 import PostCreatePage from "@/pages/PostCreatePage.tsx";
 import PostDetailPage from "@/pages/PostDetailPage.tsx";
 import PostUpdatePage from "@/pages/PostUpdatePage.tsx";
-import {useIsAuthenticated} from "@/store/useUserStore.ts";
 import ProtectedRoute from "@/components/ProtecectedRoute.tsx";
 import {GlobalLoading} from "@/components/GlobalLoading.tsx";
 

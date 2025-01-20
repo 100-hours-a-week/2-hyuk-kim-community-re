@@ -1,13 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import like from "@/assets/images/Like.svg";
 import likeTrue from "@/assets/images/icon-like-true.svg";
 import comment from "@/assets/images/Comment.svg";
-import iconUser from "@/assets/images/icon-user.svg";
-import logo from "@/assets/images/Logo.png";
-import PostListPage from "@/pages/PostListPage.tsx";
 import {theme} from "@/styles/theme.ts";
-import {GetPosts, Post} from "@/types/models/post.ts";
+import {GetPosts} from "@/types/models/post.ts";
 import {DateFormatter} from "@/utils/DateFormatter.ts";
 
 interface PostListProps {
@@ -22,8 +19,8 @@ const PostList: React.FC<PostListProps> = ({post, onClick}) => {
         <Container onClick={onClick}>
                 <UserContainer>
                     <UserContent>
-                        <ProfileImage src={post.user.profile}/>
-                        <UserNickname>{post.user.nickname}</UserNickname>
+                        <ProfileImage src={post.post.user.profile}/>
+                        <UserNickname>{post.post.user.nickname}</UserNickname>
                     </UserContent>
                 </UserContainer>
             <PostListContainer>
@@ -32,15 +29,15 @@ const PostList: React.FC<PostListProps> = ({post, onClick}) => {
                 {/*    이미지*/}
 
                 <BoardContainer>
-                    {post.image &&
-                        <ImageContainer src={post.image} alt="게시글이미지"/>
+                    {post.post.image &&
+                        <ImageContainer src={post.post.image} alt="게시글이미지"/>
                     }
                     {/*    제목 및 내용(1줄)*/}
                     <PostContainer>
                         {/*    제목*/}
-                        <PostTitle>{post.title}</PostTitle>
+                        <PostTitle>{post.post.title}</PostTitle>
                         {/*    내용*/}
-                        <PostContent>{post.content}</PostContent>
+                        <PostContent>{post.post.content}</PostContent>
                         {/*    댓글*/}
                         {/*        <CommentContent>댓글 1개 보기...</CommentContent>*/}
                     </PostContainer>
@@ -50,12 +47,12 @@ const PostList: React.FC<PostListProps> = ({post, onClick}) => {
                 {/*    좋아요 댓글 등 ~*/}
                 <PostMetaDataContent>
                     {/*<PostDate>${post.date}</PostDate>*/}
-                    <PostDate>{DateFormatter.toRelativeTime(post.createat)}</PostDate>
-                    {post.isLiked ?
+                    <PostDate>{DateFormatter.toRelativeTime(post.post.createat)}</PostDate>
+                    {post.post.isLiked ?
                         <LikeImg src={likeTrue as string} alt=""/>
                         : <LikeImg src={like as string} alt=""/>
                     }
-                    <LikeCount> {post.countLike}</LikeCount>
+                    <LikeCount> {post.post.countLike}</LikeCount>
                     <CommentImg src={comment as string} alt=""/>
                     <CommentCount> {post.countComments}</CommentCount>
                 </PostMetaDataContent>

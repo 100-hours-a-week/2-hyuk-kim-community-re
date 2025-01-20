@@ -4,7 +4,6 @@ import {theme} from "@/styles/theme.ts";
 
 const CustomTextArea = ({
                         label,
-                        type,
                         value,
                         onChange,
                         placeholder,
@@ -13,7 +12,6 @@ const CustomTextArea = ({
                         disabled = false,
                         maxLength = 500,
                         isTall = false,
-                        style,
                     }) => {
     const [helperText, setHelperText] = useState('');
     const [isHelperVisible, setIsHelperVisible] = useState(false);

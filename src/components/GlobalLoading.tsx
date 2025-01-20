@@ -13,7 +13,7 @@ export const GlobalLoading = () => {
         <LoadingOverlay>
             <LoadingContainer>
                 <LogoWrapper>
-                    <Logo src={logo} alt="Loading" />
+                    <Logo src={logo as string} alt="Loading" />
                 </LogoWrapper>
                 <LoadingText>Loading...</LoadingText>
             </LoadingContainer>

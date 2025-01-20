@@ -1,9 +1,7 @@
-import axios from './axios';
-import { STORAGE_KEYS } from "@/constants/storage.ts";
 import { API_ENDPOINTS } from "@/constants/api.ts";
 import {GetProfileResponse, UpdateUserInfoRequest, UpdateUserInfoResponse} from "@/types/models/user.ts";
-import useUserStore, {useUser} from "@/store/useUserStore.ts";
 import instance from "./axios";
+import useUserStore from "@/store/useUserStore.ts";
 
 
 export const updateUser = async (data: UpdateUserInfoRequest) => {

@@ -20,13 +20,12 @@ interface UseInfiniteScrollReturn<T> {
 export function useInfiniteScroll<T>({
                                          fetchData,
                                          initialData = [],
-                                         itemsPerPage = 10
                                      }: UseInfiniteScrollProps<T>): UseInfiniteScrollReturn<T> {
-    const [data, setData] = useState<T[]>(initialData);
+    const [data, setData] = useState<T[]>(initialData!);
     const [currentPage, setCurrentPage] = useState(1);
     const [isLoading, setIsLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
-    const observerRef = useRef<HTMLDivElement>(null);
+    const observerRef = useRef<HTMLDivElement>(null!);
     const isMounted = useRef(true);
 
     // cleanup on unmount
@@ -67,7 +66,7 @@ export function useInfiniteScroll<T>({
 
     // 데이터 fetch
     useEffect(() => {
-        let timeoutId: NodeJS.Timeout;
+        let timeoutId: ReturnType<typeof setTimeout>;
 
         const loadData = async () => {
             if (isLoading) return;
@@ -102,7 +101,7 @@ export function useInfiniteScroll<T>({
 
         // cleanup timeout on unmount or when dependencies change
         return () => {
-            clearTimeout(timeoutId);
+            clearTimeout(Number(timeoutId));
         };
     }, [currentPage, fetchData]);
 

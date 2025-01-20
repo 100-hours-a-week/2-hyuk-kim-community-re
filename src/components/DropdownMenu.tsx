@@ -27,9 +27,8 @@ const DropdownMenu = ({
                           items,
                           onClose,
                           position = {},
-                          title,
                       }: DropdownMenuProps) => {
-    const menuRef = useRef<HTMLDivElement>(null);
+    const menuRef = useRef<HTMLDivElement>(null!);
 
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {

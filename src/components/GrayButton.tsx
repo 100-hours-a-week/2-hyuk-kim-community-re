@@ -1,13 +1,6 @@
-import React, {useState} from 'react';
+import React from 'react';
 import styled from "styled-components";
 import {theme} from "@/styles/theme.ts";
-
-interface GrayButtonProps {
-    $isEnabled: boolean;  // isEnabled → $isEnabled
-    className: string;
-    type: "button" | "submit" | "reset";
-    onClick: () => void;
-}
 
 const GrayButton = ({
                         className,

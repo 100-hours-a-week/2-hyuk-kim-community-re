@@ -1,19 +1,14 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react';
+import React, {useCallback} from 'react';
 import styled from 'styled-components';
 import PostList from "@/components/PostList.tsx";
 import {theme} from "@/styles/theme.ts";
 import uploadPostButton from "@/assets/images/icon-upload-post.svg"
 import {useNavigate} from "react-router-dom";
-import PostDetailPage from "@/pages/PostDetailPage.tsx";
-import {GetPosts, Post} from '@/types/models/post.ts'
-import {login} from "@/api/auth.ts";
 import {getPosts} from "@/api/post.ts";
-import * as timers from "node:timers";
 import {useInfiniteScroll} from "@/hooks/infiniteScroll.ts";
 
 const PostListPage: React.FC = () => {
     const navigate = useNavigate();
-    // const [posts, setPosts] = useState<GetPosts[]>([]);
 
     const fetchPosts = useCallback(async (page: number) => {
         const response = await getPosts({
@@ -29,7 +24,7 @@ const PostListPage: React.FC = () => {
 
 
     const {
-        data: posts, isLoading, hasMore, observerRef
+        data: posts, isLoading, observerRef
     } = useInfiniteScroll({
         fetchData: fetchPosts
     });
@@ -48,15 +43,15 @@ const PostListPage: React.FC = () => {
                 <UploadContainer>
                     <UploadTitle>안녕하세요! 잡담은 경쟁력 게시판입니다!</UploadTitle>
                     <UploadButton onClick={handlePostButton}>
-                        <img src={uploadPostButton}/>
+                        <img src={uploadPostButton as string} alt="이미지 업로드 버튼"/>
                     </UploadButton>
                 </UploadContainer>
                 {/*<PostList/>*/}
                 {posts.map(post => (
                     <PostList
-                        key={post.id}
+                        key={post.post.id}
                         post={post}
-                        onClick={() => handlePostDetail(post.id)}
+                        onClick={() => handlePostDetail(post.post.id)}
                     />
                 ))}
                 <ObserverTarget ref={observerRef} />

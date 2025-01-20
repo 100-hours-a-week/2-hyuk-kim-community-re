@@ -13,7 +13,3 @@ export interface CreateCommentRequest {
     postId: number;
     content: string;
 }
-
-export interface UpdateCommentRequest {
-    content: string;
-}

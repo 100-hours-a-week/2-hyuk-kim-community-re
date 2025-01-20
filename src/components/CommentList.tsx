@@ -1,22 +1,13 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useRef, useState} from "react";
 import styled from "styled-components";
-import like from "@/assets/images/Like.svg";
-import comment from "@/assets/images/Comment.svg";
-import iconUser from "@/assets/images/icon-user.svg";
-import logo from "@/assets/images/Logo.png";
-import PostListPage from "@/pages/PostListPage.tsx";
 import {theme} from "@/styles/theme.ts";
-import {GetPosts, Post} from "@/types/models/post.ts";
 import {DateFormatter} from "@/utils/DateFormatter.ts";
 import {Comment} from "@/types/models/comment.ts";
 import iconMenu from "@/assets/images/icon-menu.svg";
 import {MenuButton} from "@/pages/PostDetailPage.tsx";
-import {useNavigate} from "react-router-dom";
-import {useParams} from "react-router";
-import {deleteComment, deletePost} from "@/api/post.ts";
+import {deleteComment} from "@/api/post.ts";
 import {DeleteDialog} from "@/components/DeleteDialog.tsx";
 import DropdownMenu from "@/components/DropdownMenu.tsx";
-import { hasValidContent } from '@/utils/stringValidators.ts';
 
 interface CommentListProps {
     key: number;
@@ -26,16 +17,11 @@ interface CommentListProps {
 }
 
 const CommentList: React.FC<CommentListProps> = ({comment, onCommentDeleted, onStartEdit}) => {
-    const navigate = useNavigate();
     const [isMenuVisible, setIsMenuVisible] = useState(false);
-    const buttonProfileRef = useRef<HTMLButtonElement>(null);    // ref 생성
-    const [isLikeLoading, setIsLikeLoading] = useState(false);
+    const buttonProfileRef = useRef<HTMLButtonElement>(null!);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const getCommentId = async () => {
-        return comment.id;
-    }
 
     // 댓글 삭제 핸들러
     const handleDeleteComment = async () => {
@@ -94,10 +80,10 @@ const CommentList: React.FC<CommentListProps> = ({comment, onCommentDeleted, onS
                         <UserContent>
                             <UserNickname>{comment.user.nickname}</UserNickname>
                             {comment.isAuthorComments ? <AuthorTag>작성자</AuthorTag> : null}
-                            <PostDate>{DateFormatter.toRelativeTime(comment?.date)}</PostDate>
+                            <PostDate>{DateFormatter.toRelativeTime(comment?.date as string)}</PostDate>
                             {comment?.isMyComment ?
                                 <MenuButton ref={buttonProfileRef} onClick={handleMenuClick}>
-                                    <img src={iconMenu} alt=""/>
+                                    <img src={iconMenu as string} alt=""/>
                                 </MenuButton>  : null}
                             <DropdownMenu
                                 isVisible={isMenuVisible}

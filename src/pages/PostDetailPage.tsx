@@ -4,24 +4,18 @@ import like from "@/assets/images/Like.svg";
 import comment from "@/assets/images/Comment.svg";
 import view from "@/assets/images/icon-view.svg";
 import iconMenu from "@/assets/images/icon-menu.svg";
-import logo from "@/assets/images/Logo.png";
-import PostListPage from "@/pages/PostListPage.tsx";
 import {theme} from "@/styles/theme.ts";
 import {Post} from "@/types/models/post.ts";
-import {CreateCommentRequest} from "@/types/models/comment.ts";
-import PostList from "@/components/PostList.tsx";
-import {createComment, deletePost, getPost, postLike, unlikePost, updateComment} from "@/api/post.ts";
+import {Comment, CreateCommentRequest} from "@/types/models/comment.ts";
+import {createComment, deletePost, getPost, postLike, unlikePost} from "@/api/post.ts";
 import {useParams} from "react-router";
 import {DateFormatter} from "@/utils/DateFormatter.ts";
-import CustomeInput from "@/components/CustomeInput.tsx";
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
 import CommentList from "@/components/CommentList.tsx";
 import DropdownMenu from "@/components/DropdownMenu.tsx";
-import {STORAGE_KEYS} from "@/constants/storage.ts";
 import {useNavigate} from "react-router-dom";
 import likeTrue from "@/assets/images/icon-like-true.svg";
 import {DeleteDialog} from "@/components/DeleteDialog.tsx";
-import GrayButton from "@/components/GrayButton.tsx";
 import CustomeTextArea from "@/components/CustomeTextArea.tsx";
 import {useIsAuthenticated} from "@/store/useUserStore.ts";
 import {hasValidContent} from "@/utils/stringValidators.ts";
@@ -33,16 +27,15 @@ const PostDetailPage: React.FC = () => {
     const [isMenuVisible, setIsMenuVisible] = useState(false);
     const [post, setPost] = useState<Post | null>(null);
     const [commentContent, setCommentContent] = useState<string>("");
-    const [selectedCommentId, setSelectedCommentId] = useState<number | null>(null);
-    const [totalComments, setTotalComments] = useState(0);
-    const buttonProfileRef = useRef<HTMLButtonElement>(null);    // ref 생성
-    const textAreaRef = useRef<HTMLTextAreaElement>(null);
+    const buttonProfileRef = useRef<HTMLButtonElement>(null!);    // ref 생성
     const { postId } = useParams();
     const [isLikeLoading, setIsLikeLoading] = useState(false);
     const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
     const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
     const [editingCommentId, setEditingCommentId] = useState<number | null>(null); // 수정 중인 댓글 ID
+
+
 
     const handleStartEdit = (comment: Comment) => {
         if (!isAuthenticated) {
@@ -72,11 +65,6 @@ const PostDetailPage: React.FC = () => {
         }
 
         try {
-            const updatedComment = await updateComment(
-                editingCommentId,
-                commentContent
-            );
-
             // 댓글 목록 업데이트
             setPost(prevPost => {
                 if (!prevPost) return null;
@@ -135,10 +123,10 @@ const PostDetailPage: React.FC = () => {
             // 현재 좋아요 상태에 따라 다른 API 호출
             if (post.isLiked) {
                 // 이미 좋아요 상태인 경우 취소
-                await unlikePost(postId);
+                await unlikePost(postId!);
             } else {
                 // 좋아요가 안 된 상태인 경우 좋아요 추가
-                await postLike(postId);
+                await postLike(postId!);
             }
 
             // API 호출이 성공하면 게시글 상태 업데이트
@@ -169,11 +157,6 @@ const PostDetailPage: React.FC = () => {
         event.stopPropagation();
         setIsMenuVisible(!isMenuVisible);
     };
-    // // 메뉴 내 항목(수정, 삭제) 클릭
-    // const handleMenuSelected = (path: string) => {
-    //     navigate(`/${path}`);
-    //     setIsMenuVisible(false);
-    // };
 
     const menuItems = [
         {
@@ -263,16 +246,21 @@ const PostDetailPage: React.FC = () => {
             }
         };
 
-        fetchPostDetail();
+        await fetchPostDetail();
     }
 
     // 게시글 상세 정보 불러오기 (1페이지 댓글 포함)
     useEffect(() => {
         const fetchPostDetail = async () => {
             try {
-                const response = await getPost(postId);
+                if (!postId) {
+                    alert("게시글을 불러오는데 실패했습니다.");
+                    navigate(`/posts`);
+                    return;
+                }
+
+                const response = await getPost(Number(postId));
                 setPost(response);
-                setTotalComments(response.commentList.length);
             } catch (error) {
                 console.error('Failed to fetch post detail:', error);
             }
@@ -295,7 +283,7 @@ const PostDetailPage: React.FC = () => {
                             <PostTitle>{post?.title}</PostTitle>
                             {post?.isMyPost ?
                                 <MenuButton ref={buttonProfileRef} onClick={handleMenuClick}>
-                                    <img src={iconMenu}/>
+                                    <img src={iconMenu as string} alt="메뉴 아이콘"/>
                                 </MenuButton>  : null}
                             <DropdownMenu
                                 isVisible={isMenuVisible}
@@ -305,7 +293,7 @@ const PostDetailPage: React.FC = () => {
                             />
                         </TitleMenuContainer>
                         {/*<UserNickname>{post?.user.nickname}</UserNickname>*/}
-                        <PostDate>{post?.user.nickname} · {DateFormatter.toRelativeTime(post?.createat)}</PostDate>
+                        <PostDate>{post?.user.nickname} · {DateFormatter.toRelativeTime(post?.createat!)}</PostDate>
                     </UserContent>
                 </UserContainer>
             {/*    이미지*/}
@@ -359,7 +347,6 @@ const PostDetailPage: React.FC = () => {
                     <InputWrapper>
                     <CustomeTextArea
                         label=""
-                        type="textarea"
                         value={commentContent}
                         onChange={setCommentContent}
                         placeholder="댓글을 남겨주세요!"

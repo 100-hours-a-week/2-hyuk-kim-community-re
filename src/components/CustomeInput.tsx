@@ -13,7 +13,6 @@ const InputField = ({
                         disabled = false,
                         maxLength = 500,
                         isTall = false,
-                        style,
                     }) => {
     const [helperText, setHelperText] = useState('');
     const [isHelperVisible, setIsHelperVisible] = useState(false);
@@ -122,7 +121,7 @@ const CharacterCount = styled.span`
     position: absolute;
     bottom: 0.5rem;
     right: 1rem;
-    font-size: 0.875rem;
+    font-size: 0.7rem;
     color: ${theme.colors.gray4};
 `;
 const HelperLabel = styled.label`

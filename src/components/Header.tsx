@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import defaultProfile from '@/assets/images/icon-user.svg';
 import githubLogo from '@/assets/images/logo-github.svg';
@@ -14,16 +14,8 @@ const Header: React.FC = () => {
     const isLoginPage = window.location.pathname === '/login';
     const { clearUser } = useUserActions();
     const [isMenuVisible, setIsMenuVisible] = useState(false);
-    // const [profileImage, setProfileImage] = useState<string | typeof defaultProfile>(defaultProfile);
     const navigate = useNavigate();
-    const buttonProfileRef = useRef<HTMLButtonElement>(null);
-
-    // useEffect(() => {
-    //     const storedProfile = user?.profile
-    //     if (storedProfile) {
-    //         setProfileImage(storedProfile);
-    //     }
-    // }, []);
+    const buttonProfileRef = useRef<HTMLButtonElement>(null!);
 
     const handleLogoClick = () => {
         navigate('/posts');
@@ -83,7 +75,7 @@ const Header: React.FC = () => {
             <HeaderOverlay/>
             <HeaderContent>
                 <HeaderLogo onClick={handleLogoClick}>
-                    <Logo src={logo} alt="logo"/>
+                    <Logo src={logo as string} alt="logo"/>
                     잡담은 경쟁력
                 </HeaderLogo>
                 <RightContainer>
@@ -93,7 +85,7 @@ const Header: React.FC = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                         >
-                            <GithubIcon src={githubLogo}/>
+                            <GithubIcon src={githubLogo as string}/>
                             GitHub
                         </GithubLink>
                     ) : (
@@ -217,39 +209,6 @@ const ProfileButton = styled.button`
         border-radius: 50%;
         object-fit: cover;
     }
-`
-
-const MenuContainer = styled.div`
-    position: absolute;
-    top: 100%;
-    right: 0;
-    width: 10rem;
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    z-index: 50;
-    overflow: hidden;
-`
-
-const MenuItem = styled.button`
-    width: 100%;
-    padding: 0.75rem 1rem;
-    text-align: left;
-    background: none;
-    border: none;
-    color: ${theme.colors.gray6};
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: background-color 0.2s;
-
-    &:hover {
-        background-color: ${theme.colors.gray1};
-    }
-`
-
-const MenuDivider = styled.div`
-    height: 1px;
-    background-color: ${theme.colors.gray2};
     //margin: 0.25rem 0;
 `
 

@@ -3,27 +3,24 @@ import {theme} from "@/styles/theme.ts";
 import React, {useEffect, useState} from 'react';
 import { useNavigate } from "react-router-dom";
 import InputField from "@/components/CustomeInput.tsx";
-import {validateEmail, validatePassword, validatePasswordRe, validateNickname} from "@/hooks/authValidation.ts";
+import {validateNickname} from "@/hooks/authValidation.ts";
 import iconUser from "@/assets/images/icon-user.svg"
 import iconUpload from "@/assets/images/icon-upload.svg"
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
 import {useImageUpload} from "@/hooks/imageUploader.tsx";
-import {SignupRequest} from "@/types/models/auth.ts";
-import {signup} from "@/api/auth.ts";
 import {getProfile, updateUser} from "@/api/user.ts";
-import {GetProfileResponse, UpdateUserInfoRequest} from "@/types/models/user.ts";
-import {useUser, useUserActions} from "@/store/useUserStore.ts";
+import {UpdateUserInfoRequest} from "@/types/models/user.ts";
+import {useUser} from "@/store/useUserStore.ts";
 
 const UpdateUserInfoPage: React.FC = () => {
     const user = useUser();
-    // const { updateUser } = useUserActions();
 
     const navigate = useNavigate();
     const [email, setEmail] = useState('기존 이메일');
     const [nickname, setNickname] = useState('');
     const [updateProfile, setUpdateProfile] = useState(false);
     const [checkNickname, setCheckNickname] = useState(false);
-    const [profileImageUrl, setProfileImageUrl] = useState<string>(
+    const [profileImageUrl] = useState<string>(
         // 기본 이미지로 iconUser 사용하거나, 사용자의 기존 프로필 이미지 URL 설정
         user?.profile || iconUser as string
     );
@@ -97,7 +94,7 @@ const UpdateUserInfoPage: React.FC = () => {
                                 onChange={handleImageChange}
                             />
                             <ProfileButton
-                                $iconUrl={iconUpload}
+                                $iconUrl={iconUpload as string}
                                 onClick={triggerFileInput}
                             >
                                 <img
@@ -183,19 +180,6 @@ const ProfileContainer = styled.div`
     margin: 2rem 0;
 `;
 
-const ProfileText = styled.p`
-    display: block;
-    font-weight: 500;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
-    color: ${theme.colors.gray6};
-`;
-
-const ProfileHelperText = styled.p`
-    width: 100%;
-    visibility: visible;
-    text-align: start;
-`;
 
 const ProfileButton = styled.button<{ $iconUrl: string }>`
     position: relative;
@@ -265,41 +249,6 @@ const LoginTitle = styled.h2`
 
 const FormGroup = styled.div`
     margin-bottom: 1.5rem;
-`;
-
-const LoginButton = styled.button<{ isEnabled: boolean }>`
-    width: 100%;
-    padding: 0.875rem;
-    border-radius: 0.75rem;
-    border-width: 0;
-    color: white;
-    font-weight: 500;
-    position: relative;
-    overflow: hidden;
-    
-    background: ${props => props.isEnabled
-            ? `linear-gradient(to right, ${theme.colors.seaGreenLight}, ${theme.colors.seaGreenDark1})`
-            : 'gray'};
-    cursor: ${props => props.isEnabled ? 'pointer' : 'not-allowed'};
-    opacity: ${props => props.isEnabled ? 1 : 0.5};
-    
-    span {
-        position: relative;
-        z-index: 10;
-    }
-
-    &::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(to right, ${theme.colors.seaGreenDark1}, ${theme.colors.seaGreenDark3});
-        transform: translateX(100%);
-        transition: transform 0.3s;
-    }
-
-    &:hover::after {
-        transform: translateX(0);
-    }
 `;
 
 const FormFooter = styled.div`

@@ -9,7 +9,7 @@ export const API_ENDPOINTS = {
 
     GET_POSTS: 'api/posts',
     GET_POST: 'api/posts/:postId',
-    GET_POST_EDIT: '/apiposts/:postId/edit',
+    GET_POST_EDIT: '/api/posts/:postId/edit',
     POST_POST: 'api/posts',
     PATCH_POST: 'api/posts/:postId',
     DELETE_POST: 'api/posts/:postId',
