@@ -6,6 +6,7 @@
 커뮤니티 프로젝트는 **React와 TypeScript**를 기반으로 한 현대적인 웹 애플리케이션입니다. Styled Components를 활용한 반응형 디자인을 적용하여 다양한 디바이스에서 최적화된 사용자 경험을 제공합니다.
 
 ## 관련 링크
+- [시연영상](https://drive.google.com/file/d/1v7JSTjw_RGEk7JXmlao5vI4ezt7EVncS/view?usp=sharing)
 - [백엔드 저장소](https://github.com/100-hours-a-week/2-hyuk-kim-community-be)
 - [배포 링크] - 준비중
 
