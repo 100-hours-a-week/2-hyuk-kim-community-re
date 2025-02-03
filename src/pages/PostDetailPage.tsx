@@ -577,6 +577,10 @@ const ButtonWrapper = styled.div`
         height: 100%;
         padding: 0.7rem 1rem;
         margin: 0rem;
+        
+        @media (max-width: 690px) {
+            padding: 0;
+        }
     }
     
     @media (max-width: 1024px) {

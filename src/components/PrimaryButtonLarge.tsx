@@ -58,4 +58,9 @@ const LoginButton = styled.button<{ $isEnabled: boolean }>`
     &:hover::after {
         transform: translateX(0);
     }
+
+    @media (max-width: 640px) {
+        width: fit-content;
+        padding: 0;
+    }
 `;
