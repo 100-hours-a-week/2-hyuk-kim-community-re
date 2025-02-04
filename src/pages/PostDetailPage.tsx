@@ -7,7 +7,7 @@ import iconMenu from "@/assets/images/icon-menu.svg";
 import {theme} from "@/styles/theme.ts";
 import {Post} from "@/types/models/post.ts";
 import {Comment, CreateCommentRequest} from "@/types/models/comment.ts";
-import {createComment, deletePost, getPost, postLike, unlikePost} from "@/api/post.ts";
+import {createComment, deletePost, getPost, postLike, unlikePost, updateComment} from "@/api/post.ts";
 import {useParams} from "react-router";
 import {DateFormatter} from "@/utils/DateFormatter.ts";
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
@@ -19,7 +19,7 @@ import {DeleteDialog} from "@/components/DeleteDialog.tsx";
 import CustomeTextArea from "@/components/CustomeTextArea.tsx";
 import {useIsAuthenticated} from "@/store/useUserStore.ts";
 import {hasValidContent} from "@/utils/stringValidators.ts";
-
+// import {useUser, useIsAuthenticated} from "@/store/useUserStore.ts";
 
 const PostDetailPage: React.FC = () => {
     const navigate = useNavigate();
@@ -61,11 +61,12 @@ const PostDetailPage: React.FC = () => {
 
         if (!isAuthenticated) {
             alert('로그인이 필요한 서비스입니다.');
-            // navigate('/login');
+            navigate('/login');
         }
 
         try {
             // 댓글 목록 업데이트
+            await updateComment(editingCommentId, commentContent);
             setPost(prevPost => {
                 if (!prevPost) return null;
                 return {
@@ -114,7 +115,7 @@ const PostDetailPage: React.FC = () => {
             };
         });
     };
-
+    // const user = useUser();
     const handleLike = async () => {
         if (isLikeLoading || !post) return;
 
@@ -126,7 +127,12 @@ const PostDetailPage: React.FC = () => {
                 await unlikePost(postId!);
             } else {
                 // 좋아요가 안 된 상태인 경우 좋아요 추가
-                await postLike(postId!);
+                if(isAuthenticated) {
+                    await postLike(postId!);
+                } else {
+                    alert("로그인이 필요한 기능입니다.");
+                    return;
+                }
             }
 
             // API 호출이 성공하면 게시글 상태 업데이트
