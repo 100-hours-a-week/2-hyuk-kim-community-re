@@ -46,6 +46,12 @@ export class DateFormatter {
             return `${weeks}주 전`;
         }
 
+        // 1년 이내
+        if (timeDiff < this.YEAR) {
+            const months = Math.floor(timeDiff / this.MONTH);
+            return `${months}달 전`;
+        }
+
         // 1년 이상
         const years = Math.floor(timeDiff / this.YEAR);
         return `${years}년 전`;
