@@ -10,7 +10,7 @@ export interface Post {
     image: string;
     countView: number;
     createat: string;
-    user: Pick<User, 'nickname' | 'profile'>;
+    user: Pick<User, 'nickname' | 'profile' | 'deleteat'>;
     commentList: Comment[];
     isMyPost: boolean;
 }

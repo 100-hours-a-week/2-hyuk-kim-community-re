@@ -19,7 +19,7 @@ import {DeleteDialog} from "@/components/DeleteDialog.tsx";
 import CustomeTextArea from "@/components/CustomeTextArea.tsx";
 import {useIsAuthenticated} from "@/store/useUserStore.ts";
 import {hasValidContent} from "@/utils/stringValidators.ts";
-// import {useUser, useIsAuthenticated} from "@/store/useUserStore.ts";
+import defaultUserIcon from "@/assets/images/icon-user.svg";
 
 const PostDetailPage: React.FC = () => {
     const navigate = useNavigate();
@@ -282,7 +282,10 @@ const PostDetailPage: React.FC = () => {
             {/*    프로필사진 이름 작성일*/}
             {/*    row로 정렬하기!*/}
                 <UserContainer>
+                    {post?.user.deleteat ?
+                    <ProfileImage src={defaultUserIcon as string}/> :
                     <ProfileImage src={post?.user.profile}/>
+                    }
                     <UserContent>
                         <TitleMenuContainer>
                         {/*    제목*/}
@@ -299,7 +302,7 @@ const PostDetailPage: React.FC = () => {
                             />
                         </TitleMenuContainer>
                         {/*<UserNickname>{post?.user.nickname}</UserNickname>*/}
-                        <PostDate>{post?.user.nickname} · {DateFormatter.toRelativeTime(post?.createat!)}</PostDate>
+                        <PostDate>{post?.user.deleteat ? '(탈퇴한 회원)' : post?.user.nickname} · {DateFormatter.toRelativeTime(post?.createat!)}</PostDate>
                     </UserContent>
                 </UserContainer>
             {/*    이미지*/}

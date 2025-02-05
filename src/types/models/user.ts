@@ -3,6 +3,7 @@ export interface User {
     nickname: string;
     email: string;
     profile: string;
+    deleteat: string;
 }
 
 export interface GetProfileResponse {
