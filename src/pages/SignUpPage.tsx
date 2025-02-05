@@ -89,8 +89,8 @@ const SignUpPage: React.FC = () => {
                 alert('회원가입에 실패했습니다.');
             }
         } catch (error) {
-            console.error('회원가입 오류:', error);
-            alert('회원가입 중 오류가 발생했습니다.');
+            // console.error('회원가입 오류:', error);
+            // alert('회원가입 중 오류가 발생했습니다.');
         }
     };
 
