@@ -8,6 +8,7 @@ import {MenuButton} from "@/pages/PostDetailPage.tsx";
 import {deleteComment} from "@/api/post.ts";
 import {DeleteDialog} from "@/components/DeleteDialog.tsx";
 import DropdownMenu from "@/components/DropdownMenu.tsx";
+import defaultUserIcon from "@/assets/images/icon-user.svg";
 
 interface CommentListProps {
     key: number;
@@ -75,10 +76,15 @@ const CommentList: React.FC<CommentListProps> = ({comment, onCommentDeleted, onS
     return (
         <Container>
                 <UserContainer>
-                    <ProfileImage src={comment.user.profile}/>
+                    {comment.user.nickname == '탈퇴' ?
+                        <ProfileImage src={defaultUserIcon}/> :
+                        <ProfileImage src={comment.user.profile}/>
+                    }
                     <ContentContainer>
                         <UserContent>
-                            <UserNickname>{comment.user.nickname}</UserNickname>
+                            <UserNickname>{comment.user.nickname == '탈퇴' ?
+                                    '(탈퇴한 회원)' : comment.user.nickname}</UserNickname>
+
                             {comment.isAuthorComments ? <AuthorTag>작성자</AuthorTag> : null}
                             <PostDate>{DateFormatter.toRelativeTime(comment?.date as string)}</PostDate>
                             {comment?.isMyComment ?
