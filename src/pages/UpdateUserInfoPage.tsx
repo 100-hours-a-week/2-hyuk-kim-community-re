@@ -10,7 +10,7 @@ import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
 import {useImageUpload} from "@/hooks/imageUploader.tsx";
 import {deleteUser, getProfile, updateUser} from "@/api/user.ts";
 import {UpdateUserInfoRequest} from "@/types/models/user.ts";
-import {useUser} from "@/store/useUserStore.ts";
+import useUserStore, {useUser} from "@/store/useUserStore.ts";
 
 const UpdateUserInfoPage: React.FC = () => {
     const user = useUser();
@@ -80,12 +80,18 @@ const UpdateUserInfoPage: React.FC = () => {
     };
 
     const handleDeleteUser = async () => {
+        // console.log(user);
         if(!user) {
             alert("로그인이 필요한 서비스입니다.");
             return;
         }
         try {
             await deleteUser();
+            navigate('/login');
+
+            alert("회원 탈퇴가 완료되었습니다.");
+            useUserStore.getState().clearUser();
+            return;
         } catch (error) {
             console.error('회원탈퇴 오류:', error);
             alert('회원탈퇴 중 오류가 발생했습니다.');

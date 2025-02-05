@@ -34,7 +34,7 @@ export const deleteUser = async () => {
     try {
         const response = await instance.delete(API_ENDPOINTS.DELETE_USER);
         if (response) {
-            useUserStore.getState().clearUser();
+            return;
         }
     } catch (error) {
         throw error;
