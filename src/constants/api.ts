@@ -5,6 +5,7 @@ export const API_ENDPOINTS = {
     // GET_PROFILE: 'api/users/:userId/profile',
     GET_PROFILE: 'api/users/profile',
     UPDATE_USER: 'api/users/profile',
+    DELETE_USER: 'api/users',
     UPDATE_PASSWORD: 'api/users/password',
 
     GET_POSTS: 'api/posts',

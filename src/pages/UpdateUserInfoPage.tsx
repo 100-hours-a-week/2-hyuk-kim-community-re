@@ -8,7 +8,7 @@ import iconUser from "@/assets/images/icon-user.svg"
 import iconUpload from "@/assets/images/icon-upload.svg"
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
 import {useImageUpload} from "@/hooks/imageUploader.tsx";
-import {getProfile, updateUser} from "@/api/user.ts";
+import {deleteUser, getProfile, updateUser} from "@/api/user.ts";
 import {UpdateUserInfoRequest} from "@/types/models/user.ts";
 import {useUser} from "@/store/useUserStore.ts";
 
@@ -79,6 +79,19 @@ const UpdateUserInfoPage: React.FC = () => {
         }
     };
 
+    const handleDeleteUser = async () => {
+        if(!user) {
+            alert("로그인이 필요한 서비스입니다.");
+            return;
+        }
+        try {
+            await deleteUser();
+        } catch (error) {
+            console.error('회원탈퇴 오류:', error);
+            alert('회원탈퇴 중 오류가 발생했습니다.');
+        }
+    }
+
     return (
         <Container>
             <GridContainer>
@@ -140,7 +153,8 @@ const UpdateUserInfoPage: React.FC = () => {
                         />
 
                         <FormFooter>
-                            <FormLink href="/login">계정 삭제</FormLink>
+                            {/*<FormLink href="/login">계정 삭제</FormLink>*/}
+                            <FormLink onClick={handleDeleteUser}>계정 삭제</FormLink>
                         </FormFooter>
                         {/*</form>*/}
                     </LoginContent>

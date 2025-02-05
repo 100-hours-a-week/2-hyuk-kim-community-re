@@ -30,6 +30,17 @@ export const updateUser = async (data: UpdateUserInfoRequest) => {
     }
 };
 
+export const deleteUser = async () => {
+    try {
+        const response = await instance.delete(API_ENDPOINTS.DELETE_USER);
+        if (response) {
+            useUserStore.getState().clearUser();
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
 
 export const getProfile = async () => {
     try {
