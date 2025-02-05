@@ -60,7 +60,8 @@ const LoginButton = styled.button<{ $isEnabled: boolean }>`
     }
 
     @media (max-width: 640px) {
-        width: fit-content;
-        padding: 0;
+        //width: fit-content;
+        padding-right: 0;
+        padding-left: 0;
     }
 `;
