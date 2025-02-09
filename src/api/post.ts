@@ -41,11 +41,7 @@ export const getPost = async (postId: number) => {
 
 export const createPost = async (params: CreatePostRequest) => {
     try {
-        const response = await instance.post(API_ENDPOINTS.POST_POST, params, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
+        const response = await instance.post(API_ENDPOINTS.POST_POST, params);
         return response.data;
     } catch (e) {
         console.error(e);
@@ -54,14 +50,8 @@ export const createPost = async (params: CreatePostRequest) => {
 
 export const updatePost = async (params: UpdatePostRequest) => {
     try {
-        console.log(params);
-        console.log(params.post.id);
         const url = API_ENDPOINTS.PATCH_POST.replace(':postId', String(params.post.id));
-        const response = await instance.patch(url, params, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
+        const response = await instance.patch(url, params);
         return response.data;
     } catch (e) {
         console.error(e);

@@ -10,7 +10,6 @@ interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
 const instance = axios.create({
     baseURL: import.meta.env.VITE_REACT_APP_BASE_URL,
     timeout: Number(import.meta.env.VITE_REACT_APP_TIMEOUT) || 5000,
-    // headers error !! : 해당 파일이 tsconfig. json에 포함되어 있지 않습니다.
     headers: {
         'Content-Type': 'application/json; charset=utf-8',
         'Time-Zone': 'Asia/Seoul',
@@ -70,6 +69,17 @@ instance.interceptors.response.use(
 
         if (error.response?.status === 401) {
             useUserStore.getState().clearUser();
+        }
+
+        // 400번대 에러
+        if (error.response?.status >= 400 && error.response?.status < 500) {
+            // 서버에서 전달된 에러 메시지가 있으면 그대로 사용, 없으면 기본 메시지
+            const errorMessage = error.response.data?.message || '요청을 처리할 수 없습니다.';
+            alert(errorMessage);
+        }
+        // 500번대 에러
+        else if (error.response?.status >= 500) {
+            alert('예상치 못한 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
         }
         return Promise.reject(error);
     }

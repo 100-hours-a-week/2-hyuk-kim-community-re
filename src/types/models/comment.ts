@@ -4,7 +4,7 @@ export interface Comment {
     id: number;
     date: string;
     content: string;
-    user: Pick<User, 'nickname' | 'profile'>;
+    user: Pick<User, 'nickname' | 'profile' | 'deleteat'>;
     isAuthorComments: boolean;
     isMyComment: boolean;
 }

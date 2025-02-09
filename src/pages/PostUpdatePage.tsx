@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import styled from "styled-components";
-import {useImageUpload} from "@/hooks/imageUploader.tsx";
+import {useImageLoader} from "@/hooks/imageLoader.tsx";
 import {theme} from "@/styles/theme.ts";
 import CustomeInput from "@/components/CustomeInput.tsx";
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
@@ -12,6 +12,7 @@ import {useLocation, useNavigate} from "react-router-dom";
 import {updatePost} from "@/api/post.ts";
 import {UpdatePostRequest} from "@/types/models/post.ts";
 import CustomeTextArea from "@/components/CustomeTextArea.tsx";
+import {uploadImage} from "@/api/image.ts";
 
 const PostUpdatePage: React.FC = () => {
     const location = useLocation();
@@ -38,25 +39,43 @@ const PostUpdatePage: React.FC = () => {
             } : null);
         }
 
-        if (post?.image) {
-            setPreview(post?.image);
+        if (post?.post?.image) {
+            setPreview(post?.post?.image as string);
         }
     }, []);
 
     const handleUpdateButton = async () => {
         try {
-            console.log("게시글 작성 버튼 클릭!");
+            const files = fileInputRef.current?.files;
+            if (files) {
+                const imageUrl = await uploadImage(files[0], 'profile');
+                // 새로운 post 객체 생성
+                const updatedPost = {
+                    ...post!,
+                    post: {
+                        ...post!.post,
+                        image: imageUrl
+                    }
+                };
 
-            const response = await updatePost(post!);
-            console.log(response);
-            if (response) {
-                alert("수정이 완료되었습니다.");
-                navigate(`/posts/${post?.post?.id}`);
+                // 상태 업데이트와 API 호출을 한번에 처리해야됨!
+                const response = await updatePost(updatedPost);
+                if (response) {
+                    alert("수정이 완료되었습니다.");
+                    navigate(`/posts/${post?.post?.id}`);
+                }
+            } else {
+                // 이미지가 변경되지 않은 경우
+                const response = await updatePost(post!);
+                if (response) {
+                    alert("수정이 완료되었습니다.");
+                    navigate(`/posts/${post?.post?.id}`);
+                }
             }
         } catch (e) {
             console.error(e);
         }
-    }
+    };
 
     const handleBackButton = async () => {
         navigate(`/posts/${post?.post?.id}`);
@@ -88,7 +107,7 @@ const PostUpdatePage: React.FC = () => {
         handleImageChange,
         setPreview,
         triggerFileInput
-    } = useImageUpload();
+    } = useImageLoader();
 
     return (
       <Container>

@@ -7,10 +7,11 @@ import {validateNickname} from "@/hooks/authValidation.ts";
 import iconUser from "@/assets/images/icon-user.svg"
 import iconUpload from "@/assets/images/icon-upload.svg"
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
-import {useImageUpload} from "@/hooks/imageUploader.tsx";
-import {getProfile, updateUser} from "@/api/user.ts";
+import {useImageLoader} from "@/hooks/imageLoader.tsx";
+import {deleteUser, getProfile, updateUser} from "@/api/user.ts";
 import {UpdateUserInfoRequest} from "@/types/models/user.ts";
-import {useUser} from "@/store/useUserStore.ts";
+import useUserStore, {useUser} from "@/store/useUserStore.ts";
+import {uploadImage} from "@/api/image.ts";
 
 const UpdateUserInfoPage: React.FC = () => {
     const user = useUser();
@@ -30,7 +31,7 @@ const UpdateUserInfoPage: React.FC = () => {
         fileInputRef,
         handleImageChange,
         triggerFileInput
-    } = useImageUpload(setUpdateProfile);
+    } = useImageLoader(setUpdateProfile);
 
 
 
@@ -62,9 +63,10 @@ const UpdateUserInfoPage: React.FC = () => {
 
             const request: UpdateUserInfoRequest = {
                 nickname: nickname ? nickname : "",
-                image: files && files.length > 0 ? files[0] : ""
+                image: files && files.length > 0 ? await uploadImage(files[0], 'profile') : ""
             };
 
+            console.log(request);
             const response = await updateUser(request);
 
             if (response) {
@@ -74,10 +76,28 @@ const UpdateUserInfoPage: React.FC = () => {
                 alert('회원정보 수정에 실패했습니다.');
             }
         } catch (error) {
-            console.error('회원정보 수정 오류:', error);
-            alert('회원정보 수정 중 오류가 발생했습니다.');
+            console.error('회원정보 수정 오류:', error.message);
         }
     };
+
+    const handleDeleteUser = async () => {
+        // console.log(user);
+        if(!user) {
+            alert("로그인이 필요한 서비스입니다.");
+            return;
+        }
+        try {
+            await deleteUser();
+            navigate('/login');
+
+            alert("회원 탈퇴가 완료되었습니다.");
+            useUserStore.getState().clearUser();
+            return;
+        } catch (error) {
+            console.error('회원탈퇴 오류:', error);
+            alert('회원탈퇴 중 오류가 발생했습니다.');
+        }
+    }
 
     return (
         <Container>
@@ -140,7 +160,8 @@ const UpdateUserInfoPage: React.FC = () => {
                         />
 
                         <FormFooter>
-                            <FormLink href="/login">계정 삭제</FormLink>
+                            {/*<FormLink href="/login">계정 삭제</FormLink>*/}
+                            <FormLink onClick={handleDeleteUser}>계정 삭제</FormLink>
                         </FormFooter>
                         {/*</form>*/}
                     </LoginContent>

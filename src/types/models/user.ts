@@ -3,6 +3,7 @@ export interface User {
     nickname: string;
     email: string;
     profile: string;
+    deleteat: string;
 }
 
 export interface GetProfileResponse {
@@ -12,7 +13,7 @@ export interface GetProfileResponse {
 
 export interface UpdateUserInfoRequest {
     nickname: string;
-    image: File | string;
+    image: string;
 }
 
 export interface UpdateUserInfoResponse {

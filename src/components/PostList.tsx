@@ -6,6 +6,7 @@ import comment from "@/assets/images/Comment.svg";
 import {theme} from "@/styles/theme.ts";
 import {GetPosts} from "@/types/models/post.ts";
 import {DateFormatter} from "@/utils/DateFormatter.ts";
+import defaultUserIcon from "@/assets/images/icon-user.svg";
 
 interface PostListProps {
     post: GetPosts;
@@ -19,8 +20,13 @@ const PostList: React.FC<PostListProps> = ({post, onClick}) => {
         <Container onClick={onClick}>
                 <UserContainer>
                     <UserContent>
-                        <ProfileImage src={post.post.user.profile}/>
-                        <UserNickname>{post.post.user.nickname}</UserNickname>
+                        {post.post.user.deleteat ?
+                            <ProfileImage src={defaultUserIcon as string}/> :
+                            <ProfileImage src={post.post.user.profile}/>
+                        }
+                        {/*<ProfileImage src={post.post.user.profile}/>*/}
+                        <UserNickname>{post.post.user.deleteat ?
+                            '(탈퇴한 회원)' : post.post.user.nickname}</UserNickname>
                     </UserContent>
                 </UserContainer>
             <PostListContainer>
