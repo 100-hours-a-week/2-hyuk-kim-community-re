@@ -1,5 +1,5 @@
 ---
-name: "\U0001F648 기본 이슈 템플릿"
+name: Hyuk-Issue-Template
 about: Default Issue Template
 title: 버그가 또 있어요 ? 진짜로 ?
 labels: ''
@@ -8,7 +8,7 @@ assignees: ''
 ---
 
 ---
-🐞 QA 이슈 리포트
+🙈 QA 이슈 템플릿
 title: 
 assignees: 
 ---
