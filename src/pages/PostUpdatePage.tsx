@@ -46,31 +46,22 @@ const PostUpdatePage: React.FC = () => {
 
     const handleUpdateButton = async () => {
         try {
-            const files = fileInputRef.current?.files;
-            if (files) {
-                const imageUrl = await uploadImage(files[0], 'profile');
-                // 새로운 post 객체 생성
-                const updatedPost = {
-                    ...post!,
-                    post: {
-                        ...post!.post,
-                        image: imageUrl
-                    }
-                };
+            const imageFile = fileInputRef.current?.files?.[0];
 
-                // 상태 업데이트와 API 호출을 한번에 처리해야됨!
-                const response = await updatePost(updatedPost);
-                if (response) {
-                    alert("수정이 완료되었습니다.");
-                    navigate(`/posts/${post?.post?.id}`);
+            // post state를 그대로 활용
+            const updatedPost = {
+                post: {
+                    id: post?.post?.id,
+                    title: post?.post?.title,
+                    content: post?.post?.content,
+                    ...(imageFile && { image: await uploadImage(imageFile, 'profile') })
                 }
-            } else {
-                // 이미지가 변경되지 않은 경우
-                const response = await updatePost(post!);
-                if (response) {
-                    alert("수정이 완료되었습니다.");
-                    navigate(`/posts/${post?.post?.id}`);
-                }
+            };
+
+            const response = await updatePost(updatedPost);
+            if (response) {
+                alert("수정이 완료되었습니다.");
+                navigate(`/posts/${post?.post?.id}`);
             }
         } catch (e) {
             console.error(e);
