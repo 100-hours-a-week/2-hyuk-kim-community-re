@@ -6,12 +6,10 @@ import useUserStore from "@/store/useUserStore.ts";
 
 export const updateUser = async (data: UpdateUserInfoRequest) => {
     try {
-
         const response = await instance.patch<UpdateUserInfoResponse>(API_ENDPOINTS.UPDATE_USER, data);
         if (response.data.profile) {
             useUserStore.getState().updateUser(response.data);
         }
-
         return response.data;
     } catch (error) {
         throw error;

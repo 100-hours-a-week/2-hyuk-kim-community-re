@@ -13,6 +13,7 @@ import {createPost} from "@/api/post.ts";
 import {CreatePostRequest} from "@/types/models/post.ts";
 import CustomeTextArea from "@/components/CustomeTextArea.tsx";
 import {hasValidContent} from "@/utils/stringValidators.ts";
+import {uploadImage} from "@/api/image.ts";
 
 const PostCreatePage: React.FC = () => {
     const [title, setTitle] = React.useState("");
@@ -25,17 +26,13 @@ const PostCreatePage: React.FC = () => {
 
     const handlePostButton = async () => {
         try {
-            console.log("게시글 작성 버튼 클릭!");
-
             const data: CreatePostRequest = {
-            post: {
-                title: title,
+                post: {
+                    title: title,
                     content: content,
-            },
-                ...(fileInputRef.current?.files?.[0] && {
-                image: fileInputRef.current.files[0]
-            })
-        };
+                    image: await uploadImage(fileInputRef.current.files[0], 'board') || ""
+                },
+            };
 
             const response = await createPost(data);
             if (response) {

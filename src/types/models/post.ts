@@ -26,11 +26,9 @@ export interface GetPosts {
 }
 
 export interface CreatePostRequest {
-    post: Pick<Post, 'title' | 'content'>;
-    image?: File;
+    post: Pick<Post, 'title' | 'content' | 'image'>;
 }
 
 export interface UpdatePostRequest {
-    post: Pick<Post, 'id' | 'title' | 'content'>;
-    image?: File | string;
+    post: Pick<Post, 'id' | 'title' | 'content' | 'image'>;
 }
