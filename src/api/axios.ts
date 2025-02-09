@@ -10,7 +10,6 @@ interface CustomInternalAxiosRequestConfig extends InternalAxiosRequestConfig {
 const instance = axios.create({
     baseURL: import.meta.env.VITE_REACT_APP_BASE_URL,
     timeout: Number(import.meta.env.VITE_REACT_APP_TIMEOUT) || 5000,
-    // headers error !! : 해당 파일이 tsconfig. json에 포함되어 있지 않습니다.
     headers: {
         'Content-Type': 'application/json; charset=utf-8',
         'Time-Zone': 'Asia/Seoul',
