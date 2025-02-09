@@ -17,21 +17,19 @@ export const login = async (loginData: LoginRequest) => {
 export const signup = async (signupData: SignupRequest) => {
     try {
         // FormData 생성
-        const formData = new FormData();
-        formData.append('email', signupData.email);
-        formData.append('password', signupData.password);
-        formData.append('nickname', signupData.nickname);
-        formData.append('image', signupData.image);
+        // const formData = new FormData();
+        // formData.append('email', signupData.email);
+        // formData.append('password', signupData.password);
+        // formData.append('nickname', signupData.nickname);
+        // formData.append('image', signupData.image);
 
-        for (let [key, value] of formData.entries()) {
-            console.log(`${key}: ${value}`);
-        }
+        // for (let [key, value] of formData.entries()) {
+        //     console.log(`${key}: ${value}`);
+        // }
 
-        const response = await instance.post<number>(API_ENDPOINTS.SIGNUP, formData, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
+
+        const response = await instance.post(API_ENDPOINTS.SIGNUP, signupData);
+        console.log(response);
         return response.data;
     } catch (error) {
         // handleError(error);

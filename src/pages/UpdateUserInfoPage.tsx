@@ -7,7 +7,7 @@ import {validateNickname} from "@/hooks/authValidation.ts";
 import iconUser from "@/assets/images/icon-user.svg"
 import iconUpload from "@/assets/images/icon-upload.svg"
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
-import {useImageUpload} from "@/hooks/imageUploader.tsx";
+import {useImageLoader} from "@/hooks/imageLoader.tsx";
 import {deleteUser, getProfile, updateUser} from "@/api/user.ts";
 import {UpdateUserInfoRequest} from "@/types/models/user.ts";
 import useUserStore, {useUser} from "@/store/useUserStore.ts";
@@ -30,7 +30,7 @@ const UpdateUserInfoPage: React.FC = () => {
         fileInputRef,
         handleImageChange,
         triggerFileInput
-    } = useImageUpload(setUpdateProfile);
+    } = useImageLoader(setUpdateProfile);
 
 
 

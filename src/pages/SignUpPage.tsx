@@ -7,9 +7,11 @@ import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
 import {validateEmail, validatePassword, validatePasswordRe, validateNickname} from "@/hooks/authValidation.ts";
 import iconUser from "@/assets/images/icon-user.svg"
 import iconUpload from "@/assets/images/icon-upload.svg"
-import { useImageUpload } from '@/hooks/imageUploader.tsx';
+import { useImageLoader } from '@/hooks/imageLoader.tsx';
+// import { useImageLoader } from '../hooks/imageLoader.tsx';
 import {signup} from "@/api/auth.ts";
 import {SignupRequest} from "@/types/models/auth.ts";
+import {uploadImage} from "@/api/image.ts";
 
 const SignUpPage: React.FC = () => {
     const navigate = useNavigate();
@@ -28,7 +30,7 @@ const SignUpPage: React.FC = () => {
         fileInputRef,
         handleImageChange,
         triggerFileInput
-    } = useImageUpload();
+    } = useImageLoader();
 
     const handleEmailValidation = (value: string) => {
         const check = validateEmail(value);
@@ -73,13 +75,17 @@ const SignUpPage: React.FC = () => {
                 return;
             }
 
+            const imageUrl = await uploadImage(files[0], 'profile');
+            console.log(`create imageUrl success : ${imageUrl}`);
+
             const signupData: SignupRequest = {
                 email,
                 password,
                 nickname,
-                image: files[0]
+                image: imageUrl
             };
 
+            console.log('signup start!!');
             const response = await signup(signupData);
 
             if (response) {
@@ -89,7 +95,7 @@ const SignUpPage: React.FC = () => {
                 alert('회원가입에 실패했습니다.');
             }
         } catch (error) {
-            // console.error('회원가입 오류:', error);
+            console.error('회원가입 오류:', error);
             // alert('회원가입 중 오류가 발생했습니다.');
         }
     };

@@ -21,4 +21,6 @@ export const API_ENDPOINTS = {
 
     POST_LIKE: 'api/posts/like/:postId',
     POST_UNLIKE: 'api/posts/unlike/:postId',
+
+    GET_PRESIGNED_URL: '/api/images/presigned-url',
 } as const;

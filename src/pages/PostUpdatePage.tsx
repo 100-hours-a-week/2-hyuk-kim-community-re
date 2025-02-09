@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import styled from "styled-components";
-import {useImageUpload} from "@/hooks/imageUploader.tsx";
+import {useImageLoader} from "@/hooks/imageLoader.tsx";
 import {theme} from "@/styles/theme.ts";
 import CustomeInput from "@/components/CustomeInput.tsx";
 import PrimaryButtonLarge from "@/components/PrimaryButtonLarge.tsx";
@@ -88,7 +88,7 @@ const PostUpdatePage: React.FC = () => {
         handleImageChange,
         setPreview,
         triggerFileInput
-    } = useImageUpload();
+    } = useImageLoader();
 
     return (
       <Container>
