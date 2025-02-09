@@ -13,7 +13,7 @@ export interface GetProfileResponse {
 
 export interface UpdateUserInfoRequest {
     nickname: string;
-    image: File | string;
+    image: string;
 }
 
 export interface UpdateUserInfoResponse {

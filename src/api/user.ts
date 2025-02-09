@@ -6,20 +6,8 @@ import useUserStore from "@/store/useUserStore.ts";
 
 export const updateUser = async (data: UpdateUserInfoRequest) => {
     try {
-        // FormData 생성
-        const formData = new FormData();
-        formData.append('nickname', data.nickname);
-        formData.append('image', data.image);
 
-        for (let [key, value] of formData.entries()) {
-            console.log(`${key}: ${value}`);
-        }
-
-        const response = await instance.patch<UpdateUserInfoResponse>(API_ENDPOINTS.UPDATE_USER, data, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            },
-        });
+        const response = await instance.patch<UpdateUserInfoResponse>(API_ENDPOINTS.UPDATE_USER, data);
         if (response.data.profile) {
             useUserStore.getState().updateUser(response.data);
         }

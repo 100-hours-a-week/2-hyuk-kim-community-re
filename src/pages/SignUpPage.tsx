@@ -76,8 +76,6 @@ const SignUpPage: React.FC = () => {
             }
 
             const imageUrl = await uploadImage(files[0], 'profile');
-            console.log(`create imageUrl success : ${imageUrl}`);
-
             const signupData: SignupRequest = {
                 email,
                 password,
@@ -85,9 +83,7 @@ const SignUpPage: React.FC = () => {
                 image: imageUrl
             };
 
-            console.log('signup start!!');
             const response = await signup(signupData);
-
             if (response) {
                 alert('회원가입이 완료되었습니다.');
                 navigate('/login');
