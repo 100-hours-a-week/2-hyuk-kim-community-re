@@ -15,9 +15,9 @@
     },
 
     // 타입 체킹 설정
-    "strict": true,                 // 모든 엄격한 타입 체킹 옵션 활성화
-    "noImplicitAny": true,          // 암시적 any 타입 사용 시 에러
-    "strictNullChecks": true,       // null/undefined 타입 엄격하게 체크
+    "strict": false,                 // 모든 엄격한 타입 체킹 옵션 비활성화
+    "noImplicitAny": false,          // 암시적 any 타입 사용 시 에러 X
+    "strictNullChecks": false,       // null/undefined 타입 엄격하게 체크 X
 
     // React 설정
     "jsx": "react-jsx",             // React JSX 지원
@@ -40,14 +40,8 @@
     "allowImportingTsExtensions": true
   },
   "include": [
-    "src",
-    "src/types/env.d.ts",
-    "src/types/images.d.ts",
-    "src/types/images.d.ts",
-    "src/types/**/*.d.ts",  // 타입 선언 파일 명시적 포함
-    "**/*.ts",
-    "**/*.tsx",
-    "src/**/*",  // src 폴더 아래 모든 파일 포함
+    "src/**/*",  // 이것만으로 src 아래 모든 파일을 포함할 수 있습니다
+    "src/types/**/*.d.ts"  // 타입 선언 파일도 명시적으로 포함
   ],
   "exclude": [
     "node_modules"

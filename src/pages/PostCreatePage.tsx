@@ -26,11 +26,12 @@ const PostCreatePage: React.FC = () => {
 
     const handlePostButton = async () => {
         try {
+            const imageFile = fileInputRef.current?.files?.[0];
             const data: CreatePostRequest = {
                 post: {
                     title: title,
                     content: content,
-                    image: await uploadImage(fileInputRef.current.files[0], 'board') || ""
+                    ...(imageFile && { image: await uploadImage(imageFile, 'board') })
                 },
             };
 

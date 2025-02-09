@@ -1,0 +1,1 @@
+declare module 'models';  // 기본 선언

@@ -17,8 +17,9 @@ export default defineConfig({
         open: true  // 서버 시작 시 브라우저 자동 열기
     },
     build: {
-        outDir: '../build',  // 빌드 출력 경로를 상대 경로로 수정
-        emptyOutDir: true
+        outDir: 'build',  // 빌드 출력 경로를 상대 경로로 수정
+        emptyOutDir: true,
+        // skipTypeCheck: true // TypeScript 타입 체크를 건너뛰고 빌드
     },
     resolve: {
         alias: {
