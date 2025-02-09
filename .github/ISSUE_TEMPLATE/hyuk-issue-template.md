@@ -1,5 +1,5 @@
 ---
-name: "\U0001F648 Hyuk-Issue-Template"
+name: Hyuk-Issue-Template
 about: Default Issue Template
 title: 버그가 또 있어요 ? 진짜로 ?
 labels: ''
